@@ -1,0 +1,37 @@
+#!/usr/bin/env ruby
+require 'curses'
+
+$LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
+require 'ruco'
+
+def write(line,row,text)
+  Curses.setpos(line,row)
+  Curses.addstr(text);
+end
+
+def init_screen
+  Curses.noecho # do not show typed chars
+  Curses.init_screen
+  Curses.stdscr.keypad(true) # enable arrow keys
+
+  begin
+    yield
+  ensure
+    Curses.close_screen
+  end
+end
+
+init_screen do
+  editor = Ruco::Editor.new(ARGV[0])
+  write(0, 0, editor.view)
+
+  loop do
+    case Curses.getch
+    when Curses::Key::UP then editor.move(0,-1)
+    when Curses::Key::DOWN then editor.move(0,1)
+    when Curses::Key::RIGHT then editor.move(1,0)
+    when Curses::Key::LEFT then editor.move(-1,0)
+    when ?q then break
+    end
+  end
+end

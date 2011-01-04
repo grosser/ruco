@@ -4,6 +4,20 @@ RSpec::Core::RakeTask.new(:spec) do |t|
   t.rspec_opts = '--backtrace --color'
 end
 
+task :run do
+  exec "./bin/ruco"
+end
+
+task :key do
+  require 'curses'
+  Curses.noecho
+  loop do
+    key = Curses.getchr
+    Curses.setpos(0,0)
+    Curses.addstr("#{key.inspect}     #{rand(100000)}");
+  end
+end
+
 begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
