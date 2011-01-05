@@ -11,10 +11,12 @@ end
 task :key do
   require 'curses'
   Curses.noecho
+  count = 0
   loop do
-    key = Curses.getchr
-    Curses.setpos(0,0)
-    Curses.addstr("#{key.inspect}     #{rand(100000)}");
+    count = (count + 1) % 20
+    key = Curses.stdscr.getch
+    Curses.setpos(count,0)
+    Curses.addstr("#{key.inspect}     ");
   end
 end
 
