@@ -11,10 +11,13 @@ end
 task :key do
   require 'curses'
   Curses.noecho
+  Curses.raw
+  
   count = 0
   loop do
     count = (count + 1) % 20
     key = Curses.stdscr.getch
+    break if key == ?\C-c
     Curses.setpos(count,0)
     Curses.addstr("#{key.inspect}     ");
   end
