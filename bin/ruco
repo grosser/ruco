@@ -13,6 +13,7 @@ def init_screen
   Curses.noecho # do not show typed chars
   Curses.init_screen
   Curses.stdscr.keypad(true) # enable arrow keys
+  Curses.raw # give us all other keys
 
   begin
     yield
@@ -21,8 +22,9 @@ def init_screen
   end
 end
 
+editor = Ruco::Editor.new(ARGV[0], :lines => Curses.stdscr.maxy, :columns => Curses.stdscr.maxx)
+
 init_screen do
-  editor = Ruco::Editor.new(ARGV[0])
   write(0, 0, editor.view)
 
   loop do

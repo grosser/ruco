@@ -8,8 +8,16 @@ task :run do
   exec "./bin/ruco"
 end
 
+task :try do
+  require 'curses'
+  Curses.setpos(0,0)
+  Curses.addstr("xxxxxxxx\nyyyyyyy");
+  Curses.getch
+end
+
 task :key do
   require 'curses'
+
   Curses.noecho
   Curses.raw
   

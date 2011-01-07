@@ -1,11 +1,16 @@
 module Ruco
   class Editor
-    def initialize(file)
-      
+    def initialize(file, options)
+      @file = file
+      @options = options
+      @content = File.read(@file)
     end
 
     def view
-      (("a" * 200) + "\n" + ("b" * 300) + "\n") * 10
+      lines = @content.split("\n")
+      Array.new(@options[:lines]).map_with_index do |_,i|
+        (lines[i] || "").slice(0, @options[:columns])
+      end.join("\n") + "\n"
     end
   end
 end
