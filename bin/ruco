@@ -33,7 +33,7 @@ init_screen do
     when Curses::Key::DOWN then editor.move(0,1)
     when Curses::Key::RIGHT then editor.move(1,0)
     when Curses::Key::LEFT then editor.move(-1,0)
-    when ?q then break
+    when ?\C-w, ?\C-q then break # quit
     end
   end
 end
