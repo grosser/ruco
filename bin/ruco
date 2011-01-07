@@ -25,14 +25,17 @@ end
 editor = Ruco::Editor.new(ARGV[0], :lines => Curses.stdscr.maxy, :columns => Curses.stdscr.maxx)
 
 init_screen do
-  write(0, 0, editor.view)
-
   loop do
+    editor.view.split("\n").each_with_index do |line, index|
+      write(index, 0, line)
+    end
+    Curses.setpos(editor.line, editor.column)
+
     case Curses.getch
-    when Curses::Key::UP then editor.move(0,-1)
-    when Curses::Key::DOWN then editor.move(0,1)
-    when Curses::Key::RIGHT then editor.move(1,0)
-    when Curses::Key::LEFT then editor.move(-1,0)
+    when Curses::Key::UP then editor.move(-1,0)
+    when Curses::Key::DOWN then editor.move(1,0)
+    when Curses::Key::RIGHT then editor.move(0,1)
+    when Curses::Key::LEFT then editor.move(0,-1)
     when ?\C-w, ?\C-q then break # quit
     end
   end

@@ -5,7 +5,9 @@ RSpec::Core::RakeTask.new(:spec) do |t|
 end
 
 task :run do
-  exec "./bin/ruco"
+  file = 'spec/temp.txt'
+  File.open(file, 'w'){|f|f.write("12345\n1234\n#{'1'*200}\n123")}
+  exec "./bin/ruco #{file}"
 end
 
 task :try do
