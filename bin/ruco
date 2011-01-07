@@ -29,7 +29,7 @@ init_screen do
     editor.view.split("\n").each_with_index do |line, index|
       write(index, 0, line)
     end
-    Curses.setpos(editor.line, editor.column)
+    Curses.setpos(editor.cursor_line, editor.cursor_column)
 
     case Curses.getch
     when Curses::Key::UP then editor.move(-1,0)

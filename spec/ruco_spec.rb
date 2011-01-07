@@ -18,35 +18,54 @@ describe Ruco do
     end
 
     it "starts at 0,0" do
-      editor.line.should == 0
-      editor.column.should == 0
+      editor.cursor_line.should == 0
+      editor.cursor_column.should == 0
     end
 
     it "can move" do
       editor.move(1,2)
-      editor.line.should == 1
-      editor.column.should == 2
+      editor.cursor_line.should == 1
+      editor.cursor_column.should == 2
       editor.move(1,1)
-      editor.line.should == 2
-      editor.column.should == 3
+      editor.cursor_line.should == 2
+      editor.cursor_column.should == 3
     end
 
     it "cannot move left/top off screen" do
       editor.move(-1,-1)
-      editor.line.should == 0
-      editor.column.should == 0
+      editor.cursor_line.should == 0
+      editor.cursor_column.should == 0
     end
 
     it "cannot move right of characters" do
       editor.move(2,6)
-      editor.line.should == 2
-      editor.column.should == 4
+      editor.cursor_line.should == 2
+      editor.cursor_column.should == 4
     end
 
-    it "gets reset to empty newline when moving past lines" do
+    it "gets reset to empty line when moving past lines" do
       editor.move(6,3)
-      editor.line.should == 3
-      editor.column.should == 0
+      editor.cursor_line.should == 3
+      editor.cursor_column.should == 0
+    end
+
+    it "can scroll columns" do
+      write('123456789')
+      editor.move(0,4)
+      editor.view.should == "12345\n\n\n"
+      editor.cursor_column.should == 4
+
+      editor.move(0,1)
+      editor.view.should == "6789\n\n\n"
+      editor.cursor_column.should == 0
+    end
+
+    it "cannot scroll past the screen" do
+      write('123456789')
+      editor.move(0,4)
+      6.times{ editor.move(0,1) }
+      editor.view.should == "6789\n\n\n"
+      editor.cursor_column.should == 4
     end
   end
 
