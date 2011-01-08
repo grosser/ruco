@@ -128,4 +128,25 @@ describe Ruco do
       editor.view.should == "xxx\nyyy\nzzz\n"
     end
   end
+
+  describe 'inserting' do
+    before do
+      @file = 'spec/temp.txt'
+      write('')
+    end
+
+    it "can insert new chars" do
+      editor.insert('abc')
+      editor.view.should == "abc\n\n\n"
+      editor.cursor_column.should == 3
+      editor.cursor_line.should == 0
+    end
+
+    it "can insert new newlines" do
+      editor.insert("ab\nc")
+      editor.view.should == "ab\nc\n\n"
+      editor.cursor_column.should == 1
+      editor.cursor_line.should == 1
+    end
+  end
 end

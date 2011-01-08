@@ -7,7 +7,7 @@ module Ruco
     def initialize(file, options)
       @file = file
       @options = options
-      @lines = File.read(@file).split("\n")
+      @content = File.read(@file)
       @line = 0
       @column = 0
       @cursor_line = 0
@@ -20,13 +20,13 @@ module Ruco
 
     def view
       Array.new(@options[:lines]).map_with_index do |_,i|
-        (@lines[i + @scrolled_lines] || "").slice(@scrolled_columns, @options[:columns])
+        (lines[i + @scrolled_lines] || "").slice(@scrolled_columns, @options[:columns])
       end * "\n" + "\n"
     end
 
     def move(line, column)
-      @line =    [[@line   + line,    0].max, @lines.size].min
-      @column =  [[@column + column, 0].max, (@lines[@line]||'').size].min
+      @line =    [[@line   + line,    0].max, lines.size].min
+      @column =  [[@column + column, 0].max, (lines[@line]||'').size].min
 
       reposition_cursor
       scroll_column_into_view
@@ -34,7 +34,18 @@ module Ruco
       reposition_cursor
     end
 
+    def insert(text)
+      insertion_point = lines[0...@line].join("\n").size + @column
+      @content.insert(insertion_point, text)
+      inserted_lines = text.split("\n")
+      move(inserted_lines.size - 1, inserted_lines.last.size)
+    end
+
     private
+
+    def lines
+      @content.split("\n")
+    end
 
     def scroll_column_into_view
       offset = [@options[:column_scrolling_offset], @options[:columns]].min
