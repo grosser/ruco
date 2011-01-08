@@ -1,5 +1,7 @@
 module Ruco
   class Editor
+    SCROLLING_OFFSET = 20
+
     attr_reader :cursor_line, :cursor_column
 
     def initialize(file, options)
@@ -12,6 +14,8 @@ module Ruco
       @cursor_column = 0
       @scrolled_lines = 0
       @scrolled_columns = 0
+      @options[:line_scrolling_offset] ||= @options[:lines] / 2
+      @options[:column_scrolling_offset] ||= @options[:columns] / 2
     end
 
     def view
@@ -24,21 +28,45 @@ module Ruco
       @line =    [[@line   + line,    0].max, @lines.size].min
       @column =  [[@column + column, 0].max, (@lines[@line]||'').size].min
 
-      @cursor_line = @line - @scrolled_lines
-      @cursor_column = @column - @scrolled_columns
+      reposition_cursor
+      scroll_column_into_view
+      scroll_line_into_view
+      reposition_cursor
+    end
 
-      # column scrolling
+    private
+
+    def scroll_column_into_view
+      offset = [@options[:column_scrolling_offset], @options[:columns]].min
+
       if @cursor_column >= @options[:columns]
-        offset = 5
         @scrolled_columns = @column - @options[:columns] + offset
       end
 
       if @cursor_column < 0
-        offset = 5
-        @scrolled_columns = [@column - offset, 0].max
+        @scrolled_columns = @column - offset
       end
 
+      @scrolled_columns = [[@scrolled_columns, 0].max, @column].min
+    end
+
+    def scroll_line_into_view
+      offset = [@options[:line_scrolling_offset], @options[:lines]].min
+
+      if @cursor_line >= @options[:lines]
+        @scrolled_lines = @line - @options[:lines] + offset
+      end
+
+      if @cursor_line < 0
+        @scrolled_lines = @line - offset
+      end
+
+      @scrolled_lines = [[@scrolled_lines, 0].max, @line].min
+    end
+
+    def reposition_cursor
       @cursor_column = @column - @scrolled_columns
+      @cursor_line = @line - @scrolled_lines
     end
   end
 end

@@ -5,7 +5,7 @@ describe Ruco do
     File.open(@file,'w'){|f| f.write(content) }
   end
 
-  let(:editor){ Ruco::Editor.new(@file, :lines => 3, :columns => 5) }
+  let(:editor){ Ruco::Editor.new(@file, :lines => 3, :columns => 5, :line_scrolling_offset => 5, :column_scrolling_offset => 5) }
 
   it "has a VERSION" do
     Ruco::VERSION.should =~ /^\d+\.\d+\.\d+$/
@@ -44,37 +44,62 @@ describe Ruco do
     end
 
     it "gets reset to empty line when moving past lines" do
+      write("    ")
       editor.move(6,3)
-      editor.cursor_line.should == 3
+      editor.cursor_line.should == 1
       editor.cursor_column.should == 0
     end
 
-    it "can scroll columns" do
-      write("123456789\n123")
-      editor.move(0,4)
-      editor.view.should == "12345\n123\n\n"
-      editor.cursor_column.should == 4
+    describe 'column scrolling' do
+      it "can scroll columns" do
+        write("123456789\n123")
+        editor.move(0,4)
+        editor.view.should == "12345\n123\n\n"
+        editor.cursor_column.should == 4
 
-      editor.move(0,1)
-      editor.view.should == "6789\n\n\n"
-      editor.cursor_column.should == 0
+        editor.move(0,1)
+        editor.view.should == "6789\n\n\n"
+        editor.cursor_column.should == 0
+      end
+
+      it "cannot scroll past the screen" do
+        write('123456789')
+        editor.move(0,4)
+        6.times{ editor.move(0,1) }
+        editor.view.should == "6789\n\n\n"
+        editor.cursor_column.should == 4
+      end
+
+      it "can scroll columns backwards" do
+        write('123456789')
+        editor.move(0,5)
+        editor.view.should == "6789\n\n\n"
+
+        editor.move(0,-1)
+        editor.view.should == "12345\n\n\n"
+        editor.cursor_column.should == 4
+      end
     end
 
-    it "cannot scroll past the screen" do
-      write('123456789')
-      editor.move(0,4)
-      6.times{ editor.move(0,1) }
-      editor.view.should == "6789\n\n\n"
-      editor.cursor_column.should == 4
-    end
+    describe 'line scrolling' do
+      before do
+        write("1\n2\n3\n4\n5\n6\n7\n8\n9")
+      end
 
-    it "can scroll columns backwards" do
-      write('123456789')
-      editor.move(0,5)
-      editor.view.should == "6789\n\n\n"
+      it "can scroll lines down (at maximum of screen size)" do
+        editor.move(2,0)
+        editor.view.should == "1\n2\n3\n"
 
-      editor.move(0,-1)
-      editor.view.should == "12345\n\n\n"
+        editor.move(1,0)
+        editor.view.should == "4\n5\n6\n"
+        editor.cursor_line.should == 0
+      end
+
+      it "can scroll till end of file" do
+        editor.move(15,0)
+        editor.view.should == "\n\n\n"
+        editor.cursor_line.should == 0
+      end
     end
   end
 
