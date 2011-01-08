@@ -36,8 +36,31 @@ module Ruco
       move_according_to_insert(text)
     end
 
+    def delete(count)
+      if count > 0
+        @content.slice!(cursor_index, count)
+      else
+        backspace(count.abs)
+      end
+    end
+
+    def backspace(count)
+      start_index = cursor_index - count
+      if start_index < 0
+        count += start_index
+        start_index = 0
+      end
+
+      @content.slice!(start_index, count)
+      set_cursor_to_index start_index
+    end
+
     def save
       File.open(@file,'w'){|f| f.write(@content) }
+    end
+
+    def cursor
+      [cursor_line, cursor_column]
     end
 
     private
@@ -98,6 +121,13 @@ module Ruco
       insertion_point = lines[0...@line].join("\n").size + @column
       insertion_point += 1 if @line > 0 # account for missing newline
       insertion_point
+    end
+
+    def set_cursor_to_index(index)
+      jump = @content.slice(0, index).to_s.naive_split("\n")
+      @line = jump.size - 1
+      @column = jump.last.size
+      reposition_cursor
     end
 
     def move_according_to_insert(text)

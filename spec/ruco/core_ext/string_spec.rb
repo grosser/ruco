@@ -9,5 +9,9 @@ describe String do
     it "splits normal stuff" do
       "abacad".naive_split('a').should == ['','b','c','d']
     end
+
+    it "splits empty into 1" do
+      "".naive_split('a').should == ['']
+    end
   end
 end

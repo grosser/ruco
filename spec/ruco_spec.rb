@@ -11,9 +11,12 @@ describe Ruco do
     Ruco::VERSION.should =~ /^\d+\.\d+\.\d+$/
   end
 
+  before do
+    @file = 'spec/temp.txt'
+  end
+
   describe 'moving' do
     before do
-      @file = 'spec/temp.txt'
       write("    \n    \n    ")
     end
 
@@ -111,7 +114,6 @@ describe Ruco do
 
   describe 'viewing' do
     before do
-      @file = 'spec/temp.txt'
       write('')
     end
 
@@ -137,7 +139,6 @@ describe Ruco do
 
   describe 'inserting' do
     before do
-      @file = 'spec/temp.txt'
       write('')
     end
 
@@ -193,10 +194,6 @@ describe Ruco do
   end
 
   describe 'save' do
-    before do
-      @file = 'spec/temp.txt'
-    end
-
     it 'stores the file' do
       write('xxx')
       editor.insert('a')
@@ -209,6 +206,47 @@ describe Ruco do
       editor.insert('a')
       editor.save
       File.read(@file).should == 'a'
+    end
+  end
+
+  describe 'delete' do
+    it 'removes a char' do
+      write('123')
+      editor.delete(1)
+      editor.view.should == "23\n\n\n"
+      editor.cursor.should == [0,0]
+    end
+
+    it 'removes a line' do
+      write("123\n45")
+      editor.move(0,3)
+      editor.delete(1)
+      editor.view.should == "12345\n\n\n"
+      editor.cursor.should == [0,3]
+    end
+
+    it "cannot backspace over 0,0" do
+      write("aa")
+      editor.move(0,1)
+      editor.delete(-3)
+      editor.view.should == "a\n\n\n"
+      editor.cursor.should == [0,0]
+    end
+
+    it 'backspaces a char' do
+      write('123')
+      editor.move(0,3)
+      editor.delete(-1)
+      editor.view.should == "12\n\n\n"
+      editor.cursor.should == [0,2]
+    end
+
+    it 'backspaces a newline' do
+      write("1\n234")
+      editor.move(1,0)
+      editor.delete(-1)
+      editor.view.should == "1234\n\n\n"
+      editor.cursor.should == [0,1]
     end
   end
 end
