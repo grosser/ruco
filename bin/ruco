@@ -36,11 +36,16 @@ init_screen do
 
     Curses.setpos(editor.cursor_line, editor.cursor_column)
 
-    case Curses.getch
+    key = Curses.getch
+
+    case key
     when Curses::Key::UP then editor.move(-1,0)
     when Curses::Key::DOWN then editor.move(1,0)
     when Curses::Key::RIGHT then editor.move(0,1)
     when Curses::Key::LEFT then editor.move(0,-1)
+    when 32..126 then editor.insert(key.chr) # printable
+    when 10 then editor.insert("\n") # enter
+    when 127 then editor.delete(-1)
     when ?\C-w, ?\C-q then break # quit
     end
   end

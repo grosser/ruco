@@ -159,5 +159,14 @@ describe Ruco do
       editor.cursor_column.should == 2
       editor.cursor_line.should == 2
     end
+
+    it "jumps to correct column when inserting 1 newline" do
+      write("abc\ndefg")
+      editor.move(1,2)
+      editor.insert("\n")
+      editor.view.should == "abc\nde\nfg\n"
+      editor.cursor_column.should == 2
+      editor.cursor_line.should == 0
+    end
   end
 end
