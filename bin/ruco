@@ -46,6 +46,7 @@ init_screen do
     when 32..126 then editor.insert(key.chr) # printable
     when 10 then editor.insert("\n") # enter
     when 263 then editor.delete(-1) # backspace
+    when ?\C-s then editor.save
     when ?\C-w, ?\C-q then break # quit
     end
   end
