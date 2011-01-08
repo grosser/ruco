@@ -45,7 +45,7 @@ init_screen do
     when Curses::Key::LEFT then editor.move(0,-1)
     when 32..126 then editor.insert(key.chr) # printable
     when 10 then editor.insert("\n") # enter
-    when 127 then editor.delete(-1)
+    when 263 then editor.delete(-1) # backspace
     when ?\C-w, ?\C-q then break # quit
     end
   end
