@@ -3,7 +3,7 @@ Commandline editor written in ruby
 Alpha, do not use...
 
 Finished:
- - viewing / scrolling
+ - viewing / scrolling / editing / saving / creating
 
 Install
 =======
@@ -15,9 +15,9 @@ Usage
 
 TODO
 =====
- - editing
- - saving
- - creating new files
+ - delete key !?
+ - warnings / messages
+ - help
  - syntax highlighting
 
 
