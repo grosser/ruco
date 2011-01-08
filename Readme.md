@@ -1,10 +1,12 @@
 Commandline editor written in ruby
 
-Alpha, do not use...
+Alpha, lets see if this works...
 
 Finished:
 
  - viewing / scrolling / editing / saving / creating
+ - change-indicator
+ - writeable indicator
  - backspace
 
 Install
@@ -17,10 +19,10 @@ Usage
 
 TODO
 =====
+ - indentation + paste support
  - delete key !?
  - warnings / messages
  - syntax highlighting
-
 
 Author
 ======
