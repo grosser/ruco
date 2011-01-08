@@ -6,7 +6,7 @@ module Ruco
     end
 
     def view
-      "Ruco #{Ruco::VERSION} -- #{@editor.file}#{change_indicator}"
+      "Ruco #{Ruco::VERSION} -- #{@editor.file}#{change_indicator}#{writable_indicator}"
     end
 
     def format
@@ -15,6 +15,13 @@ module Ruco
 
     def change_indicator
       @editor.modified? ? '*' : ' '
+    end
+
+    def writable_indicator
+      @writeable ||= begin
+        writable = (not File.exist?(@editor.file) or system("test -w #{@editor.file}"))
+        writable ? ' ' : '!'
+      end
     end
   end
 end

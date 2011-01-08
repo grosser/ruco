@@ -18,4 +18,18 @@ describe Ruco::StatusBar do
     editor.insert('x')
     bar.view.should include('*')
   end
+
+  it "indicates writable" do
+    bar.view.should_not include('!')
+  end
+
+  it "indicates writable if file is missing" do
+    editor.stub!(:file).and_return '/gradasadadsds'
+    bar.view.should_not include('!')
+  end
+
+  it "indicates not writable" do
+    editor.stub!(:file).and_return '/etc/sudoers'
+    bar.view.should include('!')
+  end
 end
