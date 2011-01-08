@@ -1,12 +1,25 @@
 Commandline editor written in ruby
 
+Alpha, do not use...
+
+Finished:
+ - viewing / scrolling
+
 Install
 =======
     sudo gem install ruco
 
 Usage
 =====
-    CODE_EXAMPLE
+    ruco file.rb
+
+TODO
+=====
+ - editing
+ - saving
+ - creating new files
+ - syntax highlighting
+
 
 Author
 ======
