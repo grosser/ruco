@@ -1,8 +1,31 @@
 #!/usr/bin/env ruby
 require 'curses'
-
+require 'optparse'
 $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
-require 'ruco'
+
+def parse_options
+  options = OptionParser.new do |opts|
+    opts.banner = <<BANNER
+[Ru]by [Co]mmandline editor
+
+Shortcuts:
+ Ctrl+w/q   Exit
+ Ctrl+s     Save
+
+Usage:
+    ruco FILE
+
+Options:
+BANNER
+    opts.on("-h", "--help","Show this.") { puts opts; exit }
+  end
+  options.parse!
+
+  if ARGV.empty?
+    puts options
+    exit
+  end
+end
 
 def write(line,row,text)
   Curses.setpos(line,row)
@@ -22,6 +45,9 @@ def init_screen
   end
 end
 
+parse_options
+
+require 'ruco'
 editor = Ruco::Editor.new(ARGV[0], :lines => Curses.stdscr.maxy, :columns => Curses.stdscr.maxx)
 
 init_screen do

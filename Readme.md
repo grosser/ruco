@@ -19,10 +19,7 @@ TODO
 =====
  - delete key !?
  - warnings / messages
- - help
  - syntax highlighting
- - start without file == --help
-
 
 
 Author
