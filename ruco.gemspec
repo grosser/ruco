@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{ruco}
-  s.version = "0.0.1"
+  s.version = "0.0.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Michael Grosser"]
@@ -24,8 +24,11 @@ Gem::Specification.new do |s|
     "lib/ruco/core_ext/array.rb",
     "lib/ruco/core_ext/string.rb",
     "lib/ruco/editor.rb",
+    "lib/ruco/status_bar.rb",
     "ruco.gemspec",
     "spec/ruco/core_ext/string_spec.rb",
+    "spec/ruco/editor_spec.rb",
+    "spec/ruco/status_bar_spec.rb",
     "spec/ruco_spec.rb",
     "spec/spec_helper.rb"
   ]
@@ -35,6 +38,8 @@ Gem::Specification.new do |s|
   s.summary = %q{Commandline editor written in ruby}
   s.test_files = [
     "spec/ruco/core_ext/string_spec.rb",
+    "spec/ruco/editor_spec.rb",
+    "spec/ruco/status_bar_spec.rb",
     "spec/ruco_spec.rb",
     "spec/spec_helper.rb"
   ]
