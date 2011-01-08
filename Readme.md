@@ -3,7 +3,9 @@ Commandline editor written in ruby
 Alpha, do not use...
 
 Finished:
+
  - viewing / scrolling / editing / saving / creating
+ - backspace
 
 Install
 =======
@@ -19,6 +21,8 @@ TODO
  - warnings / messages
  - help
  - syntax highlighting
+ - start without file == --help
+
 
 
 Author
