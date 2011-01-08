@@ -28,23 +28,35 @@ module Ruco
       @line =    [[@line   + line,    0].max, lines.size].min
       @column =  [[@column + column, 0].max, (lines[@line]||'').size].min
 
-      reposition_cursor
-      scroll_column_into_view
-      scroll_line_into_view
-      reposition_cursor
+      adjust_view
     end
 
     def insert(text)
       insertion_point = lines[0...@line].join("\n").size + @column
+      insertion_point += 1 if @line > 0 # account for missing newline
       @content.insert(insertion_point, text)
       inserted_lines = text.split("\n")
-      move(inserted_lines.size - 1, inserted_lines.last.size)
+
+      if inserted_lines.size > 1
+        # column position does not add up when hitting return
+        @column = inserted_lines.last.size
+        move(inserted_lines.size - 1, 0)
+      else
+        move(inserted_lines.size - 1, inserted_lines.last.size)
+      end
     end
 
     private
 
     def lines
       @content.split("\n")
+    end
+
+    def adjust_view
+      reposition_cursor
+      scroll_column_into_view
+      scroll_line_into_view
+      reposition_cursor
     end
 
     def scroll_column_into_view

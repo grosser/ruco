@@ -136,8 +136,10 @@ describe Ruco do
     end
 
     it "can insert new chars" do
-      editor.insert('abc')
-      editor.view.should == "abc\n\n\n"
+      write('123')
+      editor.move(0,1)
+      editor.insert('ab')
+      editor.view.should == "1ab23\n\n\n"
       editor.cursor_column.should == 3
       editor.cursor_line.should == 0
     end
@@ -147,6 +149,15 @@ describe Ruco do
       editor.view.should == "ab\nc\n\n"
       editor.cursor_column.should == 1
       editor.cursor_line.should == 1
+    end
+
+    it "jumps to correct column when inserting newline" do
+      write("abc\ndefg")
+      editor.move(1,2)
+      editor.insert("1\n23")
+      editor.view.should == "abc\nde1\n23fg\n"
+      editor.cursor_column.should == 2
+      editor.cursor_line.should == 2
     end
   end
 end
