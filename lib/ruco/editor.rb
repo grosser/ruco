@@ -32,18 +32,8 @@ module Ruco
     end
 
     def insert(text)
-      insertion_point = lines[0...@line].join("\n").size + @column
-      insertion_point += 1 if @line > 0 # account for missing newline
-      @content.insert(insertion_point, text)
-      inserted_lines = text.naive_split("\n")
-
-      if inserted_lines.size > 1
-        # column position does not add up when hitting return
-        @column = inserted_lines.last.size
-        move(inserted_lines.size - 1, 0)
-      else
-        move(inserted_lines.size - 1, inserted_lines.last.size)
-      end
+      insert_into_content cursor_index, text
+      move_according_to_insert(text)
     end
 
     private
@@ -90,6 +80,31 @@ module Ruco
     def reposition_cursor
       @cursor_column = @column - @scrolled_columns
       @cursor_line = @line - @scrolled_lines
+    end
+
+    def insert_into_content(index, text)
+      # expand with newlines when inserting after maximum position
+      if index > @content.size
+        @content << "\n" * (index - @content.size)
+      end
+      @content.insert(index, text)
+    end
+
+    def cursor_index
+      insertion_point = lines[0...@line].join("\n").size + @column
+      insertion_point += 1 if @line > 0 # account for missing newline
+      insertion_point
+    end
+
+    def move_according_to_insert(text)
+      inserted_lines = text.naive_split("\n")
+      if inserted_lines.size > 1
+        # column position does not add up when hitting return
+        @column = inserted_lines.last.size
+        move(inserted_lines.size - 1, 0)
+      else
+        move(inserted_lines.size - 1, inserted_lines.last.size)
+      end
     end
   end
 end

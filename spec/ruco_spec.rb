@@ -182,5 +182,13 @@ describe Ruco do
       editor.cursor_line.should == 2
       editor.cursor_column.should == 0
     end
+
+    it "can add newlines to the moveable end" do
+      write('')
+      editor.move(1,0)
+      editor.insert("\n")
+      editor.cursor_line.should == 2
+      editor.cursor_column.should == 0
+    end
   end
 end
