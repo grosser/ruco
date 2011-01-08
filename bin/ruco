@@ -45,22 +45,29 @@ def init_screen
   end
 end
 
+def display(widget, offset)
+  lines = widget.view.naive_split("\n")
+  Curses.stdscr.maxy.times do |i|
+    line = lines[i] || ''
+    clearer = Curses.stdscr.maxx - line.size
+    clearer = " " * clearer
+    write(i + offset, 0, line + clearer)
+  end
+end
+
 parse_options
 
 require 'ruco'
-editor = Ruco::Editor.new(ARGV[0], :lines => Curses.stdscr.maxy, :columns => Curses.stdscr.maxx)
+editor_offset = 1
+editor = Ruco::Editor.new(ARGV[0], :lines => Curses.stdscr.maxy - editor_offset, :columns => Curses.stdscr.maxx)
+status = Ruco::StatusBar.new(editor, :columns => Curses.stdscr.maxx)
 
 init_screen do
   loop do
-    lines = editor.view.split("\n")
-    Curses.stdscr.maxy.times do |i|
-      line = lines[i] || ''
-      clearer = Curses.stdscr.maxx - line.size
-      clearer = " " * clearer
-      write(i, 0, line + clearer)
-    end
+    display status, 0
+    display editor, editor_offset
 
-    Curses.setpos(editor.cursor_line, editor.cursor_column)
+    Curses.setpos(editor.cursor_line + editor_offset, editor.cursor_column)
 
     key = Curses.getch
 
