@@ -49,7 +49,7 @@ module Ruco
     private
 
     def lines
-      @content.split("\n")
+      @content.naive_split("\n")
     end
 
     def adjust_view

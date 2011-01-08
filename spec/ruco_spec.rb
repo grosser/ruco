@@ -31,6 +31,12 @@ describe Ruco do
       editor.cursor_column.should == 3
     end
 
+    it "can move in empty file" do
+      write("\n\n\n")
+      editor.move(2,0)
+      editor.cursor_line.should == 2
+    end
+
     it "cannot move left/top off screen" do
       editor.move(-1,-1)
       editor.cursor_line.should == 0
@@ -167,6 +173,14 @@ describe Ruco do
       editor.view.should == "abc\nde\nfg\n"
       editor.cursor_column.should == 0
       editor.cursor_line.should == 2
+    end
+
+    it "can add newlines to the end" do
+      write('')
+      editor.insert("\n")
+      editor.insert("\n")
+      editor.cursor_line.should == 2
+      editor.cursor_column.should == 0
     end
   end
 end
