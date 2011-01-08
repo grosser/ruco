@@ -35,7 +35,7 @@ module Ruco
       insertion_point = lines[0...@line].join("\n").size + @column
       insertion_point += 1 if @line > 0 # account for missing newline
       @content.insert(insertion_point, text)
-      inserted_lines = text.split("\n")
+      inserted_lines = text.naive_split("\n")
 
       if inserted_lines.size > 1
         # column position does not add up when hitting return

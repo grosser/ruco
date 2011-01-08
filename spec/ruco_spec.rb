@@ -165,8 +165,8 @@ describe Ruco do
       editor.move(1,2)
       editor.insert("\n")
       editor.view.should == "abc\nde\nfg\n"
-      editor.cursor_column.should == 2
-      editor.cursor_line.should == 0
+      editor.cursor_column.should == 0
+      editor.cursor_line.should == 2
     end
   end
 end
