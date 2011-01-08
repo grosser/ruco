@@ -27,16 +27,18 @@ module Ruco
       @cursor_line = @line - @scrolled_lines
       @cursor_column = @column - @scrolled_columns
 
-#      if @cursor_line >= @options[:lines]
-#        @scrolled_lines += 5
-#        @cursor_line -= 5
-#      end
-
+      # column scrolling
       if @cursor_column >= @options[:columns]
         offset = 5
         @scrolled_columns = @column - @options[:columns] + offset
-        @cursor_column = @column - @scrolled_columns
       end
+
+      if @cursor_column < 0
+        offset = 5
+        @scrolled_columns = [@column - offset, 0].max
+      end
+
+      @cursor_column = @column - @scrolled_columns
     end
   end
 end

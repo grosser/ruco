@@ -67,6 +67,15 @@ describe Ruco do
       editor.view.should == "6789\n\n\n"
       editor.cursor_column.should == 4
     end
+
+    it "can scroll columns backwards" do
+      write('123456789')
+      editor.move(0,5)
+      editor.view.should == "6789\n\n\n"
+
+      editor.move(0,-1)
+      editor.view.should == "12345\n\n\n"
+    end
   end
 
   describe 'viewing' do
