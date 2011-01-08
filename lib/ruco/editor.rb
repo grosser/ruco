@@ -7,7 +7,7 @@ module Ruco
     def initialize(file, options)
       @file = file
       @options = options
-      @content = File.read(@file)
+      @content = (File.exist?(@file) ? File.read(@file) : '')
       @line = 0
       @column = 0
       @cursor_line = 0
@@ -34,6 +34,10 @@ module Ruco
     def insert(text)
       insert_into_content cursor_index, text
       move_according_to_insert(text)
+    end
+
+    def save
+      File.open(@file,'w'){|f| f.write(@content) }
     end
 
     private

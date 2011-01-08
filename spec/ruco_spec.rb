@@ -191,4 +191,24 @@ describe Ruco do
       editor.cursor_column.should == 0
     end
   end
+
+  describe 'save' do
+    before do
+      @file = 'spec/temp.txt'
+    end
+
+    it 'stores the file' do
+      write('xxx')
+      editor.insert('a')
+      editor.save
+      File.read(@file).should == 'axxx'
+    end
+
+    it 'creates the file' do
+      `rm #{@file}`
+      editor.insert('a')
+      editor.save
+      File.read(@file).should == 'a'
+    end
+  end
 end
