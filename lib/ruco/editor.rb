@@ -2,7 +2,7 @@ module Ruco
   class Editor
     SCROLLING_OFFSET = 20
 
-    attr_reader :cursor_line, :cursor_column
+    attr_reader :cursor_line, :cursor_column, :file
 
     def initialize(file, options)
       @file = file
@@ -14,6 +14,7 @@ module Ruco
       @cursor_column = 0
       @scrolled_lines = 0
       @scrolled_columns = 0
+      @modified = false
       @options[:line_scrolling_offset] ||= @options[:lines] / 2
       @options[:column_scrolling_offset] ||= @options[:columns] / 2
     end
@@ -34,6 +35,7 @@ module Ruco
     def insert(text)
       insert_into_content cursor_index, text
       move_according_to_insert(text)
+      @modified = true
     end
 
     def delete(count)
@@ -42,6 +44,7 @@ module Ruco
       else
         backspace(count.abs)
       end
+      @modified = true
     end
 
     def backspace(count)
@@ -53,14 +56,20 @@ module Ruco
 
       @content.slice!(start_index, count)
       set_cursor_to_index start_index
+      @modified = true
     end
 
     def save
       File.open(@file,'w'){|f| f.write(@content) }
+      @modified = false
     end
 
     def cursor
       [cursor_line, cursor_column]
+    end
+
+    def modified?
+      @modified
     end
 
     private

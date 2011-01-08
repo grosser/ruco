@@ -6,7 +6,15 @@ module Ruco
     end
 
     def view
-      "Ruco #{Ruco::VERSION}"
+      "Ruco #{Ruco::VERSION} -- #{@editor.file}#{change_indicator}"
+    end
+
+    def format
+      Curses::A_REVERSE
+    end
+
+    def change_indicator
+      @editor.modified? ? '*' : ' '
     end
   end
 end

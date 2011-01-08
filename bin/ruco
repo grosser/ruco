@@ -45,7 +45,8 @@ def init_screen
   end
 end
 
-def display(widget, offset)
+def display(widget, offset, color)
+  Curses.attrset color
   lines = widget.view.naive_split("\n")
   Curses.stdscr.maxy.times do |i|
     line = lines[i] || ''
@@ -64,8 +65,8 @@ status = Ruco::StatusBar.new(editor, :columns => Curses.stdscr.maxx)
 
 init_screen do
   loop do
-    display status, 0
-    display editor, editor_offset
+    display status, 0, Curses::A_REVERSE
+    display editor, editor_offset, Curses::A_NORMAL
 
     Curses.setpos(editor.cursor_line + editor_offset, editor.cursor_column)
 

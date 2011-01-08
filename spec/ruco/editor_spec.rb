@@ -233,4 +233,31 @@ describe Ruco::Editor do
       editor.cursor.should == [0,1]
     end
   end
+
+  describe :changes? do
+    it "is unchanged by default" do
+      editor.modified?.should == false
+    end
+
+    it "is changed after insert" do
+      editor.insert('x')
+      editor.modified?.should == true
+    end
+
+    it "is changed after delete" do
+      editor.delete(1)
+      editor.modified?.should == true
+    end
+
+    it "is not changed after move" do
+      editor.move(1,1)
+      editor.modified?.should == false
+    end
+
+    it "is unchanged after save" do
+      editor.insert('x')
+      editor.save
+      editor.modified?.should == false
+    end
+  end
 end
