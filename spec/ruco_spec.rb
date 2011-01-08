@@ -21,42 +21,36 @@ describe Ruco do
     end
 
     it "starts at 0,0" do
-      editor.cursor_line.should == 0
-      editor.cursor_column.should == 0
+      editor.cursor.should == [0,0]
     end
 
     it "can move" do
       editor.move(1,2)
-      editor.cursor_line.should == 1
-      editor.cursor_column.should == 2
+      editor.cursor.should == [1,2]
       editor.move(1,1)
-      editor.cursor_line.should == 2
-      editor.cursor_column.should == 3
+      editor.cursor.should == [2,3]
     end
 
     it "can move in empty file" do
       write("\n\n\n")
       editor.move(2,0)
-      editor.cursor_line.should == 2
+      editor.cursor.should == [2,0]
     end
 
     it "cannot move left/top off screen" do
       editor.move(-1,-1)
-      editor.cursor_line.should == 0
-      editor.cursor_column.should == 0
+      editor.cursor.should == [0,0]
     end
 
     it "cannot move right of characters" do
       editor.move(2,6)
-      editor.cursor_line.should == 2
-      editor.cursor_column.should == 4
+      editor.cursor.should == [2,4]
     end
 
     it "gets reset to empty line when moving past lines" do
       write("    ")
       editor.move(6,3)
-      editor.cursor_line.should == 1
-      editor.cursor_column.should == 0
+      editor.cursor.should == [1,0]
     end
 
     describe 'column scrolling' do
@@ -147,15 +141,13 @@ describe Ruco do
       editor.move(0,1)
       editor.insert('ab')
       editor.view.should == "1ab23\n\n\n"
-      editor.cursor_column.should == 3
-      editor.cursor_line.should == 0
+      editor.cursor.should == [0,3]
     end
 
     it "can insert new newlines" do
       editor.insert("ab\nc")
       editor.view.should == "ab\nc\n\n"
-      editor.cursor_column.should == 1
-      editor.cursor_line.should == 1
+      editor.cursor.should == [1,1]
     end
 
     it "jumps to correct column when inserting newline" do
@@ -163,8 +155,7 @@ describe Ruco do
       editor.move(1,2)
       editor.insert("1\n23")
       editor.view.should == "abc\nde1\n23fg\n"
-      editor.cursor_column.should == 2
-      editor.cursor_line.should == 2
+      editor.cursor.should == [2,2]
     end
 
     it "jumps to correct column when inserting 1 newline" do
@@ -172,24 +163,21 @@ describe Ruco do
       editor.move(1,2)
       editor.insert("\n")
       editor.view.should == "abc\nde\nfg\n"
-      editor.cursor_column.should == 0
-      editor.cursor_line.should == 2
+      editor.cursor.should == [2,0]
     end
 
     it "can add newlines to the end" do
       write('')
       editor.insert("\n")
       editor.insert("\n")
-      editor.cursor_line.should == 2
-      editor.cursor_column.should == 0
+      editor.cursor.should == [2,0]
     end
 
     it "can add newlines to the moveable end" do
       write('')
       editor.move(1,0)
       editor.insert("\n")
-      editor.cursor_line.should == 2
-      editor.cursor_column.should == 0
+      editor.cursor.should == [2,0]
     end
   end
 
