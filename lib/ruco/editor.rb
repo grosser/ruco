@@ -33,8 +33,9 @@ module Ruco
 #      end
 
       if @cursor_column >= @options[:columns]
-        @scrolled_columns += 5
-        @cursor_column -= 5
+        offset = 5
+        @scrolled_columns = @column - @options[:columns] + offset
+        @cursor_column = @column - @scrolled_columns
       end
     end
   end

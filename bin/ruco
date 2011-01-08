@@ -26,9 +26,14 @@ editor = Ruco::Editor.new(ARGV[0], :lines => Curses.stdscr.maxy, :columns => Cur
 
 init_screen do
   loop do
-    editor.view.split("\n").each_with_index do |line, index|
-      write(index, 0, line)
+    lines = editor.view.split("\n")
+    Curses.stdscr.maxy.times do |i|
+      line = lines[i] || ''
+      clearer = Curses.stdscr.maxx - line.size
+      clearer = " " * clearer
+      write(i, 0, line + clearer)
     end
+
     Curses.setpos(editor.cursor_line, editor.cursor_column)
 
     case Curses.getch

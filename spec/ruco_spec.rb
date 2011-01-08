@@ -50,9 +50,9 @@ describe Ruco do
     end
 
     it "can scroll columns" do
-      write('123456789')
+      write("123456789\n123")
       editor.move(0,4)
-      editor.view.should == "12345\n\n\n"
+      editor.view.should == "12345\n123\n\n"
       editor.cursor_column.should == 4
 
       editor.move(0,1)
