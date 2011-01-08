@@ -5,16 +5,39 @@
 
 Gem::Specification.new do |s|
   s.name = %q{ruco}
-  s.version = "0.0.0"
+  s.version = "0.0.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Michael Grosser"]
-  s.date = %q{2011-01-03}
+  s.date = %q{2011-01-08}
+  s.default_executable = %q{ruco}
   s.email = %q{michael@grosser.it}
+  s.executables = ["ruco"]
+  s.files = [
+    "Gemfile",
+    "Gemfile.lock",
+    "Rakefile",
+    "Readme.md",
+    "VERSION",
+    "bin/ruco",
+    "lib/ruco.rb",
+    "lib/ruco/core_ext/array.rb",
+    "lib/ruco/core_ext/string.rb",
+    "lib/ruco/editor.rb",
+    "ruco.gemspec",
+    "spec/ruco/core_ext/string_spec.rb",
+    "spec/ruco_spec.rb",
+    "spec/spec_helper.rb"
+  ]
   s.homepage = %q{http://github.com/grosser/ruco}
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.7}
   s.summary = %q{Commandline editor written in ruby}
+  s.test_files = [
+    "spec/ruco/core_ext/string_spec.rb",
+    "spec/ruco_spec.rb",
+    "spec/spec_helper.rb"
+  ]
 
   if s.respond_to? :specification_version then
     current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
