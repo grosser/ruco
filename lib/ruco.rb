@@ -5,4 +5,5 @@ require 'ruco/core_ext/array'
 
 module Ruco
   VERSION = File.read( File.join(File.dirname(__FILE__),'..','VERSION') ).strip
+  TAB_SIZE = 2
 end

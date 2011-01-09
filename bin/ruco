@@ -83,6 +83,7 @@ init_screen do
     when Curses::KEY_HOME then editor.move_to_bol
 
     # modify
+    when 9 then editor.insert(key.chr) # tab
     when 32..126 then editor.insert(key.chr) # printable
     when 10 then editor.insert("\n") # enter
     when 263 then editor.delete(-1) # backspace

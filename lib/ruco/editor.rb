@@ -7,7 +7,7 @@ module Ruco
     def initialize(file, options)
       @file = file
       @options = options
-      @content = (File.exist?(@file) ? File.read(@file) : '')
+      @content = tabs_to_spaces((File.exist?(@file) ? File.read(@file) : ''))
       @line = 0
       @column = 0
       @cursor_line = 0
@@ -57,6 +57,7 @@ module Ruco
     end
 
     def insert(text)
+      text = tabs_to_spaces(text)
       insert_into_content cursor_index, text
       move_according_to_insert(text)
       @modified = true
@@ -176,6 +177,10 @@ module Ruco
       else
         move(inserted_lines.size - 1, inserted_lines.last.size)
       end
+    end
+
+    def tabs_to_spaces(text)
+      text.gsub("\t",' ' * Ruco::TAB_SIZE)
     end
   end
 end

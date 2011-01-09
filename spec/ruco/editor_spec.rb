@@ -11,6 +11,11 @@ describe Ruco::Editor do
     @file = 'spec/temp.txt'
   end
 
+  it "reads tab as spaces" do
+    write("\t\ta")
+    editor.view.should == "    a\n\n\n"
+  end
+
   describe :move do
     before do
       write("    \n    \n    ")
@@ -236,6 +241,12 @@ describe Ruco::Editor do
       editor.move(1,0)
       editor.insert("\n")
       editor.cursor.should == [2,0]
+    end
+
+    it "inserts tab as spaces" do
+      editor.insert("\t")
+      editor.view.should == "  \n\n\n"
+      editor.cursor.should == [0,2]
     end
   end
 

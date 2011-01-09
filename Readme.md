@@ -6,6 +6,7 @@ Finished:
 
  - viewing / scrolling / editing / saving / creating
  - Home/End
+ - basic Tab support (tab == 2 space)
  - change-indicator
  - writeable indicator
  - backspace
@@ -22,7 +23,6 @@ TODO
 =====
  - search
  - smart staying at end of line/column when changing line
- - tab-characters
  - indentation + paste support
  - delete key !?
  - warnings / messages
