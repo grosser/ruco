@@ -5,6 +5,7 @@ Alpha, lets see if this works...
 Finished:
 
  - viewing / scrolling / editing / saving / creating
+ - Home/End
  - change-indicator
  - writeable indicator
  - backspace
@@ -19,6 +20,9 @@ Usage
 
 TODO
 =====
+ - search
+ - smart staying at end of line/column when changing line
+ - tab-characters
  - indentation + paste support
  - delete key !?
  - warnings / messages
