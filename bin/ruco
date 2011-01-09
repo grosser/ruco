@@ -65,7 +65,10 @@ editor_lines = Curses.stdscr.maxy - status_lines - command_lines
 
 editor = Ruco::Editor.new(ARGV[0], :lines => editor_lines, :columns => Curses.stdscr.maxx)
 status = Ruco::StatusBar.new(editor, :columns => Curses.stdscr.maxx)
-command = Ruco::CommandBar.new(editor, :columns => Curses.stdscr.maxx)
+command = Ruco::CommandBar.new(:columns => Curses.stdscr.maxx)
+command.cursor_line = editor_lines
+
+focused = editor
 
 init_screen do
   loop do
@@ -73,28 +76,39 @@ init_screen do
     display editor, status_lines, Curses::A_NORMAL
     display command, status_lines + editor_lines, Curses::A_REVERSE
 
-    Curses.setpos(editor.cursor_line + status_lines, editor.cursor_column)
+    Curses.setpos(focused.cursor_line + status_lines, focused.cursor_column)
 
     key = Curses.getch
 
     case key
 
     # move
-    when Curses::Key::UP then editor.move(-1,0)
-    when Curses::Key::DOWN then editor.move(1,0)
-    when Curses::Key::RIGHT then editor.move(0,1)
-    when Curses::Key::LEFT then editor.move(0,-1)
-    when Curses::KEY_END then editor.move_to_eol
-    when Curses::KEY_HOME then editor.move_to_bol
+    when Curses::Key::UP then focused.move(-1,0)
+    when Curses::Key::DOWN then focused.move(1,0)
+    when Curses::Key::RIGHT then focused.move(0,1)
+    when Curses::Key::LEFT then focused.move(0,-1)
+    when Curses::KEY_END then focused.move_to_eol
+    when Curses::KEY_HOME then focused.move_to_bol
 
     # modify
-    when 9 then editor.insert(key.chr) # tab
-    when 32..126 then editor.insert(key.chr) # printable
-    when 10 then editor.insert("\n") # enter
-    when 263 then editor.delete(-1) # backspace
-    when Curses::KEY_DC then editor.delete(1) # delete
+    when 9 then focused.insert(key.chr) # tab
+    when 32..126 then focused.insert(key.chr) # printable
+    when 10 then # enter
+      result = focused.insert("\n")
+      if result.is_a?(Ruco::Command)
+        result.send_to(editor)
+        focused = editor
+      end
+    when 263 then focused.delete(-1) # backspace
+    when Curses::KEY_DC then focused.delete(1) # delete
 
     # misc
+    when ?\C-f then
+      focused = command
+      command.find
+    when 27 then
+      focused.reset
+      focused = editor # escape from focused
     when ?\C-s then editor.save
     when ?\C-w, ?\C-q then break # quit
     end

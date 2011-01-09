@@ -1,5 +1,7 @@
 module Ruco
   class Editor
+    include Focusable
+
     SCROLLING_OFFSET = 20
 
     attr_reader :cursor_line, :cursor_column, :file
@@ -31,9 +33,18 @@ module Ruco
       adjust_view
     end
 
-    def move_to_column(column)
+    def move_to(line, column)
+      @line = line
       @column = column
       adjust_view
+    end
+
+    def move_to_line(line)
+      move_to(line, @column)
+    end
+
+    def move_to_column(column)
+      move_to(@line, column)
     end
 
     def move_to_eol
@@ -53,6 +64,12 @@ module Ruco
         move_to_column before_first_word
       else
         move_to_column 0
+      end
+    end
+
+    def find(text, options)
+      if index = @content.nth_index(text, options[:offset])
+        move_to *cursor_for_index(index)
       end
     end
 
@@ -80,7 +97,7 @@ module Ruco
       end
 
       @content.slice!(start_index, count)
-      set_cursor_to_index start_index
+      move_to *cursor_for_index(start_index)
       @modified = true
     end
 
@@ -161,11 +178,9 @@ module Ruco
       insertion_point
     end
 
-    def set_cursor_to_index(index)
+    def cursor_for_index(index)
       jump = @content.slice(0, index).to_s.naive_split("\n")
-      @line = jump.size - 1
-      @column = jump.last.size
-      adjust_view
+      [jump.size - 1, jump.last.size]
     end
 
     def move_according_to_insert(text)

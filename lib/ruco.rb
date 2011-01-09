@@ -1,3 +1,6 @@
+require 'ruco/focusable'
+require 'ruco/command'
+
 require 'ruco/editor'
 require 'ruco/status_bar'
 require 'ruco/command_bar'

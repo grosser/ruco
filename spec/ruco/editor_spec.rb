@@ -169,6 +169,27 @@ describe Ruco::Editor do
     end
   end
 
+  describe :find do
+    it "moves to first occurrence" do
+      write("\n ab\n")
+      editor.find('ab', :offset => 0)
+      editor.cursor.should == [1,1]
+    end
+
+    it "moves to n-th occurrence" do
+      write("\n ab\n ab")
+      editor.find('ab', :offset => 1)
+      editor.cursor.should == [2,1]
+    end
+
+    it "stays in place when nothing was found" do
+      write("\n  \nba")
+      editor.move(1,1)
+      editor.find('ab', :offset => 1)
+      editor.cursor.should == [1,1]
+    end
+  end
+
   describe :view do
     before do
       write('')
