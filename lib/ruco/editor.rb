@@ -47,6 +47,15 @@ module Ruco
       end
     end
 
+    def move_to_bol
+      before_first_word = current_line.index(/[^\s]/) || 0
+      if @column == 0 or @column > before_first_word
+        move_to_column before_first_word
+      else
+        move_to_column 0
+      end
+    end
+
     def insert(text)
       insert_into_content cursor_index, text
       move_according_to_insert(text)

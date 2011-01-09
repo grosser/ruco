@@ -131,6 +131,39 @@ describe Ruco::Editor do
     end
   end
 
+  describe :move_to_bol do
+    before do
+      write("\n  aa \n  ")
+    end
+
+    it 'stays at start when line is empty' do
+      editor.move_to_bol
+      editor.cursor.should == [0,0]
+    end
+
+    it 'moves before first work if at start of line' do
+      editor.move(1,0)
+      editor.move_to_bol
+      editor.cursor.should == [1,2]
+    end
+
+    it 'moves to start of line if before first word' do
+      editor.move(1,1)
+      editor.move_to_bol
+      editor.cursor.should == [1,0]
+
+      editor.move(0,2)
+      editor.move_to_bol
+      editor.cursor.should == [1,0]
+    end
+
+    it 'moves before first word if inside line' do
+      editor.move(1,5)
+      editor.move_to_bol
+      editor.cursor.should == [1,2]
+    end
+  end
+
   describe :view do
     before do
       write('')
