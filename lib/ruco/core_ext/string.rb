@@ -11,4 +11,13 @@ class String
     found << string
     found
   end
+
+  def nth_index(text, n)
+    offset = -1
+    (n+1).times do
+      offset += 1
+      offset = index(text, offset) or return
+    end
+    offset
+  end
 end

@@ -14,4 +14,19 @@ describe String do
       "".naive_split('a').should == ['']
     end
   end
+
+  describe :nth_index do
+    it "finds the first by default" do
+      "a a a".nth_index('a',0).should == 0
+    end
+
+    it "finds the n-th index" do
+      "a a a".nth_index('a',2).should == 4
+    end
+
+    it "is nil when not found" do
+      "b b b".nth_index('a',0).should == nil
+      "b b b".nth_index('a',1).should == nil
+    end
+  end
 end
