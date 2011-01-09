@@ -165,7 +165,7 @@ module Ruco
       jump = @content.slice(0, index).to_s.naive_split("\n")
       @line = jump.size - 1
       @column = jump.last.size
-      reposition_cursor
+      adjust_view
     end
 
     def move_according_to_insert(text)
