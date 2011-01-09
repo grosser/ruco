@@ -10,6 +10,7 @@ Finished:
  - change-indicator
  - writeable indicator
  - backspace / delete
+ - find
 
 Install
 =======
@@ -21,7 +22,7 @@ Usage
 
 TODO
 =====
- - search
+ - cursor move + delete/backspace inside find field
  - smart staying at end of line/column when changing line
  - indentation + paste support
  - warnings / messages
