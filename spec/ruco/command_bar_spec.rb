@@ -37,15 +37,13 @@ describe Ruco::CommandBar do
       bar.view.should include("^W Exit ") # default view
       bar.find
       bar.view.should == "Find: " # term removed
-      result = bar.insert("abc\n")
-      result.should == Ruco::Command.new(:find, 'abc', :offset => 0) # offset reset
     end
 
     it "can execute a search" do
       bar.find
       bar.insert('abc')
       result = bar.insert("d\n")
-      result.should == Ruco::Command.new(:find, 'abcd', :offset => 0)
+      result.should == Ruco::Command.new(:find, 'abcd')
     end
 
     it "finds with offset when same search is entered again" do
@@ -53,7 +51,7 @@ describe Ruco::CommandBar do
       bar.insert('abcd')
       bar.insert("\n")
       result = bar.insert("\n")
-      result.should == Ruco::Command.new(:find, 'abcd', :offset => 1)
+      result.should == Ruco::Command.new(:find, 'abcd')
     end
   end
 end

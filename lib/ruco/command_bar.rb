@@ -34,18 +34,13 @@ module Ruco
       @find_term += text
       if @find_term.include?("\n")
         @find_term.gsub!("\n",'')
-
-        @find_offset = find_offset(@find_term)
-        @find_last = @find_term
-        Command.new(:find, @find_term, :offset => @find_offset)
+        Command.new(:find, @find_term)
       end
     end
 
     def reset
       @find_mode = false
-      @find_offset = 0
       @find_term = ''
-      @find_last = nil
     end
 
     def cursor_column
@@ -53,14 +48,6 @@ module Ruco
     end
 
     private
-
-    def find_offset(term)
-      if term == @find_last
-        @find_offset + 1
-      else
-        0
-      end
-    end
 
     def available_shortcuts
       used_columns = 0

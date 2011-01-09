@@ -67,10 +67,9 @@ module Ruco
       end
     end
 
-    def find(text, options)
-      if index = @content.nth_index(text, options[:offset])
-        move_to *cursor_for_index(index)
-      end
+    def find(text)
+      index = @content.index(text, cursor_index+1) || cursor_index
+      move_to *cursor_for_index(index)
     end
 
     def insert(text)
@@ -173,9 +172,9 @@ module Ruco
     end
 
     def cursor_index
-      insertion_point = lines[0...@line].join("\n").size + @column
-      insertion_point += 1 if @line > 0 # account for missing newline
-      insertion_point
+      index = lines[0...@line].join("\n").size + @column
+      index += 1 if @line > 0 # account for missing newline
+      index
     end
 
     def cursor_for_index(index)
