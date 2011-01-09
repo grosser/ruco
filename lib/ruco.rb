@@ -1,5 +1,6 @@
 require 'ruco/editor'
 require 'ruco/status_bar'
+require 'ruco/command_bar'
 require 'ruco/core_ext/string'
 require 'ruco/core_ext/array'
 
