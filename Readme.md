@@ -9,7 +9,7 @@ Finished:
  - basic Tab support (tab == 2 space)
  - change-indicator
  - writeable indicator
- - backspace
+ - backspace / delete
 
 Install
 =======
@@ -24,7 +24,6 @@ TODO
  - search
  - smart staying at end of line/column when changing line
  - indentation + paste support
- - delete key !?
  - warnings / messages
  - syntax highlighting
 

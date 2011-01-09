@@ -87,6 +87,7 @@ init_screen do
     when 32..126 then editor.insert(key.chr) # printable
     when 10 then editor.insert("\n") # enter
     when 263 then editor.delete(-1) # backspace
+    when Curses::KEY_DC then editor.delete(1) # delete
 
     # misc
     when ?\C-s then editor.save
