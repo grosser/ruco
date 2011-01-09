@@ -11,7 +11,7 @@ describe Ruco::Editor do
     @file = 'spec/temp.txt'
   end
 
-  describe 'moving' do
+  describe :move do
     before do
       write("    \n    \n    ")
     end
@@ -102,7 +102,36 @@ describe Ruco::Editor do
     end
   end
 
-  describe 'viewing' do
+  describe :move_to_eol do
+    before do
+      write("\n aa \n  ")
+    end
+
+    it 'stays at start when line is empty' do
+      editor.move_to_eol
+      editor.cursor.should == [0,0]
+    end
+
+    it 'moves after last word if cursor was before it' do
+      editor.move(1,1)
+      editor.move_to_eol
+      editor.cursor.should == [1,3]
+    end
+
+    it 'moves after last whitespace if cursor was after last word' do
+      editor.move(1,3)
+      editor.move_to_eol
+      editor.cursor.should == [1,4]
+    end
+
+    it 'moves after last work if cursor was after last whitespace' do
+      editor.move(1,4)
+      editor.move_to_eol
+      editor.cursor.should == [1,3]
+    end
+  end
+
+  describe :view do
     before do
       write('')
     end
@@ -127,7 +156,7 @@ describe Ruco::Editor do
     end
   end
 
-  describe 'inserting' do
+  describe :insert do
     before do
       write('')
     end
@@ -177,7 +206,7 @@ describe Ruco::Editor do
     end
   end
 
-  describe 'save' do
+  describe :save do
     it 'stores the file' do
       write('xxx')
       editor.insert('a')
@@ -193,7 +222,7 @@ describe Ruco::Editor do
     end
   end
 
-  describe 'delete' do
+  describe :delete do
     it 'removes a char' do
       write('123')
       editor.delete(1)

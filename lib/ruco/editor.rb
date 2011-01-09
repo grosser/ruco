@@ -28,8 +28,23 @@ module Ruco
     def move(line, column)
       @line =    [[@line   + line,    0].max, lines.size].min
       @column =  [[@column + column, 0].max, (lines[@line]||'').size].min
-
       adjust_view
+    end
+
+    def move_to_column(column)
+      @column = column
+      adjust_view
+    end
+
+    def move_to_eol
+      after_last_word = current_line.index(/\s*$/)
+      after_last_whitespace = current_line.size
+
+      if @column == after_last_whitespace or @column < after_last_word
+        move_to_column after_last_word
+      else
+        move_to_column after_last_whitespace
+      end
     end
 
     def insert(text)
@@ -124,6 +139,10 @@ module Ruco
         @content << "\n" * (index - @content.size)
       end
       @content.insert(index, text)
+    end
+
+    def current_line
+      lines[@line] || ''
     end
 
     def cursor_index

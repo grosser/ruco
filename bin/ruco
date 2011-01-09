@@ -73,13 +73,21 @@ init_screen do
     key = Curses.getch
 
     case key
+
+    # move
     when Curses::Key::UP then editor.move(-1,0)
     when Curses::Key::DOWN then editor.move(1,0)
     when Curses::Key::RIGHT then editor.move(0,1)
     when Curses::Key::LEFT then editor.move(0,-1)
+    when Curses::KEY_END then editor.move_to_eol
+    when Curses::KEY_HOME then editor.move_to_bol
+
+    # modify
     when 32..126 then editor.insert(key.chr) # printable
     when 10 then editor.insert("\n") # enter
     when 263 then editor.delete(-1) # backspace
+
+    # misc
     when ?\C-s then editor.save
     when ?\C-w, ?\C-q then break # quit
     end
