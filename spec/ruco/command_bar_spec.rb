@@ -62,4 +62,36 @@ describe Ruco::CommandBar do
       result.should == Ruco::Command.new(:find, 'abcd')
     end
   end
+
+  describe :move_to_line do
+    it "displays a form" do
+      bar.move_to_line
+      bar.view.should == "Go to Line: "
+    end
+
+    it "gets output" do
+      bar.move_to_line
+      bar.insert('123')
+      result = bar.insert("\n")
+      result.should == Ruco::Command.new(:move_to_line, '123')
+    end
+
+    it "gets reset" do
+      bar.move_to_line
+      bar.insert('123')
+      bar.move_to_line
+      bar.view.should == "Go to Line: "
+    end
+
+    it "does not reset search when resetting" do
+      bar.find
+      bar.insert('abc')
+      bar.move_to_line
+      bar.reset
+
+      bar.view.should include("^W Exit ") # default view
+      bar.find
+      bar.view.should == "Find: abc"
+    end
+  end
 end

@@ -106,6 +106,9 @@ init_screen do
     when ?\C-f then
       focused = command
       command.find
+    when ?\C-g then
+      focused = command
+      command.go_to_line
     when 27 then
       focused.reset
       focused = editor # escape from focused

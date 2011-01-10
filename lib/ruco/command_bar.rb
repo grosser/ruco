@@ -2,47 +2,49 @@ module Ruco
   class CommandBar
     include Focusable
 
-    attr_accessor :cursor_line, :find_form
-    delegate :move, :delete, :to => :find_form
+    attr_accessor :cursor_line, :form
+    delegate :move, :delete, :insert, :to => :form
 
     SHORTCUTS = [
       '^W Exit',
       '^S Save',
       '^F Find',
-      '^D Delete line'
+      '^D Delete line',
+      '^G Go to line'
     ]
 
     SEARCH_PREFIX = "Find: "
 
     def initialize(options)
       @options = options
+      @forms = {}
       reset
     end
 
     def view
-      if @find_form
-        @find_form.view
+      if @form
+        @form.view
       else
         available_shortcuts
       end
     end
 
     def find
-      @find_form ||= Form.new('Find: ', :columns => @options[:columns])
+      @form = @forms[:find] ||= Form.new('Find: ', :columns => @options[:columns], :command => :find)
     end
 
-    def insert(text)
-      result = @find_form.insert(text)
-      Command.new(:find, result) if result
+    def move_to_line
+      @form = Form.new('Go to Line: ', :columns => @options[:columns], :command => :move_to_line)
     end
 
     def reset
-      @find_form = nil
+      @forms[:find] = nil if @form == @forms[:find]
+      @form = nil
     end
 
     def cursor_column
-      if @find_form
-        @find_form.cursor[1]
+      if @form
+        @form.cursor[1]
       else
         0
       end
