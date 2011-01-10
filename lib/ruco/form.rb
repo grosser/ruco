@@ -14,7 +14,11 @@ module Ruco
 
     def insert(text)
       @text_field.insert(text.gsub("\n",''))
-      Command.new(@options[:command], @text_field.value) if text.include?("\n")
+      if text.include?("\n")
+        result = @text_field.value
+        result = result.to_i if @options[:type] == :integer
+        Command.new(@options[:command], result)
+      end
     end
 
     def cursor

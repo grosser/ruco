@@ -17,7 +17,7 @@ module Ruco
 
     def initialize(options)
       @options = options
-      @forms = {}
+      @forms_cache = {}
       reset
     end
 
@@ -30,15 +30,15 @@ module Ruco
     end
 
     def find
-      @form = @forms[:find] ||= Form.new('Find: ', :columns => @options[:columns], :command => :find)
+      @form = @forms_cache[:find] ||= Form.new('Find: ', :columns => @options[:columns], :command => :find)
     end
 
     def move_to_line
-      @form = Form.new('Go to Line: ', :columns => @options[:columns], :command => :move_to_line)
+      @form = Form.new('Go to Line: ', :columns => @options[:columns], :command => :move_to_line, :type => :integer)
     end
 
     def reset
-      @forms[:find] = nil if @form == @forms[:find]
+      @forms_cache[:find] = nil if @form == @forms_cache[:find]
       @form = nil
     end
 
