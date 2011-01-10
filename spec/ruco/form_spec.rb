@@ -29,6 +29,19 @@ describe Ruco::Form do
       form.move(0, -1)
       form.cursor.should == [0,7]
     end
+
+    it "cannot move out of left side" do
+      form.move(0, -3)
+      form.cursor.should == [0,5]
+    end
+
+    it "cannot move out of right side" do
+      form.move(0, 4)
+      form.cursor.should == [0,5]
+      form.insert('abc')
+      form.move(0, 4)
+      form.cursor.should == [0,8]
+    end
   end
 
   describe :view do

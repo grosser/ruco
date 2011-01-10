@@ -2,7 +2,8 @@ module Ruco
   class CommandBar
     include Focusable
 
-    attr_accessor :cursor_line
+    attr_accessor :cursor_line, :find_form
+    delegate :move, :to => :find_form
 
     SHORTCUTS = [
       '^W Exit',

@@ -20,7 +20,7 @@ module Ruco
     end
 
     def move(line, column)
-      @column += column
+      @column = [[@column + column, 0].max, @content.size].min
     end
 
     def cursor
