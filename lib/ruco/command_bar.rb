@@ -19,32 +19,32 @@ module Ruco
     end
 
     def view
-      if @find_mode
-        SEARCH_PREFIX + @find_term
+      if @find_form
+        @find_form.view
       else
         available_shortcuts
       end
     end
 
     def find
-      @find_mode = true
+      @find_form = Form.new('Find: ', :columns => @options[:columns])
     end
 
     def insert(text)
-      @find_term += text
-      if @find_term.include?("\n")
-        @find_term.gsub!("\n",'')
-        Command.new(:find, @find_term)
-      end
+      result = @find_form.insert(text)
+      Command.new(:find, result) if result
     end
 
     def reset
-      @find_mode = false
-      @find_term = ''
+      @find_form = nil
     end
 
     def cursor_column
-      view.size
+      if @find_form
+        @find_form.cursor[1]
+      else
+        0
+      end
     end
 
     private
