@@ -48,10 +48,10 @@ describe Ruco::Editor do
       editor.cursor.should == [2,4]
     end
 
-    it "gets reset to empty line when moving past lines" do
+    it "stays in last line when moving past lines" do
       write("    ")
       editor.move(6,3)
-      editor.cursor.should == [1,0]
+      editor.cursor.should == [0,3]
     end
 
     describe 'column scrolling' do
@@ -101,9 +101,24 @@ describe Ruco::Editor do
 
       it "can scroll till end of file" do
         editor.move(15,0)
-        editor.view.should == "\n\n\n"
+        editor.view.should == "9\n\n\n"
         editor.cursor_line.should == 0
       end
+    end
+  end
+
+  describe :move_to do
+    it "cannot move outside of text (bottom/right)" do
+      write("123\n456")
+      editor.move_to(10,10)
+      editor.cursor.should == [1,3]
+    end
+
+    it "cannot move outside of text (top/left)" do
+      write("123\n456")
+      editor.move(1,1)
+      editor.move_to(-10,-10)
+      editor.cursor.should == [0,0]
     end
   end
 
@@ -260,8 +275,9 @@ describe Ruco::Editor do
     end
 
     it "can add newlines to the moveable end" do
-      write('')
-      editor.move(1,0)
+      write('abc')
+      editor.move(0,3)
+      editor.insert("\n")
       editor.insert("\n")
       editor.cursor.should == [2,0]
     end

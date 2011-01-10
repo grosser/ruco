@@ -28,8 +28,8 @@ module Ruco
     end
 
     def move(line, column)
-      @line =    [[@line   + line,    0].max, lines.size].min
-      @column =  [[@column + column, 0].max, (lines[@line]||'').size].min
+      @line += line
+      @column += column
       adjust_view
     end
 
@@ -120,6 +120,8 @@ module Ruco
     end
 
     def adjust_view
+      @line =    [[@line,   0].max, lines.size - 1].min
+      @column =  [[@column, 0].max, (lines[@line]||'').size].min
       reposition_cursor
       scroll_column_into_view
       scroll_line_into_view
