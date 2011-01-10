@@ -27,7 +27,7 @@ module Ruco
     end
 
     def find
-      @find_form = Form.new('Find: ', :columns => @options[:columns])
+      @find_form ||= Form.new('Find: ', :columns => @options[:columns])
     end
 
     def insert(text)

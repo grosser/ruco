@@ -28,6 +28,14 @@ describe Ruco::CommandBar do
       bar.cursor_column.should == 9
     end
 
+    it "keeps entered stuff" do
+      bar.find
+      bar.insert('abc')
+      bar.find
+      bar.view.should == "Find: abc"
+      bar.cursor_column.should == 9
+    end
+
     it "can reset the search" do
       bar.find
       bar.insert('abc')
