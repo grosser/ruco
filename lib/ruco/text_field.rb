@@ -11,6 +11,16 @@ module Ruco
       move(0, text.size)
     end
 
+    def delete(count)
+      if count > 0
+        @content.slice!(@column, count)
+      else
+        delete_start = [@column - count.abs, 0].max
+        @content[delete_start...@column] = ''
+        @column = delete_start
+      end
+    end
+
     def view
       @content
     end

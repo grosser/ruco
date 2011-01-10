@@ -3,7 +3,7 @@ module Ruco
     include Focusable
 
     attr_accessor :cursor_line, :find_form
-    delegate :move, :to => :find_form
+    delegate :move, :delete, :to => :find_form
 
     SHORTCUTS = [
       '^W Exit',

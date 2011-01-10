@@ -44,6 +44,29 @@ describe Ruco::Form do
     end
   end
 
+  describe :delete do
+    it "removes characters forward" do
+      form.insert('abc')
+      form.move(0, -2)
+      form.delete(1)
+      form.view.should == 'Test ac' 
+    end
+
+    it "removes characters backward" do
+      form.insert('abc')
+      form.move(0, -1)
+      form.delete(-1)
+      form.view.should == 'Test ac'
+    end
+
+    it "moves the cursor backward" do
+      form.insert('abc')
+      form.move(0, -1)
+      form.delete(-1)
+      form.cursor.should == [0,6]
+    end
+  end
+
   describe :view do
     it "can be viewed" do
       form.view.should == "Test "
