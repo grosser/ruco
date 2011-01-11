@@ -1,15 +1,16 @@
 require File.expand_path('spec/spec_helper')
 
 describe Ruco::CommandBar do
+  let(:default_view){ "^W Exit    ^S Save    ^F Find" }
   let(:bar){ Ruco::CommandBar.new(:columns => 30) }
 
   it "shows shortcuts by default" do
-    bar.view.should == "^W Exit    ^S Save    ^F Find"
+    bar.view.should == default_view
   end
 
   it "shows less shortcuts when space is low" do
     bar = Ruco::CommandBar.new(:columns => 29)
-    bar.view.should == "^W Exit    ^S Save    ^F Find"
+    bar.view.should == default_view
     bar = Ruco::CommandBar.new(:columns => 28)
     bar.view.should == "^W Exit    ^S Save"
   end
@@ -42,7 +43,7 @@ describe Ruco::CommandBar do
       bar.insert("\n")
       bar.reset
 
-      bar.view.should include("^W Exit ") # default view
+      bar.view.should == default_view
       bar.find
       bar.view.should == "Find: " # term removed
     end
@@ -76,11 +77,17 @@ describe Ruco::CommandBar do
       result.should == Ruco::Command.new(:move, :to_line, 123)
     end
 
-    it "gets reset" do
+    it "gets reset when starting a new go to line" do
       bar.move_to_line
       bar.insert('123')
       bar.move_to_line
       bar.view.should == "Go to Line: "
+    end
+
+    it "gets reset when submitting" do
+      bar.move_to_line
+      bar.insert("123\n")
+      bar.view.should == default_view
     end
 
     it "does not reset search when resetting" do
@@ -89,7 +96,7 @@ describe Ruco::CommandBar do
       bar.move_to_line
       bar.reset
 
-      bar.view.should include("^W Exit ") # default view
+      bar.view.should == default_view
       bar.find
       bar.view.should == "Find: abc"
     end

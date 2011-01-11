@@ -34,6 +34,7 @@ module Ruco
 
     def move_to_line
       @form = Form.new('Go to Line: ', :columns => @options[:columns], :type => :integer) do |value|
+        reset
         Command.new(:move, :to_line, value.to_i)
       end
     end
