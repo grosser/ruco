@@ -23,7 +23,7 @@ module Ruco
     end
 
     def cursor
-      [0, @label.size + @text_field.cursor[1]]
+      Cursor.new 0, @label.size + @text_field.cursor.column
     end
 
     def reset

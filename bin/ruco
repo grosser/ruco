@@ -76,7 +76,7 @@ init_screen do
     display editor, status_lines, Curses::A_NORMAL
     display command, status_lines + editor_lines, Curses::A_REVERSE
 
-    Curses.setpos(focused.cursor_line + status_lines, focused.cursor_column)
+    Curses.setpos(focused.cursor.line + status_lines, focused.cursor.column)
 
     key = Curses.getch
 

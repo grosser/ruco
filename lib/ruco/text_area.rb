@@ -1,6 +1,6 @@
 module Ruco
   class TextArea
-    attr_reader :cursor_line, :cursor_column, :content
+    attr_reader :content
 
     def initialize(content, options)
       @content = tabs_to_spaces(content)
@@ -53,7 +53,7 @@ module Ruco
     end
 
     def cursor
-      [cursor_line, cursor_column]
+      Cursor.new @cursor_line, @cursor_column
     end
 
     def cursor_index

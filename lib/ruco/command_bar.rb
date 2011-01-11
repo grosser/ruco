@@ -11,8 +11,6 @@ module Ruco
       '^G Go to line'
     ]
 
-    SEARCH_PREFIX = "Find: "
-
     def initialize(options)
       @options = options
       @forms_cache = {}
@@ -45,11 +43,11 @@ module Ruco
       @form = nil
     end
 
-    def cursor_column
+    def cursor
       if @form
-        @form.cursor[1]
+        Cursor.new cursor_line, @form.cursor.column
       else
-        0
+        Cursor.new cursor_line, 0
       end
     end
 

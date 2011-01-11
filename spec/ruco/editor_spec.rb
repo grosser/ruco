@@ -59,11 +59,11 @@ describe Ruco::Editor do
         write("123456789\n123")
         editor.move(:relative, 0,4)
         editor.view.should == "12345\n123\n\n"
-        editor.cursor_column.should == 4
+        editor.cursor.column.should == 4
 
         editor.move(:relative, 0,1)
         editor.view.should == "6789\n\n\n"
-        editor.cursor_column.should == 0
+        editor.cursor.column.should == 0
       end
 
       it "cannot scroll past the screen" do
@@ -71,7 +71,7 @@ describe Ruco::Editor do
         editor.move(:relative, 0,4)
         6.times{ editor.move(:relative, 0,1) }
         editor.view.should == "6789\n\n\n"
-        editor.cursor_column.should == 4
+        editor.cursor.column.should == 4
       end
 
       it "can scroll columns backwards" do
@@ -81,7 +81,7 @@ describe Ruco::Editor do
 
         editor.move(:relative, 0,-1)
         editor.view.should == "12345\n\n\n"
-        editor.cursor_column.should == 4
+        editor.cursor.column.should == 4
       end
     end
 
@@ -96,13 +96,13 @@ describe Ruco::Editor do
 
         editor.move(:relative, 1,0)
         editor.view.should == "4\n5\n6\n"
-        editor.cursor_line.should == 0
+        editor.cursor.line.should == 0
       end
 
       it "can scroll till end of file" do
         editor.move(:relative, 15,0)
         editor.view.should == "9\n\n\n"
-        editor.cursor_line.should == 0
+        editor.cursor.line.should == 0
       end
     end
   end

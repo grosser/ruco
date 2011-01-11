@@ -18,14 +18,14 @@ describe Ruco::CommandBar do
     it "sets command bar into search mode" do
       bar.find
       bar.view.should == "Find: "
-      bar.cursor_column.should == 6
+      bar.cursor.column.should == 6
     end
 
     it "can enter stuff" do
       bar.find
       bar.insert('abc')
       bar.view.should == "Find: abc"
-      bar.cursor_column.should == 9
+      bar.cursor.column.should == 9
     end
 
     it "keeps entered stuff" do
@@ -33,7 +33,7 @@ describe Ruco::CommandBar do
       bar.insert('abc')
       bar.find
       bar.view.should == "Find: abc"
-      bar.cursor_column.should == 9
+      bar.cursor.column.should == 9
     end
 
     it "can reset the search" do
