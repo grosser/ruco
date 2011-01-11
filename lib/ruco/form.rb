@@ -1,6 +1,6 @@
 module Ruco
   class Form
-    delegate :move, :delete, :to => :text_field
+    delegate :move, :move_to, :move_to_eol, :move_to_bol, :delete, :to => :text_field
 
     def initialize(label, options)
       @options = options

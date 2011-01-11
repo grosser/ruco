@@ -1,9 +1,7 @@
 module Ruco
   class CommandBar
-    include Focusable
-
     attr_accessor :cursor_line, :form
-    delegate :move, :delete, :insert, :to => :form
+    delegate :move, :move_to, :move_to_eol, :move_to_bol, :delete, :insert, :to => :form
 
     SHORTCUTS = [
       '^W Exit',

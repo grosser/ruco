@@ -2,7 +2,6 @@ require 'ruco/core_ext/object'
 require 'ruco/core_ext/string'
 require 'ruco/core_ext/array'
 
-require 'ruco/focusable'
 require 'ruco/command'
 
 require 'ruco/editor'
