@@ -11,6 +11,7 @@ Finished:
  - writeable indicator
  - backspace / delete
  - find / go to line
+ - delete line
 
 Install
 =======
@@ -22,8 +23,6 @@ Usage
 
 TODO
 =====
- - delete line
- - scrolling inside text field
  - smart staying at end of line/column when changing line
  - indentation + paste support
  - warnings / messages
