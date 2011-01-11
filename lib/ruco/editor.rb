@@ -28,6 +28,18 @@ module Ruco
       @modified = true
     end
 
+    def delete_line
+      old_cursor = cursor
+      move :to, cursor.line, 0
+      delete text_area.line_length
+      if cursor == [0,0]
+        delete(1)
+      else
+        delete(-1)
+      end
+      move :to, *old_cursor
+    end
+
     def modified?
       @modified
     end

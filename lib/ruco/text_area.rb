@@ -67,6 +67,10 @@ module Ruco
       [jump.size - 1, jump.last.size]
     end
 
+    def line_length
+      lines[@line].size
+    end
+
     private
 
     def move_to_eol

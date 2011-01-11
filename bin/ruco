@@ -103,6 +103,8 @@ init_screen do
     when Curses::KEY_DC then focused.delete(1) # delete
 
     # misc
+    when ?\C-d then
+      editor.delete_line
     when ?\C-f then
       focused = command
       command.find

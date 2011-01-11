@@ -372,4 +372,52 @@ describe Ruco::Editor do
       editor.cursor.should == [2,1]
     end
   end
+
+  describe :delete_line do
+    before do
+      write("1\nlonger_than_columns\n56789")
+    end
+
+    it "removes the current line from first char" do
+      editor.move(:to, 1, 0)
+      editor.delete_line
+      editor.view.should == "1\n56789\n\n"
+      editor.cursor.should == [1, 0]
+    end
+
+    it "removes the current line from last char" do
+      editor.move(:to, 1, 3)
+      editor.delete_line
+      editor.view.should == "1\n56789\n\n"
+      editor.cursor.should == [1, 3]
+    end
+
+    it "can remove the first line" do
+      editor.delete_line
+      editor.view.should == "longe\n56789\n\n"
+      editor.cursor.should == [0, 0]
+    end
+
+    it "can remove the last line" do
+      write("aaa")
+      editor.delete_line
+      editor.view.should == "\n\n\n"
+      editor.cursor.should == [0, 0]
+    end
+
+    it "can remove the last line with lines remaining" do
+      write("aaa\nbbb")
+      editor.move(:to, 1,1)
+      editor.delete_line
+      editor.view.should == "aaa\n\n\n"
+      editor.cursor.should == [0, 1]
+    end
+
+    it "jumps to end of next lines end when put of space" do
+      write("1\n234\n5")
+      editor.move(:to, 1, 3)
+      editor.delete_line
+      editor.cursor.should == [1, 1]
+    end
+  end
 end
