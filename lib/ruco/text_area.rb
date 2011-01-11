@@ -21,44 +21,21 @@ module Ruco
       end * "\n" + "\n"
     end
 
-    def move(line, column)
-      @line += line
-      @column += column
-      adjust_view
-    end
-
-    def move_to(line, column)
-      @line = line
-      @column = column
-      adjust_view
-    end
-
-    def move_to_line(line)
-      move_to(line, @column)
-    end
-
-    def move_to_column(column)
-      move_to(@line, column)
-    end
-
-    def move_to_eol
-      after_last_word = current_line.index(/\s*$/)
-      after_last_whitespace = current_line.size
-
-      if @column == after_last_whitespace or @column < after_last_word
-        move_to_column after_last_word
+    def move(where, *args)
+      case where
+      when :relative then
+        @line += args.first
+        @column += args.last
+      when :to then
+        @line, @column = args
+      when :to_bol then move_to_bol(*args)
+      when :to_eol then move_to_eol(*args)
+      when :to_line then @line = args.first
+      when :to_column then @column = args.first
       else
-        move_to_column after_last_whitespace
+        raise "Unknown move type #{where} with #{args.inspect}"
       end
-    end
-
-    def move_to_bol
-      before_first_word = current_line.index(/[^\s]/) || 0
-      if @column == 0 or @column > before_first_word
-        move_to_column before_first_word
-      else
-        move_to_column 0
-      end
+      adjust_view
     end
 
     def insert(text)
@@ -92,6 +69,27 @@ module Ruco
 
     private
 
+    def move_to_eol
+      after_last_word = current_line.index(/\s*$/)
+      after_last_whitespace = current_line.size
+
+      if @column == after_last_whitespace or @column < after_last_word
+        move :to_column, after_last_word
+      else
+        move :to_column, after_last_whitespace
+      end
+    end
+
+    def move_to_bol
+      before_first_word = current_line.index(/[^\s]/) || 0
+      column = if @column == 0 or @column > before_first_word
+        before_first_word
+      else
+        0
+      end
+      move :to_column, column
+    end
+
     def backspace(count)
       start_index = cursor_index - count
       if start_index < 0
@@ -100,7 +98,7 @@ module Ruco
       end
 
       @content.slice!(start_index, count)
-      move_to *cursor_for_index(start_index)
+      move :to, *cursor_for_index(start_index)
     end
 
     def lines
@@ -166,9 +164,9 @@ module Ruco
       if inserted_lines.size > 1
         # column position does not add up when hitting return
         @column = inserted_lines.last.size
-        move(inserted_lines.size - 1, 0)
+        move(:relative, inserted_lines.size - 1, 0)
       else
-        move(inserted_lines.size - 1, inserted_lines.last.size)
+        move(:relative, inserted_lines.size - 1, inserted_lines.last.size)
       end
     end
 

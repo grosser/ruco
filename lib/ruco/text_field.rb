@@ -11,13 +11,5 @@ module Ruco
     def value
       content.gsub("\n",'')
     end
-
-    def move(line, column)
-      super(0, column)
-    end
-
-    def move_to(line, column)
-      super(0, column)
-    end
   end
 end

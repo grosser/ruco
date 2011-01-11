@@ -73,7 +73,7 @@ describe Ruco::CommandBar do
       bar.move_to_line
       bar.insert('123')
       result = bar.insert("\n")
-      result.should == Ruco::Command.new(:move_to_line, 123)
+      result.should == Ruco::Command.new(:move, :to_line, 123)
     end
 
     it "gets reset" do

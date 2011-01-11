@@ -1,10 +1,11 @@
 module Ruco
   class Form
-    delegate :move, :move_to, :move_to_eol, :move_to_bol, :delete, :to => :text_field
+    delegate :move, :delete, :to => :text_field
 
-    def initialize(label, options)
+    def initialize(label, options, &submit)
       @options = options
       @label = label.strip + ' '
+      @submit = submit
       reset
     end
 
@@ -17,7 +18,7 @@ module Ruco
       if text.include?("\n")
         result = @text_field.value
         result = result.to_i if @options[:type] == :integer
-        Command.new(@options[:command], result)
+        @submit.call(result)
       end
     end
 

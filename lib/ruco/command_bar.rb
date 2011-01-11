@@ -1,7 +1,7 @@
 module Ruco
   class CommandBar
     attr_accessor :cursor_line, :form
-    delegate :move, :move_to, :move_to_eol, :move_to_bol, :delete, :insert, :to => :form
+    delegate :move, :delete, :insert, :to => :form
 
     SHORTCUTS = [
       '^W Exit',
@@ -28,11 +28,16 @@ module Ruco
     end
 
     def find
-      @form = @forms_cache[:find] ||= Form.new('Find: ', :columns => @options[:columns], :command => :find)
+      @forms_cache[:find] ||= Form.new('Find: ', :columns => @options[:columns]) do |value|
+        Command.new(:find, value)
+      end
+      @form = @forms_cache[:find]
     end
 
     def move_to_line
-      @form = Form.new('Go to Line: ', :columns => @options[:columns], :command => :move_to_line, :type => :integer)
+      @form = Form.new('Go to Line: ', :columns => @options[:columns], :type => :integer) do |value|
+        Command.new(:move, :to_line, value.to_i)
+      end
     end
 
     def reset

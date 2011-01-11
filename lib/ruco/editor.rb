@@ -1,9 +1,7 @@
 module Ruco
   class Editor
     attr_reader :file
-    delegate :cursor_column, :cursor_line, :view,
-      :move, :move_to, :cursor, :move_to_eol, :move_to_bol,
-      :to => :text_area
+    delegate :cursor_column, :cursor_line, :view, :move, :cursor, :to => :text_area
 
     def initialize(file, options)
       @file = file
@@ -15,7 +13,7 @@ module Ruco
 
     def find(text)
       index = text_area.content.index(text, text_area.cursor_index+1) || text_area.cursor_index
-      move_to *text_area.cursor_for_index(index)
+      move :to, *text_area.cursor_for_index(index)
     end
 
     def reset;end

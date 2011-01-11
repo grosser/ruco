@@ -26,60 +26,60 @@ describe Ruco::Editor do
     end
 
     it "can move" do
-      editor.move(1,2)
+      editor.move(:relative, 1,2)
       editor.cursor.should == [1,2]
-      editor.move(1,1)
+      editor.move(:relative, 1,1)
       editor.cursor.should == [2,3]
     end
 
     it "can move in empty file" do
       write("\n\n\n")
-      editor.move(2,0)
+      editor.move(:relative, 2,0)
       editor.cursor.should == [2,0]
     end
 
     it "cannot move left/top off screen" do
-      editor.move(-1,-1)
+      editor.move(:relative, -1,-1)
       editor.cursor.should == [0,0]
     end
 
     it "cannot move right of characters" do
-      editor.move(2,6)
+      editor.move(:relative, 2,6)
       editor.cursor.should == [2,4]
     end
 
     it "stays in last line when moving past lines" do
       write("    ")
-      editor.move(6,3)
+      editor.move(:relative, 6,3)
       editor.cursor.should == [0,3]
     end
 
     describe 'column scrolling' do
       it "can scroll columns" do
         write("123456789\n123")
-        editor.move(0,4)
+        editor.move(:relative, 0,4)
         editor.view.should == "12345\n123\n\n"
         editor.cursor_column.should == 4
 
-        editor.move(0,1)
+        editor.move(:relative, 0,1)
         editor.view.should == "6789\n\n\n"
         editor.cursor_column.should == 0
       end
 
       it "cannot scroll past the screen" do
         write('123456789')
-        editor.move(0,4)
-        6.times{ editor.move(0,1) }
+        editor.move(:relative, 0,4)
+        6.times{ editor.move(:relative, 0,1) }
         editor.view.should == "6789\n\n\n"
         editor.cursor_column.should == 4
       end
 
       it "can scroll columns backwards" do
         write('123456789')
-        editor.move(0,5)
+        editor.move(:relative, 0,5)
         editor.view.should == "6789\n\n\n"
 
-        editor.move(0,-1)
+        editor.move(:relative, 0,-1)
         editor.view.should == "12345\n\n\n"
         editor.cursor_column.should == 4
       end
@@ -91,95 +91,95 @@ describe Ruco::Editor do
       end
 
       it "can scroll lines down (at maximum of screen size)" do
-        editor.move(2,0)
+        editor.move(:relative, 2,0)
         editor.view.should == "1\n2\n3\n"
 
-        editor.move(1,0)
+        editor.move(:relative, 1,0)
         editor.view.should == "4\n5\n6\n"
         editor.cursor_line.should == 0
       end
 
       it "can scroll till end of file" do
-        editor.move(15,0)
+        editor.move(:relative, 15,0)
         editor.view.should == "9\n\n\n"
         editor.cursor_line.should == 0
       end
     end
   end
 
-  describe :move_to do
+  describe :to do
     it "cannot move outside of text (bottom/right)" do
       write("123\n456")
-      editor.move_to(10,10)
+      editor.move(:to, 10,10)
       editor.cursor.should == [1,3]
     end
 
     it "cannot move outside of text (top/left)" do
       write("123\n456")
-      editor.move(1,1)
-      editor.move_to(-10,-10)
+      editor.move(:relative, 1,1)
+      editor.move(:to, -10,-10)
       editor.cursor.should == [0,0]
     end
   end
 
-  describe :move_to_eol do
+  describe :to_eol do
     before do
       write("\n aa \n  ")
     end
 
     it 'stays at start when line is empty' do
-      editor.move_to_eol
+      editor.move :to_eol
       editor.cursor.should == [0,0]
     end
 
     it 'moves after last word if cursor was before it' do
-      editor.move(1,1)
-      editor.move_to_eol
+      editor.move(:relative, 1,1)
+      editor.move :to_eol
       editor.cursor.should == [1,3]
     end
 
     it 'moves after last whitespace if cursor was after last word' do
-      editor.move(1,3)
-      editor.move_to_eol
+      editor.move(:relative, 1,3)
+      editor.move :to_eol
       editor.cursor.should == [1,4]
     end
 
     it 'moves after last work if cursor was after last whitespace' do
-      editor.move(1,4)
-      editor.move_to_eol
+      editor.move(:relative, 1,4)
+      editor.move :to_eol
       editor.cursor.should == [1,3]
     end
   end
 
-  describe :move_to_bol do
+  describe :to_bol do
     before do
       write("\n  aa \n  ")
     end
 
     it 'stays at start when line is empty' do
-      editor.move_to_bol
+      editor.move :to_bol
       editor.cursor.should == [0,0]
     end
 
     it 'moves before first work if at start of line' do
-      editor.move(1,0)
-      editor.move_to_bol
+      editor.move(:relative, 1,0)
+      editor.move :to_bol
       editor.cursor.should == [1,2]
     end
 
     it 'moves to start of line if before first word' do
-      editor.move(1,1)
-      editor.move_to_bol
+      editor.move(:relative, 1,1)
+      editor.move :to_bol
       editor.cursor.should == [1,0]
 
-      editor.move(0,2)
-      editor.move_to_bol
+      editor.move(:relative, 0,2)
+      editor.move :to_bol
       editor.cursor.should == [1,0]
     end
 
     it 'moves before first word if inside line' do
-      editor.move(1,5)
-      editor.move_to_bol
+      editor.move(:relative, 1,5)
+      editor.move :to_bol
       editor.cursor.should == [1,2]
     end
   end
@@ -195,13 +195,13 @@ describe Ruco::Editor do
     end
 
     it "moves to next occurrence" do
-      editor.move(1,1)
+      editor.move(:relative, 1,1)
       editor.find('ab')
       editor.cursor.should == [2,1]
     end
 
     it "stays in place when nothing was found" do
-      editor.move(2,1)
+      editor.move(:relative, 2,1)
       editor.find('ab')
       editor.cursor.should == [2,1]
     end
@@ -239,7 +239,7 @@ describe Ruco::Editor do
 
     it "can insert new chars" do
       write('123')
-      editor.move(0,1)
+      editor.move(:relative, 0,1)
       editor.insert('ab')
       editor.view.should == "1ab23\n\n\n"
       editor.cursor.should == [0,3]
@@ -253,7 +253,7 @@ describe Ruco::Editor do
 
     it "jumps to correct column when inserting newline" do
       write("abc\ndefg")
-      editor.move(1,2)
+      editor.move(:relative, 1,2)
       editor.insert("1\n23")
       editor.view.should == "abc\nde1\n23fg\n"
       editor.cursor.should == [2,2]
@@ -261,7 +261,7 @@ describe Ruco::Editor do
 
     it "jumps to correct column when inserting 1 newline" do
       write("abc\ndefg")
-      editor.move(1,2)
+      editor.move(:relative, 1,2)
       editor.insert("\n")
       editor.view.should == "abc\nde\nfg\n"
       editor.cursor.should == [2,0]
@@ -276,7 +276,7 @@ describe Ruco::Editor do
 
     it "can add newlines to the moveable end" do
       write('abc')
-      editor.move(0,3)
+      editor.move(:relative, 0,3)
       editor.insert("\n")
       editor.insert("\n")
       editor.cursor.should == [2,0]
@@ -315,7 +315,7 @@ describe Ruco::Editor do
 
     it 'removes a line' do
       write("123\n45")
-      editor.move(0,3)
+      editor.move(:relative, 0,3)
       editor.delete(1)
       editor.view.should == "12345\n\n\n"
       editor.cursor.should == [0,3]
@@ -323,7 +323,7 @@ describe Ruco::Editor do
 
     it "cannot backspace over 0,0" do
       write("aa")
-      editor.move(0,1)
+      editor.move(:relative, 0,1)
       editor.delete(-3)
       editor.view.should == "a\n\n\n"
       editor.cursor.should == [0,0]
@@ -331,7 +331,7 @@ describe Ruco::Editor do
 
     it 'backspaces a char' do
       write('123')
-      editor.move(0,3)
+      editor.move(:relative, 0,3)
       editor.delete(-1)
       editor.view.should == "12\n\n\n"
       editor.cursor.should == [0,2]
@@ -339,7 +339,7 @@ describe Ruco::Editor do
 
     it 'backspaces a newline' do
       write("1\n234")
-      editor.move(1,0)
+      editor.move(:relative, 1,0)
       editor.delete(-1)
       editor.view.should == "1234\n\n\n"
       editor.cursor.should == [0,1]
@@ -362,7 +362,7 @@ describe Ruco::Editor do
     end
 
     it "is not changed after move" do
-      editor.move(1,1)
+      editor.move(:relative, 1,1)
       editor.modified?.should == false
     end
 

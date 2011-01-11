@@ -83,12 +83,12 @@ init_screen do
     case key
 
     # move
-    when Curses::Key::UP then focused.move(-1,0)
-    when Curses::Key::DOWN then focused.move(1,0)
-    when Curses::Key::RIGHT then focused.move(0,1)
-    when Curses::Key::LEFT then focused.move(0,-1)
-    when Curses::KEY_END then focused.move_to_eol
-    when Curses::KEY_HOME then focused.move_to_bol
+    when Curses::Key::UP then focused.move(:relative, -1,0)
+    when Curses::Key::DOWN then focused.move(:relative, 1,0)
+    when Curses::Key::RIGHT then focused.move(:relative, 0,1)
+    when Curses::Key::LEFT then focused.move(:relative, 0,-1)
+    when Curses::KEY_END then focused.move :to_eol
+    when Curses::KEY_HOME then focused.move :to_bol
 
     # modify
     when 9 then focused.insert(key.chr) # tab
