@@ -105,105 +105,82 @@ describe Ruco::Editor do
         editor.cursor.line.should == 0
       end
     end
-  end
 
-  describe :to do
-    it "cannot move outside of text (bottom/right)" do
-      write("123\n456")
-      editor.move(:to, 10,10)
-      editor.cursor.should == [1,3]
+    describe :to do
+      it "cannot move outside of text (bottom/right)" do
+        write("123\n456")
+        editor.move(:to, 10,10)
+        editor.cursor.should == [1,3]
+      end
+
+      it "cannot move outside of text (top/left)" do
+        write("123\n456")
+        editor.move(:relative, 1,1)
+        editor.move(:to, -10,-10)
+        editor.cursor.should == [0,0]
+      end
     end
 
-    it "cannot move outside of text (top/left)" do
-      write("123\n456")
-      editor.move(:relative, 1,1)
-      editor.move(:to, -10,-10)
-      editor.cursor.should == [0,0]
-    end
-  end
+    describe :to_eol do
+      before do
+        write("\n aa \n  ")
+      end
 
-  describe :to_eol do
-    before do
-      write("\n aa \n  ")
-    end
+      it 'stays at start when line is empty' do
+        editor.move :to_eol
+        editor.cursor.should == [0,0]
+      end
 
-    it 'stays at start when line is empty' do
-      editor.move :to_eol
-      editor.cursor.should == [0,0]
-    end
+      it 'moves after last word if cursor was before it' do
+        editor.move(:relative, 1,1)
+        editor.move :to_eol
+        editor.cursor.should == [1,3]
+      end
 
-    it 'moves after last word if cursor was before it' do
-      editor.move(:relative, 1,1)
-      editor.move :to_eol
-      editor.cursor.should == [1,3]
-    end
+      it 'moves after last whitespace if cursor was after last word' do
+        editor.move(:relative, 1,3)
+        editor.move :to_eol
+        editor.cursor.should == [1,4]
+      end
 
-    it 'moves after last whitespace if cursor was after last word' do
-      editor.move(:relative, 1,3)
-      editor.move :to_eol
-      editor.cursor.should == [1,4]
-    end
-
-    it 'moves after last work if cursor was after last whitespace' do
-      editor.move(:relative, 1,4)
-      editor.move :to_eol
-      editor.cursor.should == [1,3]
-    end
-  end
-
-  describe :to_bol do
-    before do
-      write("\n  aa \n  ")
+      it 'moves after last work if cursor was after last whitespace' do
+        editor.move(:relative, 1,4)
+        editor.move :to_eol
+        editor.cursor.should == [1,3]
+      end
     end
 
-    it 'stays at start when line is empty' do
-      editor.move :to_bol
-      editor.cursor.should == [0,0]
-    end
+    describe :to_bol do
+      before do
+        write("\n  aa \n  ")
+      end
 
-    it 'moves before first work if at start of line' do
-      editor.move(:relative, 1,0)
-      editor.move :to_bol
-      editor.cursor.should == [1,2]
-    end
+      it 'stays at start when line is empty' do
+        editor.move :to_bol
+        editor.cursor.should == [0,0]
+      end
 
-    it 'moves to start of line if before first word' do
-      editor.move(:relative, 1,1)
-      editor.move :to_bol
-      editor.cursor.should == [1,0]
+      it 'moves before first work if at start of line' do
+        editor.move(:relative, 1,0)
+        editor.move :to_bol
+        editor.cursor.should == [1,2]
+      end
 
-      editor.move(:relative, 0,2)
-      editor.move :to_bol
-      editor.cursor.should == [1,0]
-    end
+      it 'moves to start of line if before first word' do
+        editor.move(:relative, 1,1)
+        editor.move :to_bol
+        editor.cursor.should == [1,0]
 
-    it 'moves before first word if inside line' do
-      editor.move(:relative, 1,5)
-      editor.move :to_bol
-      editor.cursor.should == [1,2]
-    end
-  end
+        editor.move(:relative, 0,2)
+        editor.move :to_bol
+        editor.cursor.should == [1,0]
+      end
 
-  describe :find do
-    before do
-      write("\n ab\n ab")
-    end
-
-    it "moves to first occurrence" do
-      editor.find('ab')
-      editor.cursor.should == [1,1]
-    end
-
-    it "moves to next occurrence" do
-      editor.move(:relative, 1,1)
-      editor.find('ab')
-      editor.cursor.should == [2,1]
-    end
-
-    it "stays in place when nothing was found" do
-      editor.move(:relative, 2,1)
-      editor.find('ab')
-      editor.cursor.should == [2,1]
+      it 'moves before first word if inside line' do
+        editor.move(:relative, 1,5)
+        editor.move :to_bol
+        editor.cursor.should == [1,2]
+      end
     end
   end
 
@@ -370,6 +347,29 @@ describe Ruco::Editor do
       editor.insert('x')
       editor.save
       editor.modified?.should == false
+    end
+  end
+
+  describe :find do
+    before do
+      write("\n ab\n ab")
+    end
+
+    it "moves to first occurrence" do
+      editor.find('ab')
+      editor.cursor.should == [1,1]
+    end
+
+    it "moves to next occurrence" do
+      editor.move(:relative, 1,1)
+      editor.find('ab')
+      editor.cursor.should == [2,1]
+    end
+
+    it "stays in place when nothing was found" do
+      editor.move(:relative, 2,1)
+      editor.find('ab')
+      editor.cursor.should == [2,1]
     end
   end
 end
