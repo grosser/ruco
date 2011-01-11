@@ -10,6 +10,7 @@ require 'ruco/status_bar'
 require 'ruco/command_bar'
 
 require 'ruco/form'
+require 'ruco/text_area'
 require 'ruco/text_field'
 
 module Ruco
