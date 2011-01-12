@@ -4,7 +4,8 @@ require 'optparse'
 $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
 
 def parse_options
-  options = OptionParser.new do |opts|
+  options = {}
+  parser = OptionParser.new do |opts|
     opts.banner = <<BANNER
 [Ru]by [Co]mmandline editor
 
@@ -17,14 +18,17 @@ Usage:
 
 Options:
 BANNER
+    opts.on("--show-cache","Show caching in action(ugly)") { options[:show_cache] = true }
     opts.on("-h", "--help","Show this.") { puts opts; exit }
   end
-  options.parse!
+  parser.parse!
 
   if ARGV.empty?
-    puts options
+    puts parser
     exit
   end
+
+  options
 end
 
 def write(line,row,text)
@@ -46,12 +50,20 @@ def init_screen
 end
 
 def display(lines, offset, color)
+  @screen ||= [] # current screen is used as cache
   Curses.attrset color
-  Curses.stdscr.maxy.times do |i|
-    line = lines[i] || ''
-    clearer = Curses.stdscr.maxx - line.size
+
+  lines.each_with_index do |content, line|
+    line += offset
+    clearer = Curses.stdscr.maxx - content.size
     clearer = " " * clearer
-    write(i + offset, 0, line + clearer)
+    content += clearer
+
+    next if @screen[line] == content
+    @screen[line] = content
+
+    write(line, 0, content)
+    write(line, 0, (rand(899)+100).to_s) if @options[:show_cache]
   end
 end
 
@@ -66,7 +78,7 @@ def show_app(app)
   Curses.setpos(app.cursor.line, app.cursor.column)
 end
 
-parse_options
+@options = parse_options
 
 require 'ruco'
 require 'ruco/keyboard' # needs curses <-> not loaded for specs
