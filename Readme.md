@@ -23,7 +23,6 @@ Usage
 
 TODO
 =====
- - buffer <-> faster response via ssh session
  - smart staying at end of line/column when changing line
  - indentation + paste support
  - warnings / messages
