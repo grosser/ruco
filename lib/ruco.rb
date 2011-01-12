@@ -8,6 +8,7 @@ require 'ruco/command'
 require 'ruco/editor'
 require 'ruco/status_bar'
 require 'ruco/command_bar'
+require 'ruco/application'
 
 require 'ruco/form'
 require 'ruco/text_area'

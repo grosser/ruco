@@ -45,9 +45,8 @@ def init_screen
   end
 end
 
-def display(widget, offset, color)
+def display(lines, offset, color)
   Curses.attrset color
-  lines = widget.view.naive_split("\n")
   Curses.stdscr.maxy.times do |i|
     line = lines[i] || ''
     clearer = Curses.stdscr.maxx - line.size
@@ -56,66 +55,30 @@ def display(widget, offset, color)
   end
 end
 
+def show_app(app)
+  lines = app.view.naive_split("\n")
+
+  # TODO move this logic into application
+  display([lines.first], 0, Curses::A_REVERSE)
+  display(lines[1..-2], 1, Curses::A_NORMAL)
+  display([lines.last], Curses.stdscr.maxy - 1, Curses::A_REVERSE)
+
+  Curses.setpos(app.cursor.line, app.cursor.column)
+end
+
 parse_options
 
 require 'ruco'
-status_lines = 1
-command_lines = 1
-editor_lines = Curses.stdscr.maxy - status_lines - command_lines
+require 'ruco/keyboard' # needs curses <-> not loaded for specs
 
-editor = Ruco::Editor.new(ARGV[0], :lines => editor_lines, :columns => Curses.stdscr.maxx)
-status = Ruco::StatusBar.new(editor, :columns => Curses.stdscr.maxx)
-command = Ruco::CommandBar.new(:columns => Curses.stdscr.maxx)
-command.cursor_line = editor_lines
-
-focused = editor
+app = Ruco::Application.new(ARGV[0], :lines => Curses.stdscr.maxy, :columns => Curses.stdscr.maxx)
 
 init_screen do
-  loop do
-    display status, 0, Curses::A_REVERSE
-    display editor, status_lines, Curses::A_NORMAL
-    display command, status_lines + editor_lines, Curses::A_REVERSE
+  show_app app
 
-    Curses.setpos(focused.cursor.line + status_lines, focused.cursor.column)
-
-    key = Curses.getch
-
-    case key
-
-    # move
-    when Curses::Key::UP then focused.move(:relative, -1,0)
-    when Curses::Key::DOWN then focused.move(:relative, 1,0)
-    when Curses::Key::RIGHT then focused.move(:relative, 0,1)
-    when Curses::Key::LEFT then focused.move(:relative, 0,-1)
-    when Curses::KEY_END then focused.move :to_eol
-    when Curses::KEY_HOME then focused.move :to_bol
-
-    # modify
-    when 9 then focused.insert(key.chr) # tab
-    when 32..126 then focused.insert(key.chr) # printable
-    when 10 then # enter
-      result = focused.insert("\n")
-      if result.is_a?(Ruco::Command)
-        result.send_to(editor)
-        focused = editor
-      end
-    when 263 then focused.delete(-1) # backspace
-    when Curses::KEY_DC then focused.delete(1) # delete
-
-    # misc
-    when ?\C-d then
-      editor.delete_line
-    when ?\C-f then
-      focused = command
-      command.find
-    when ?\C-g then
-      focused = command
-      command.move_to_line
-    when 27 then
-      focused.reset
-      focused = editor # escape from focused
-    when ?\C-s then editor.save
-    when ?\C-w, ?\C-q then break # quit
-    end
+  Keyboard.listen do |key|
+    result = app.key key
+    break if result == :quit
+    show_app app
   end
 end
