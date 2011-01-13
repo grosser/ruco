@@ -3,7 +3,6 @@ require 'ruco/core_ext/string'
 require 'ruco/core_ext/array'
 
 require 'ruco/cursor'
-require 'ruco/command'
 
 require 'ruco/editor'
 require 'ruco/status_bar'

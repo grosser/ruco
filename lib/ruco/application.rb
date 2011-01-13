@@ -50,11 +50,7 @@ module Ruco
       when :tab then @focused.insert("\t")
       when 32..126 then @focused.insert(key.chr) # printable
       when :enter then
-        result = @focused.insert("\n")
-        if result.is_a?(Ruco::Command)
-          result.send_to(@editor)
-          @focused = @editor
-        end
+        @focused.insert("\n")
       when :backspace then @focused.delete(-1)
       when :delete then @focused.delete(1)
 
@@ -74,6 +70,14 @@ module Ruco
       @actions[name] = block
     end
 
+    def ask(question, options={}, &block)
+      @focused = @command
+      @command.ask(question, options) do |response|
+        @focused = @editor
+        block.call(response)
+      end
+    end
+
     private
 
     def setup_actions
@@ -86,8 +90,7 @@ module Ruco
       end
 
       action :go_to_line do
-        @focused = @command
-        @command.move_to_line
+        ask('Go to Line: '){|result| @editor.move(:to_line, result.to_i) }
       end
 
       action :delete_line do
@@ -95,8 +98,7 @@ module Ruco
       end
 
       action :find do
-        @focused = @command
-        @command.find
+        ask("Find: ", :cache => true){|result| @editor.find(result) }
       end
     end
 

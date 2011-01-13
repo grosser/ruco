@@ -15,91 +15,69 @@ describe Ruco::CommandBar do
     bar.view.should == "^W Exit    ^S Save"
   end
 
-  describe :find do
-    it "sets command bar into search mode" do
-      bar.find
+  describe :ask do
+    it "sets command bar into question mode" do
+      bar.ask('Find: '){}
       bar.view.should == "Find: "
       bar.cursor.column.should == 6
     end
 
-    it "can enter stuff" do
-      bar.find
+    it "can enter answer" do
+      bar.ask('Find: '){}
       bar.insert('abc')
       bar.view.should == "Find: abc"
       bar.cursor.column.should == 9
-    end
-
-    it "keeps entered stuff" do
-      bar.find
-      bar.insert('abc')
-      bar.insert("\n")
-      bar.find
-      bar.view.should == "Find: abc"
-      bar.cursor.column.should == 9
-    end
-
-    it "can reset the search" do
-      bar.find
-      bar.insert('abc')
-      bar.reset
-
-      bar.view.should == default_view
-      bar.find
-      bar.view.should == "Find: " # term removed
-    end
-
-    it "can execute a search" do
-      bar.find
-      bar.insert('abc')
-      result = bar.insert("d\n")
-      result.should == Ruco::Command.new(:find, 'abcd')
-    end
-
-    it "finds with offset when same search is entered again" do
-      bar.find
-      bar.insert('abcd')
-      bar.insert("\n")
-      bar.find
-      result = bar.insert("\n")
-      result.should == Ruco::Command.new(:find, 'abcd')
-    end
-  end
-
-  describe :move_to_line do
-    it "displays a form" do
-      bar.move_to_line
-      bar.view.should == "Go to Line: "
-    end
-
-    it "gets output" do
-      bar.move_to_line
-      bar.insert('123')
-      result = bar.insert("\n")
-      result.should == Ruco::Command.new(:move, :to_line, 123)
-    end
-
-    it "gets reset when starting a new go to line" do
-      bar.move_to_line
-      bar.insert('123')
-      bar.move_to_line
-      bar.view.should == "Go to Line: "
     end
 
     it "gets reset when submitting" do
-      bar.move_to_line
+      bar.ask('Find: '){}
       bar.insert("123\n")
       bar.view.should == default_view
     end
 
-    it "does not reset search when resetting" do
-      bar.find
+    it "keeps entered answer when cached" do
+      bar.ask('Find: ', :cache => true){}
       bar.insert('abc')
-      bar.move_to_line
+      bar.insert("\n")
+      bar.ask('Find: ', :cache => true){}
+      bar.view.should == "Find: abc"
+      bar.cursor.column.should == 9
+    end
+
+    it "reset the question when cached" do
+      bar.ask('Find: ', :cache => true){}
+      bar.insert('abc')
       bar.reset
 
       bar.view.should == default_view
-      bar.find
+      bar.ask('Find: ', :cache => true){}
+      bar.view.should == "Find: " # term removed
+    end
+
+    it "does not reset all cached questions" do
+      bar.ask('Find: ', :cache => true){}
+      bar.insert("abc\n")
+
+      bar.ask('Foo: ', :cache => true){}
+      bar.reset # clears Foo not Find
+      bar.view.should == default_view
+
+      bar.ask('Find: ', :cache => true){}
       bar.view.should == "Find: abc"
+    end
+
+    it "gets reset when starting a new question" do
+      bar.ask('Find: '){}
+      bar.insert('123')
+      bar.ask('Find: '){}
+      bar.view.should == "Find: "
+    end
+
+    it "can execute" do
+      bar.ask('Find: ', :cache => true){|r| @result = r }
+      bar.insert('abc')
+      bar.insert("d\n")
+      @result.should == 'abcd'
     end
   end
 end

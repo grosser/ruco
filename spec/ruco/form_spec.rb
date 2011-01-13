@@ -1,7 +1,7 @@
 require File.expand_path('spec/spec_helper')
 
 describe Ruco::Form do
-  let(:form){ Ruco::Form.new('Test', :columns => 30){|value| Ruco::Command.new(:find, value) } }
+  let(:form){ Ruco::Form.new('Test', :columns => 30){|value| @result = value } }
 
   it "positions cursor in text field" do
     form.cursor.should == [0, 5]
@@ -13,13 +13,15 @@ describe Ruco::Form do
       form.cursor.should == [0, 8]
     end
 
-    it "returns nil on any insert" do
-      form.insert('abc').should == nil
+    it "does not return result on normal insert" do
+      form.insert('abc')
+      @result.should == nil
     end
 
-    it "returns value on enter" do
+    it "returns result on enter" do
       form.insert('abc')
-      form.insert("d\n").should == Ruco::Command.new(:find, 'abcd')
+      form.insert("d\n")
+      @result.should == "abcd"
     end
   end
 

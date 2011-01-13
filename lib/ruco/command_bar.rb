@@ -25,23 +25,17 @@ module Ruco
       end
     end
 
-    def find
-      @forms_cache[:find] ||= Form.new('Find: ', :columns => @options[:columns]) do |value|
-        @form = nil
-        Command.new(:find, value)
-      end
-      @form = @forms_cache[:find]
-    end
-
-    def move_to_line
-      @form = Form.new('Go to Line: ', :columns => @options[:columns], :type => :integer) do |value|
-        @form = nil
-        Command.new(:move, :to_line, value.to_i)
+    def ask(question, options={}, &block)
+      @form = cached_form_if(options[:cache], question) do
+        Form.new(question, :columns => @options[:columns]) do |result|
+          @form = nil
+          block.call(result)
+        end
       end
     end
 
     def reset
-      @forms_cache[:find] = nil if @form == @forms_cache[:find]
+      @forms_cache[@forms_cache.index(@form)] = nil
       @form = nil
     end
 
@@ -54,6 +48,14 @@ module Ruco
     end
 
     private
+
+    def cached_form_if(cache, question)
+      if cache
+        @forms_cache[question] ||= yield
+      else
+        yield
+      end
+    end
 
     def available_shortcuts
       used_columns = 0
