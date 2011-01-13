@@ -32,6 +32,7 @@ describe Ruco::CommandBar do
     it "keeps entered stuff" do
       bar.find
       bar.insert('abc')
+      bar.insert("\n")
       bar.find
       bar.view.should == "Find: abc"
       bar.cursor.column.should == 9
@@ -40,7 +41,6 @@ describe Ruco::CommandBar do
     it "can reset the search" do
       bar.find
       bar.insert('abc')
-      bar.insert("\n")
       bar.reset
 
       bar.view.should == default_view
@@ -59,6 +59,7 @@ describe Ruco::CommandBar do
       bar.find
       bar.insert('abcd')
       bar.insert("\n")
+      bar.find
       result = bar.insert("\n")
       result.should == Ruco::Command.new(:find, 'abcd')
     end

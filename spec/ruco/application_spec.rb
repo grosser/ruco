@@ -10,7 +10,7 @@ describe Ruco::Application do
   end
 
   let(:app){ Ruco::Application.new(@file, :lines => 5, :columns => 10) }
-  let(:status){ "Ruco 0.0.6 -- spec/temp.txt  \n" }
+  let(:status){ "Ruco #{Ruco::VERSION} -- spec/temp.txt  \n" }
   let(:command){ "^W Exit" }
 
   it "renders status + editor + command" do

@@ -27,6 +27,7 @@ module Ruco
 
     def find
       @forms_cache[:find] ||= Form.new('Find: ', :columns => @options[:columns]) do |value|
+        @form = nil
         Command.new(:find, value)
       end
       @form = @forms_cache[:find]
@@ -34,7 +35,7 @@ module Ruco
 
     def move_to_line
       @form = Form.new('Go to Line: ', :columns => @options[:columns], :type => :integer) do |value|
-        reset
+        @form = nil
         Command.new(:move, :to_line, value.to_i)
       end
     end
