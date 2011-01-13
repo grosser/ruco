@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{ruco}
-  s.version = "0.0.8"
+  s.version = "0.0.9"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Michael Grosser"]
@@ -22,7 +22,6 @@ Gem::Specification.new do |s|
     "bin/ruco",
     "lib/ruco.rb",
     "lib/ruco/application.rb",
-    "lib/ruco/command.rb",
     "lib/ruco/command_bar.rb",
     "lib/ruco/core_ext/array.rb",
     "lib/ruco/core_ext/object.rb",
@@ -37,7 +36,6 @@ Gem::Specification.new do |s|
     "ruco.gemspec",
     "spec/ruco/application_spec.rb",
     "spec/ruco/command_bar_spec.rb",
-    "spec/ruco/command_spec.rb",
     "spec/ruco/core_ext/string_spec.rb",
     "spec/ruco/editor_spec.rb",
     "spec/ruco/form_spec.rb",
@@ -53,7 +51,6 @@ Gem::Specification.new do |s|
   s.test_files = [
     "spec/ruco/application_spec.rb",
     "spec/ruco/command_bar_spec.rb",
-    "spec/ruco/command_spec.rb",
     "spec/ruco/core_ext/string_spec.rb",
     "spec/ruco/editor_spec.rb",
     "spec/ruco/form_spec.rb",
