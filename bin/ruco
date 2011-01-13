@@ -38,8 +38,9 @@ def write(line,row,text)
 end
 
 def init_screen
-  Curses.noecho # do not show typed chars
   Curses.init_screen
+  Curses.noecho # do not show typed chars
+  Curses.nonl # turn off newline translation
   Curses.stdscr.keypad(true) # enable arrow keys
   Curses.raw # give us all other keys
 

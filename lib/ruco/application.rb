@@ -65,6 +65,7 @@ module Ruco
     end
 
     def bind(key, action=nil, &block)
+      raise "Ctrl+m cannot be bound" if key == :"Ctrl+m" # would shadow enter -> bad
       raise if action and block
       @bindings[key] = action || block
     end

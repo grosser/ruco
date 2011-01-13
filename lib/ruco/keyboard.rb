@@ -1,4 +1,6 @@
 class Keyboard
+  A_TO_Z = ('a'..'z').to_a
+
   def self.listen
     loop do
       key = Curses.getch
@@ -17,19 +19,15 @@ class Keyboard
 
       # modify
       when 9 then :tab
+      when 13 then :enter # shadows Ctrl+m
       when 32..126 then key # printable
-      when 10 then :enter
       when 263, 127 then :backspace # ubuntu / mac
       when Curses::KEY_DC then :delete
 
       # misc
-      when ?\C-d then :"Ctrl+d"
-      when ?\C-f then :"Ctrl+f"
-      when ?\C-g then :"Ctrl+g"
+      when 0 then :"Ctrl+space"
+      when 1..26 then :"Ctrl+#{A_TO_Z[key-1]}"
       when 27 then :escape
-      when ?\C-s then :"Ctrl+s"
-      when ?\C-w then :"Ctrl+w"
-      when ?\C-q then :"Ctrl+q"
       else
         key
       end
