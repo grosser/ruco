@@ -18,7 +18,8 @@ Usage:
 
 Options:
 BANNER
-    opts.on("--show-cache","Show caching in action(ugly)") { options[:show_cache] = true }
+    opts.on("--debug-cache","Show caching in action") { options[:debug_cache] = true }
+    opts.on("--debug-keys", "Show pressed keys") { options[:debug_keys] = true }
     opts.on("-h", "--help","Show this.") { puts opts; exit }
   end
   parser.parse!
@@ -63,7 +64,7 @@ def display(lines, offset, color)
     @screen[line] = content
 
     write(line, 0, content)
-    write(line, 0, (rand(899)+100).to_s) if @options[:show_cache]
+    write(line, 0, (rand(899)+100).to_s) if @options[:debug_cache]
   end
 end
 
@@ -78,6 +79,12 @@ def show_app(app)
   Curses.setpos(app.cursor.line, app.cursor.column)
 end
 
+def debug_key(key)
+  @key_line ||= -1
+  @key_line = (@key_line + 1) % Curses.stdscr.maxy
+  write(@key_line, 0, "#{key}---")
+end
+
 @options = parse_options
 
 require 'ruco'
@@ -89,6 +96,7 @@ init_screen do
   show_app app
 
   Keyboard.listen do |key|
+    debug_key(key) if @options[:debug_keys]
     result = app.key key
     break if result == :quit
     show_app app

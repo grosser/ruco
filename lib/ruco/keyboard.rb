@@ -3,34 +3,38 @@ class Keyboard
     loop do
       key = Curses.getch
 
-      case key
+      code = case key
 
       # move
-      when Curses::Key::UP then yield(:up)
-      when Curses::Key::DOWN then yield(:down)
-      when Curses::Key::RIGHT then yield(:right)
-      when Curses::Key::LEFT then yield(:left)
-      when Curses::KEY_END then yield(:end)
-      when Curses::KEY_HOME then yield(:home)
-      when Curses::KEY_NPAGE then yield(:page_down)
-      when Curses::KEY_PPAGE then yield(:page_up)
+      when Curses::Key::UP then :up
+      when Curses::Key::DOWN then :down
+      when Curses::Key::RIGHT then :right
+      when Curses::Key::LEFT then :left
+      when Curses::KEY_END then :end
+      when Curses::KEY_HOME then :home
+      when Curses::KEY_NPAGE then :page_down
+      when Curses::KEY_PPAGE then :page_up
 
       # modify
-      when 9 then yield(:tab)
-      when 32..126 then yield(key) # printable
-      when 10 then yield(:enter)
-      when 263 then yield(:backspace)
-      when Curses::KEY_DC then yield(:delete)
+      when 9 then :tab
+      when 32..126 then key # printable
+      when 10 then :enter
+      when 263 then :backspace
+      when Curses::KEY_DC then :delete
 
       # misc
-      when ?\C-d then yield(:"Ctrl+d")
-      when ?\C-f then yield(:"Ctrl+f")
-      when ?\C-g then yield(:"Ctrl+g")
-      when 27 then yield(:escape)
-      when ?\C-s then yield(:"Ctrl+s")
-      when ?\C-w then yield(:"Ctrl+w")
-      when ?\C-q then yield(:"Ctrl+q")
+      when ?\C-d then :"Ctrl+d"
+      when ?\C-f then :"Ctrl+f"
+      when ?\C-g then :"Ctrl+g"
+      when 27 then :escape
+      when ?\C-s then :"Ctrl+s"
+      when ?\C-w then :"Ctrl+w"
+      when ?\C-q then :"Ctrl+q"
+      else
+        key
       end
+
+      yield code
     end
   end
 end
