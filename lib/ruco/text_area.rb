@@ -32,6 +32,14 @@ module Ruco
       when :to_eol then move_to_eol(*args)
       when :to_line then @line = args.first
       when :to_column then @column = args.first
+      when :page_down then
+        shift = @options[:lines] - 1
+        @line += shift
+        @scrolled_lines += shift
+      when :page_up then
+        shift = @options[:lines] - 1
+        @line -= shift
+        @scrolled_lines -= shift
       else
         raise "Unknown move type #{where} with #{args.inspect}"
       end

@@ -12,6 +12,8 @@ class Keyboard
       when Curses::Key::LEFT then yield(:left)
       when Curses::KEY_END then yield(:end)
       when Curses::KEY_HOME then yield(:home)
+      when Curses::KEY_NPAGE then yield(:page_down)
+      when Curses::KEY_PPAGE then yield(:page_up)
 
       # modify
       when 9 then yield(:tab)

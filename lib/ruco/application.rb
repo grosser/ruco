@@ -43,6 +43,8 @@ module Ruco
       when :left then @focused.move(:relative, 0,-1)
       when :end then @focused.move :to_eol
       when :home then @focused.move :to_bol
+      when :page_up then @focused.move :page_up
+      when :page_down then @focused.move :page_down
 
       # modify
       when :tab then @focused.insert("\t")

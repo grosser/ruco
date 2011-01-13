@@ -5,10 +5,10 @@ Alpha, lets see if this works...
 Finished:
 
  - viewing / scrolling / editing / saving / creating
- - Home/End
+ - Home/End + Page up/down
  - basic Tab support (tab == 2 space)
- - change-indicator
- - writeable indicator
+ - change-indicator (*)
+ - writeable indicator (!)
  - backspace / delete
  - find / go to line
  - delete line
@@ -23,6 +23,7 @@ Usage
 
 TODO
 =====
+ - backspace on mac ?
  - bind/action must use instance_exec
  - read .rucorc.rb
  - write key binding guide
