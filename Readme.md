@@ -23,7 +23,7 @@ Usage
 
 TODO
 =====
- - backspace on mac ?
+ - ask before quitting on changed file
  - bind/action must use instance_exec
  - read .rucorc.rb
  - write key binding guide

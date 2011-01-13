@@ -19,7 +19,7 @@ class Keyboard
       when 9 then :tab
       when 32..126 then key # printable
       when 10 then :enter
-      when 263 then :backspace
+      when 263, 127 then :backspace # ubuntu / mac
       when Curses::KEY_DC then :delete
 
       # misc
