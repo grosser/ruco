@@ -37,6 +37,11 @@ describe Ruco::Application do
     app.cursor.should == [3,0] # 0 offset + 1 for statusbar
   end
 
+  it "can quit" do
+    result = app.key(:"Ctrl+w")
+    result.should == :quit
+  end
+
   describe :bind do
     it "can execute bound stuff" do
       test = 0

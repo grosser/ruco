@@ -26,11 +26,12 @@ module Ruco
 
     def key(key)
       if bound = @bindings[key]
-        if bound.is_a?(Symbol)
+        result = if bound.is_a?(Symbol)
           @actions[bound].call
         else
           bound.call
         end
+        return result
       end
 
       case key
