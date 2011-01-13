@@ -36,4 +36,25 @@ describe Ruco::Application do
     app.view.should == "#{status}123\n456\n789\n#{command}"
     app.cursor.should == [3,0] # 0 offset + 1 for statusbar
   end
+
+  describe :bind do
+    it "can execute bound stuff" do
+      test = 0
+      app.bind :'Ctrl+q' do
+        test = 1
+      end
+      app.key(:'Ctrl+q')
+      test.should == 1
+    end
+
+    it "can execute an action via bind" do
+      test = 0
+      app.action :foo do
+        test = 1
+      end
+      app.bind :'Ctrl+q', :foo
+      app.key(:'Ctrl+q')
+      test.should == 1
+    end
+  end
 end

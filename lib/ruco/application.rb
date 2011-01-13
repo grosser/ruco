@@ -4,10 +4,16 @@ module Ruco
       @file = file
       @options = options
 
+      @bindings = {}
+      @actions = {}
+
       @status_lines = 1
       @command_lines = 1
       @editor_lines = @options[:lines] - @status_lines - @command_lines
       create_components
+
+      setup_actions
+      setup_keys
     end
 
     def view
@@ -19,6 +25,14 @@ module Ruco
     end
 
     def key(key)
+      if bound = @bindings[key]
+        if bound.is_a?(Symbol)
+          @actions[bound].call
+        else
+          bound.call
+        end
+      end
+
       case key
 
       # move
@@ -41,21 +55,54 @@ module Ruco
       when :backspace then @focused.delete(-1)
       when :delete then @focused.delete(1)
 
-      # misc
-      when :"Ctrl+d" then
-        @editor.delete_line
-      when :"Ctrl+f" then
-        @focused = @command
-        @command.find
-      when :"Ctrl+g" then
-        @focused = @command
-        @command.move_to_line
       when :escape then # escape from focused
         @focused.reset
         @focused = @editor
-      when :"Ctrl+s" then @editor.save
-      when :"Ctrl+w", :"Ctrl+q" then return(:quit) # quit
       end
+    end
+
+    def bind(key, action=nil, &block)
+      raise if action and block
+      @bindings[key] = action || block
+    end
+
+    def action(name, &block)
+      @actions[name] = block
+    end
+
+    private
+
+    def setup_actions
+      action :save do
+        @editor.save
+      end
+
+      action :quit do
+        :quit
+      end
+
+      action :go_to_line do
+        @focused = @command
+        @command.move_to_line
+      end
+
+      action :delete_line do
+        @editor.delete_line
+      end
+
+      action :find do
+        @focused = @command
+        @command.find
+      end
+    end
+
+    def setup_keys
+      bind :"Ctrl+s", :save
+      bind :"Ctrl+w", :quit
+      bind :"Ctrl+q", :quit
+      bind :"Ctrl+g", :go_to_line
+      bind :"Ctrl+f", :find
+      bind :"Ctrl+d", :delete_line
     end
 
     def create_components
