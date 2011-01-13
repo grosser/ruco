@@ -23,6 +23,9 @@ Usage
 
 TODO
 =====
+ - bind/action must use instance_exec
+ - read .rucorc.rb
+ - write key binding guide
  - smart staying at end of line/column when changing line
  - indentation + paste support
  - warnings / messages
