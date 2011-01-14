@@ -86,7 +86,13 @@ module Ruco
       end
 
       action :quit do
-        :quit
+        if @editor.modified?
+          ask("Loose changes? Enter=Yes Esc=Cancel") do
+            :quit
+          end
+        else
+          :quit
+        end
       end
 
       action :go_to_line do

@@ -37,9 +37,26 @@ describe Ruco::Application do
     app.cursor.should == [3,0] # 0 offset + 1 for statusbar
   end
 
-  it "can quit" do
-    result = app.key(:"Ctrl+w")
-    result.should == :quit
+  describe 'closing' do
+    it "can quit" do
+      result = app.key(:"Ctrl+w")
+      result.should == :quit
+    end
+
+    it "asks before closing changed file -- escape == no" do
+      app.key(?a)
+      app.key(:"Ctrl+w")
+      app.view.split("\n").last.should include("Loose changes")
+      app.key(:escape).should_not == :quit
+      app.key("\n").should_not == :quit
+    end
+
+    it "asks before closing changed file -- enter == yes" do
+      app.key(?a)
+      app.key(:"Ctrl+w")
+      app.view.split("\n").last.should include("Loose changes")
+      app.key(:enter).should == :quit
+    end
   end
 
   describe :bind do
