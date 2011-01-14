@@ -34,7 +34,7 @@ describe Ruco::Application do
     app.key(50) # 2
     app.key(:enter)
     app.view.should == "#{status}123\n456\n789\n#{command}"
-    app.cursor.should == [3,0] # 0 offset + 1 for statusbar
+    app.cursor.should == [2,0] # 0 offset + 1 for statusbar
   end
 
   describe 'closing' do
@@ -56,6 +56,22 @@ describe Ruco::Application do
       app.key(:"Ctrl+w")
       app.view.split("\n").last.should include("Loose changes")
       app.key(:enter).should == :quit
+    end
+  end
+
+  describe 'go to line' do
+    it "goes to the line" do
+      app.key(:"Ctrl+g")
+      app.key(?2)
+      app.key(:enter)
+      app.cursor.should == [2,0] # status bar +  2
+    end
+
+    it "goes to 1 when strange stuff entered" do
+      app.key(:"Ctrl+g")
+      app.key(?0)
+      app.key(:enter)
+      app.cursor.should == [1,0] # status bar +  1
     end
   end
 
