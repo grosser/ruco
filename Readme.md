@@ -12,6 +12,7 @@ Finished:
  - backspace / delete
  - find / go to line
  - delete line
+ - configuration via `~/.ruco.rb`
 
 Install
 =======
@@ -21,12 +22,39 @@ Usage
 =====
     ruco file.rb
 
+Customize
+=========
+
+    # ~/.ruco.rb
+    Ruco.configure do
+      # bind a key, you can use Integers and Symbols
+      # use "ruco --debug-keys foo" to see which keys are possible
+      # or have a look at lib/ruco/keyboard.rb
+      bind(:"Ctrl+e") do
+        ask('delete ?') do |response|
+          if response or not response
+            editor.move(:to, 0, 0)
+            editor.delete(9999)
+          end
+        end
+      end
+
+      # bind an existing action
+      puts @actions.keys
+
+      bind(:"Ctrl+x", :quit)
+      bind(:"Ctrl+o", :save)
+      bind(:"Ctrl+k", :delete_line)
+
+      # define a new action and bind it to multiple keys
+      action(:first){ editor.move(:to_column, 0) }
+      bind(:"Ctrl+a", :first)
+      bind(:home, :first)
+    end
+
 TODO
 =====
  - support typing unicode like äöß etc (rework size / make strings utf8-aware)
- - bind/action must use instance_exec
- - read .rucorc.rb
- - write key binding guide
  - smart staying at end of line/column when changing line
  - indentation + paste support
  - warnings / messages
