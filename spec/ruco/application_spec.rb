@@ -95,4 +95,16 @@ describe Ruco::Application do
       test.should == 1
     end
   end
+
+  describe '.ruco.rb' do
+    it "loads it and can use the bound keys" do
+      Tempfile.string_as_file("Ruco.configure{ bind(:'Ctrl+e'){ @editor.insert('TEST') } }") do |file|
+        File.stub!(:exist?).and_return true
+        File.should_receive(:expand_path).with("~/.ruco.rb").and_return file
+        app.view.should_not include('TEST')
+        app.key(:"Ctrl+e")
+        app.view.should include("TEST")
+      end
+    end
+  end
 end

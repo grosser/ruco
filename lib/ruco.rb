@@ -16,4 +16,12 @@ require 'ruco/text_field'
 module Ruco
   VERSION = File.read( File.join(File.dirname(__FILE__),'..','VERSION') ).strip
   TAB_SIZE = 2
+
+  class << self
+    attr_accessor :application
+  end
+
+  def self.configure(&block)
+    application.instance_exec(&block)
+  end
 end

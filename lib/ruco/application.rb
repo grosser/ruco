@@ -4,20 +4,14 @@ module Ruco
       @file = file
       @options = options
 
-      @bindings = {}
-      @actions = {}
-
-      @status_lines = 1
-      @command_lines = 1
-      @editor_lines = @options[:lines] - @status_lines - @command_lines
-      create_components
-
       setup_actions
       setup_keys
+      load_user_config
+      create_components
     end
 
     def view
-      @status.view + "\n" + @editor.view + @command.view
+      status.view + "\n" + editor.view + command.view
     end
 
     def cursor
@@ -56,7 +50,7 @@ module Ruco
 
       when :escape then # escape from focused
         @focused.reset
-        @focused = @editor
+        @focused = editor
       end
     end
 
@@ -71,22 +65,30 @@ module Ruco
     end
 
     def ask(question, options={}, &block)
-      @focused = @command
-      @command.ask(question, options) do |response|
-        @focused = @editor
+      @focused = command
+      command.ask(question, options) do |response|
+        @focused = editor
         block.call(response)
       end
     end
 
+    def configure(&block)
+      instance_exec(&block)
+    end
+
     private
 
+    attr_reader :editor, :status, :command
+
     def setup_actions
+      @actions = {}
+
       action :save do
-        @editor.save
+        editor.save
       end
 
       action :quit do
-        if @editor.modified?
+        if editor.modified?
           ask("Loose changes? Enter=Yes Esc=Cancel") do
             :quit
           end
@@ -96,19 +98,20 @@ module Ruco
       end
 
       action :go_to_line do
-        ask('Go to Line: '){|result| @editor.move(:to_line, result.to_i - 1) }
+        ask('Go to Line: '){|result| editor.move(:to_line, result.to_i - 1) }
       end
 
       action :delete_line do
-        @editor.delete_line
+        editor.delete_line
       end
 
       action :find do
-        ask("Find: ", :cache => true){|result| @editor.find(result) }
+        ask("Find: ", :cache => true){|result| editor.find(result) }
       end
     end
 
     def setup_keys
+      @bindings = {}
       bind :"Ctrl+s", :save
       bind :"Ctrl+w", :quit
       bind :"Ctrl+q", :quit
@@ -117,11 +120,21 @@ module Ruco
       bind :"Ctrl+d", :delete_line
     end
 
+    def load_user_config
+      Ruco.application = self
+      config = File.expand_path("~/.ruco.rb")
+      load config if File.exist?(config)
+    end
+
     def create_components
-      @editor = Ruco::Editor.new(@file, :lines => @editor_lines, :columns => @options[:columns])
+      @status_lines = 1
+      command_lines = 1
+      editor_lines = @options[:lines] - @status_lines - command_lines
+      
+      @editor = Ruco::Editor.new(@file, :lines => editor_lines, :columns => @options[:columns])
       @status = Ruco::StatusBar.new(@editor, :columns => @options[:columns])
       @command = Ruco::CommandBar.new(:columns => @options[:columns])
-      @command.cursor_line = @editor_lines
+      command.cursor_line = editor_lines
       @focused = @editor
     end
   end
