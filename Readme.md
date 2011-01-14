@@ -23,7 +23,6 @@ Usage
 
 TODO
 =====
- - speedup for large files
  - support typing unicode like äöß etc (rework size / make strings utf8-aware)
  - bind/action must use instance_exec
  - read .rucorc.rb

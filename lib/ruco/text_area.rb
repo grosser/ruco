@@ -16,6 +16,7 @@ module Ruco
     end
 
     def view
+      lines = self.lines
       Array.new(@options[:lines]).map_with_index do |_,i|
         (lines[i + @scrolled_lines] || "").slice(@scrolled_columns, @options[:columns])
       end * "\n" + "\n"
@@ -79,7 +80,7 @@ module Ruco
       lines[@line].size
     end
 
-    private
+    protected
 
     def move_to_eol
       after_last_word = current_line.index(/\s*$/)
