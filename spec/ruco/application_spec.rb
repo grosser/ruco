@@ -28,6 +28,11 @@ describe Ruco::Application do
     app.view.should == "#{status.sub('.txt ','.txt*')}22\n2\n\n#{command}"
   end
 
+  it "does not enter key-codes" do
+    app.key(888)
+    app.view.should == "#{status}\n\n\n#{command}"
+  end
+
   it "can execute a command" do
     write("123\n456\n789\n")
     app.key(:"Ctrl+g") # go to line

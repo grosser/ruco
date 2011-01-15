@@ -51,7 +51,7 @@ module Ruco
         @focused.reset
         @focused = editor
       else
-        @focused.insert(key)
+        @focused.insert(key) if key.is_a?(String)
       end
     end
 
