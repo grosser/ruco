@@ -20,16 +20,17 @@ end
 task :key do
   require 'curses'
 
-  Curses.cbreak # provide unbuffered input
-  Curses.noecho # turn off input echoing
+  Curses.noecho # do not show typed chars
   Curses.nonl # turn off newline translation
-  Curses.stdscr.keypad(true) # turn on keypad mode
-  Curses.stdscr.nodelay = 1
+  Curses.stdscr.keypad(true) # enable arrow keys
+  Curses.raw # give us all other keys
+  Curses.stdscr.nodelay = 1 # do not block -> we can use timeouts
+  Curses.init_screen
 
-  
   count = 0
   loop do
     key = Curses.getch or next
+    break if key == 4294967295 # why does this not appear in ruco !? 
     break if key == ?\C-c
     count = (count + 1) % 20
     Curses.setpos(count,0)
