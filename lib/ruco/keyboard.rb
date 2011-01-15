@@ -65,10 +65,6 @@ class Keyboard
 
   private
 
-  def self.log(stuff)
-    File.open('keyboard.log','a'){|f| f.puts stuff }
-  end
-
   def self.sequence_finished?
     (Time.now.to_f - @sequence_started) > SEQUENCE_TIMEOUT
   end

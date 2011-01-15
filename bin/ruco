@@ -87,6 +87,10 @@ def debug_key(key)
   write(@key_line, 0, "#{key}---")
 end
 
+def log(stuff)
+  File.open('ruco.log','a'){|f| f.puts stuff }
+end
+
 @options = parse_options
 
 require 'ruco'
