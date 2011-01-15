@@ -1,3 +1,5 @@
+# encoding: UTF-8
+
 task :default => :spec
 require "rspec/core/rake_task"
 RSpec::Core::RakeTask.new(:spec) do |t|
@@ -29,8 +31,8 @@ task :key do
 
   count = 0
   loop do
-    key = Curses.getch or next
-    break if key == 4294967295 # why does this not appear in ruco !? 
+    key = Curses.getch || 4294967295
+    next if key == 4294967295 
     break if key == ?\C-c
     count = (count + 1) % 20
     Curses.setpos(count,0)
