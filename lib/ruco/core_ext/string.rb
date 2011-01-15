@@ -20,4 +20,11 @@ class String
     end
     offset
   end
+
+  # stub for 1.8
+  unless method_defined?(:force_encoding)
+    def force_encoding(encoding)
+      self
+    end
+  end
 end

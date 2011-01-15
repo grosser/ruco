@@ -1,22 +1,25 @@
 class Keyboard
   SEQUENCE_TIMEOUT = 0.01
+  NOTHING = 4294967295 # getch returns this as 'nothing' on 1.8 but nil on 1.9.2
   A_TO_Z = ('a'..'z').to_a
 
   def self.listen
     loop do
-      key = Curses.getch
+      key = Curses.getch || NOTHING
 
       if @sequence
         if sequence_finished?
-          yield @sequence.pack('c*')
+          yield @sequence.pack('c*').force_encoding('utf-8')
           @sequence = nil
         else
-          @sequence << key if key
+          @sequence << key unless key == NOTHING
         end
         next
       end
 
-      next unless key
+      next if key == NOTHING
+      log(key)
+
 
       code = case key
 
