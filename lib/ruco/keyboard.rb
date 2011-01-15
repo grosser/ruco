@@ -22,6 +22,8 @@ class Keyboard
       when Curses::KEY_HOME then :home
       when Curses::KEY_NPAGE then :page_down
       when Curses::KEY_PPAGE then :page_up
+      when Curses::KEY_IC then :insert
+      when Curses::KEY_F0..Curses::KEY_F63 then :"F#{key - Curses::KEY_F0}"
 
       # modify
       when 9 then :tab
