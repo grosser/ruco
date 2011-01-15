@@ -35,7 +35,7 @@ module Ruco
     end
 
     def reset
-      @forms_cache[@forms_cache.index(@form)] = nil
+      @forms_cache[@forms_cache.key(@form)] = nil
       @form = nil
     end
 
