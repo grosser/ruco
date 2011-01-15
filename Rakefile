@@ -24,13 +24,12 @@ task :key do
   Curses.noecho # turn off input echoing
   Curses.nonl # turn off newline translation
   Curses.stdscr.keypad(true) # turn on keypad mode
-#  Curses.stdscr.nodelay = 1
+  Curses.stdscr.nodelay = 1
 
   
   count = 0
   loop do
-    key = Curses.getch
-    next if key == 4294967295 # placeholder key when using nodelay mode
+    key = Curses.getch or next
     break if key == ?\C-c
     count = (count + 1) % 20
     Curses.setpos(count,0)

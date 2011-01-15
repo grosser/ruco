@@ -1,9 +1,22 @@
 class Keyboard
+  SEQUENCE_TIMEOUT = 0.01
   A_TO_Z = ('a'..'z').to_a
 
   def self.listen
     loop do
       key = Curses.getch
+
+      if @sequence
+        if sequence_finished?
+          yield @sequence.pack('c*')
+          @sequence = nil
+        else
+          @sequence << key if key
+        end
+        next
+      end
+
+      next unless key
 
       code = case key
 
@@ -35,11 +48,25 @@ class Keyboard
       when 0 then :"Ctrl+space"
       when 1..26 then :"Ctrl+#{A_TO_Z[key-1]}"
       when 27 then :escape
+      when 195..197 # start of unicode sequence
+        @sequence = [key]
+        @sequence_started = Time.now.to_f
+        next
       else
         key > 255 ? key : key.chr # output printable chars
       end
 
       yield code
     end
+  end
+
+  private
+
+  def self.log(stuff)
+    File.open('keyboard.log','a'){|f| f.puts stuff }
+  end
+
+  def self.sequence_finished?
+    (Time.now.to_f - @sequence_started) > SEQUENCE_TIMEOUT
   end
 end
