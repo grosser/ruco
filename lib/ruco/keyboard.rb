@@ -20,7 +20,6 @@ class Keyboard
       # modify
       when 9 then :tab
       when 13 then :enter # shadows Ctrl+m
-      when 32..126 then key # printable
       when 263, 127 then :backspace # ubuntu / mac
       when Curses::KEY_DC then :delete
 
@@ -29,7 +28,7 @@ class Keyboard
       when 1..26 then :"Ctrl+#{A_TO_Z[key-1]}"
       when 27 then :escape
       else
-        key
+        key.chr # printable
       end
 
       yield code

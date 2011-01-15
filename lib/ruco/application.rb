@@ -42,7 +42,6 @@ module Ruco
 
       # modify
       when :tab then @focused.insert("\t")
-      when 32..126 then @focused.insert(key.chr) # printable
       when :enter then
         @focused.insert("\n")
       when :backspace then @focused.delete(-1)
@@ -51,6 +50,8 @@ module Ruco
       when :escape then # escape from focused
         @focused.reset
         @focused = editor
+      else
+        @focused.insert(key)
       end
     end
 

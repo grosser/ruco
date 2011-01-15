@@ -20,10 +20,10 @@ describe Ruco::Application do
 
   it "can enter stuff" do
     write("")
-    app.key(50)
-    app.key(50)
+    app.key('2')
+    app.key('2')
     app.key(:enter)
-    app.key(50)
+    app.key('2')
     app.key(:enter)
     app.view.should == "#{status.sub('.txt ','.txt*')}22\n2\n\n#{command}"
   end
@@ -31,7 +31,7 @@ describe Ruco::Application do
   it "can execute a command" do
     write("123\n456\n789\n")
     app.key(:"Ctrl+g") # go to line
-    app.key(50) # 2
+    app.key('2') # 2
     app.key(:enter)
     app.view.should == "#{status}123\n456\n789\n#{command}"
     app.cursor.should == [2,0] # 0 offset + 1 for statusbar
@@ -44,7 +44,7 @@ describe Ruco::Application do
     end
 
     it "asks before closing changed file -- escape == no" do
-      app.key(?a)
+      app.key('a')
       app.key(:"Ctrl+w")
       app.view.split("\n").last.should include("Loose changes")
       app.key(:escape).should_not == :quit
@@ -52,7 +52,7 @@ describe Ruco::Application do
     end
 
     it "asks before closing changed file -- enter == yes" do
-      app.key(?a)
+      app.key('a')
       app.key(:"Ctrl+w")
       app.view.split("\n").last.should include("Loose changes")
       app.key(:enter).should == :quit
@@ -62,14 +62,14 @@ describe Ruco::Application do
   describe 'go to line' do
     it "goes to the line" do
       app.key(:"Ctrl+g")
-      app.key(?2)
+      app.key('2')
       app.key(:enter)
       app.cursor.should == [2,0] # status bar +  2
     end
 
     it "goes to 1 when strange stuff entered" do
       app.key(:"Ctrl+g")
-      app.key(?0)
+      app.key('0')
       app.key(:enter)
       app.cursor.should == [1,0] # status bar +  1
     end
