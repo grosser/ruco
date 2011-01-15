@@ -59,6 +59,8 @@ TODO
  - indentation + paste support
  - warnings / messages
  - syntax highlighting
+ - support more key-combos/codes in keyboard.rb
+ - search & replace
 
 Author
 ======
