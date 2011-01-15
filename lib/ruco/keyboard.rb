@@ -3,7 +3,7 @@ class Keyboard
 
   def self.listen
     loop do
-      key = Curses.getch
+      key = Curses.getch.ord
 
       code = case key
 
