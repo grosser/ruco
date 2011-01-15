@@ -32,8 +32,8 @@ task :key do
   count = 0
   loop do
     key = Curses.getch || 4294967295
-    next if key == 4294967295 
-    break if key == ?\C-c
+    next if key == 4294967295
+    exit if key == 3 # Ctrl+c
     count = (count + 1) % 20
     Curses.setpos(count,0)
     Curses.addstr("#{key.inspect}     ");
