@@ -124,6 +124,14 @@ describe Ruco::Application do
       app.key('a')
       editor_part(app.view).should == "    \n    a\n"
     end
+
+    it "indents when typing and the next line has more whitespace" do
+      write("a\n  b\n")
+      app.key(:right)
+      app.key(:enter)
+      app.key('c')
+      editor_part(app.view).should == "a\n  c\n  b"
+    end
   end
 
   describe '.ruco.rb' do

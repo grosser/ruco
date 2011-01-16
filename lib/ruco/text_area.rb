@@ -50,7 +50,9 @@ module Ruco
     def insert(text)
       text = tabs_to_spaces(text)
       if text == "\n"
-        text = text + lines[@line].match(/^\s*/)[0]
+        current_whitespace = lines[@line].match(/^\s*/)[0]
+        next_whitespace = lines[@line+1].to_s.match(/^\s*/)[0]
+        text = text + [current_whitespace, next_whitespace].max
       end
       insert_into_content cursor_index, text
       move_according_to_insert(text)
