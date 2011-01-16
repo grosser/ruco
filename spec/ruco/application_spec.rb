@@ -1,8 +1,10 @@
+# encoding: UTF-8
 require File.expand_path('spec/spec_helper')
 
 describe Ruco::Application do
   before do
     @file = 'spec/temp.txt'
+    write('')
   end
 
   def write(content)
@@ -23,7 +25,6 @@ describe Ruco::Application do
   end
 
   it "can enter stuff" do
-    write("")
     app.key('2')
     app.key('2')
     app.key(:enter)
@@ -70,6 +71,7 @@ describe Ruco::Application do
 
   describe 'go to line' do
     it "goes to the line" do
+      write("\n\n\n")
       app.key(:"Ctrl+g")
       app.key('2')
       app.key(:enter)
@@ -77,6 +79,7 @@ describe Ruco::Application do
     end
 
     it "goes to 1 when strange stuff entered" do
+      write("\n\n\n")
       app.key(:"Ctrl+g")
       app.key('0')
       app.key(:enter)
@@ -107,7 +110,6 @@ describe Ruco::Application do
 
   describe 'indentation' do
     it "does not extra-indent when pasting" do
-      write('')
       Ruco.class_eval "Clipboard.copy('ab\n  cd\n  ef')"
       app.key(:tab)
       app.key(:tab)
@@ -116,7 +118,6 @@ describe Ruco::Application do
     end
 
     it "indents when typing" do
-      write('')
       app.key(:tab)
       app.key(:tab)
       app.key(:enter)
