@@ -13,6 +13,8 @@ Finished:
  - find / go to line
  - delete line
  - configuration via `~/.ruco.rb`
+ - keeps indentation
+ - paste from clipboard (default: Ctrl+v)
 
 Install
 =======
@@ -58,9 +60,9 @@ TIPS
 
 TODO
 =====
+ - selecting -> delete / overwrite / copy / cut
  - support typing unicode like äöß etc (rework size / make strings utf8-aware)
  - smart staying at end of line/column when changing line
- - indentation + paste support
  - warnings / messages
  - syntax highlighting
  - support more key-combos/codes in keyboard.rb

@@ -15,6 +15,8 @@ require 'ruco/text_area'
 require 'ruco/text_field'
 
 module Ruco
+  autoload :Clipboard, 'clipboard' # can crash when loaded -> load if needed
+
   VERSION = File.read( File.join(File.dirname(__FILE__),'..','VERSION') ).strip
   TAB_SIZE = 2
 

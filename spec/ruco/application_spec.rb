@@ -9,6 +9,10 @@ describe Ruco::Application do
     File.open(@file,'w'){|f| f.write(content) }
   end
 
+  def editor_part(view)
+    view.naive_split("\n")[1..-2].join("\n")
+  end
+
   let(:app){ Ruco::Application.new(@file, :lines => 5, :columns => 10) }
   let(:status){ "Ruco #{Ruco::VERSION} -- spec/temp.txt  \n" }
   let(:command){ "^W Exit" }
@@ -98,6 +102,26 @@ describe Ruco::Application do
       app.bind :'Ctrl+q', :foo
       app.key(:'Ctrl+q')
       test.should == 1
+    end
+  end
+
+  describe 'indentation' do
+    it "does not extra-indent when pasting" do
+      write('')
+      Ruco.class_eval "Clipboard.copy('ab\n  cd\n  ef')"
+      app.key(:tab)
+      app.key(:tab)
+      app.key(:'Ctrl+v') # paste
+      editor_part(app.view).should == "    ab\n  cd\n  ef"
+    end
+
+    it "indents when typing" do
+      write('')
+      app.key(:tab)
+      app.key(:tab)
+      app.key(:enter)
+      app.key('a')
+      editor_part(app.view).should == "    \n    a\n"
     end
   end
 

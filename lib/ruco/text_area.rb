@@ -49,6 +49,9 @@ module Ruco
 
     def insert(text)
       text = tabs_to_spaces(text)
+      if text == "\n"
+        text = text + lines[@line].match(/^\s*/)[0]
+      end
       insert_into_content cursor_index, text
       move_according_to_insert(text)
     end

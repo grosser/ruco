@@ -84,6 +84,10 @@ module Ruco
     def setup_actions
       @actions = {}
 
+      action :paste do
+        editor.insert(Clipboard.paste('clipboard'))
+      end
+
       action :save do
         editor.save
       end
@@ -119,6 +123,7 @@ module Ruco
       bind :"Ctrl+g", :go_to_line
       bind :"Ctrl+f", :find
       bind :"Ctrl+d", :delete_line
+      bind :"Ctrl+v", :paste
     end
 
     def load_user_config
