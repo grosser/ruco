@@ -1,7 +1,7 @@
 module Ruco
   class Editor
     attr_reader :file
-    delegate :view, :move, :cursor, :to => :text_area
+    delegate :view, :move, :cursor, :delete_line, :to => :text_area
 
     def initialize(file, options)
       @file = file
@@ -26,18 +26,6 @@ module Ruco
     def delete(*args)
       text_area.delete(*args)
       @modified = true
-    end
-
-    def delete_line
-      old_cursor = cursor
-      move :to, cursor.line, 0
-      delete text_area.line_length
-      if cursor == [0,0]
-        delete(1)
-      else
-        delete(-1)
-      end
-      move :to, *old_cursor
     end
 
     def modified?

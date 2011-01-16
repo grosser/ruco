@@ -419,5 +419,14 @@ describe Ruco::Editor do
       editor.delete_line
       editor.cursor.should == [1, 1]
     end
+
+    it "can remove lines outside of initial screen" do
+      write("0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n")
+      editor.move(:to, 5, 0)
+      editor.move(:to, 6, 1)
+      editor.delete_line
+      editor.view.should == "5\n7\n8\n"
+      editor.cursor.should == [1, 1]
+    end
   end
 end

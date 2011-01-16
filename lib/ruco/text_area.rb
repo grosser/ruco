@@ -61,6 +61,19 @@ module Ruco
       end
     end
 
+    # TODO this should go into editor
+    def delete_line
+      old_position = position
+      move :to_column, 0
+      delete line_length
+      if position == [0,0]
+        delete(1)
+      else
+        delete(-1)
+      end
+      move :to, *old_position
+    end
+
     def cursor
       Cursor.new @cursor_line, @cursor_column
     end
@@ -76,11 +89,15 @@ module Ruco
       [jump.size - 1, jump.last.size]
     end
 
+    protected
+
     def line_length
       lines[@line].size
     end
 
-    protected
+    def position
+      [@line, @column]
+    end
 
     def move_to_eol
       after_last_word = current_line.index(/\s*$/)
