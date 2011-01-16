@@ -52,6 +52,10 @@ Customize
       bind(:home, :first)
     end
 
+TIPS
+====
+ - Unicode support -> install libncursesw5-dev before installing ruby 1.9 (does not work for 1.8)
+
 TODO
 =====
  - support typing unicode like äöß etc (rework size / make strings utf8-aware)
