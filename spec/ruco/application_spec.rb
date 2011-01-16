@@ -125,12 +125,20 @@ describe Ruco::Application do
       editor_part(app.view).should == "    \n    a\n"
     end
 
-    it "indents when typing and the next line has more whitespace" do
+    it "indents when at end of line and the next line has more whitespace" do
       write("a\n  b\n")
       app.key(:right)
       app.key(:enter)
       app.key('c')
       editor_part(app.view).should == "a\n  c\n  b"
+    end
+
+    it "does not indent when inside line and next line has more whitespace" do
+      write("ab\n  b\n")
+      app.key(:right)
+      app.key(:enter)
+      app.key('c')
+      editor_part(app.view).should == "a\ncb\n  b"
     end
   end
 

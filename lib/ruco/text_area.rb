@@ -49,8 +49,8 @@ module Ruco
 
     def insert(text)
       text = tabs_to_spaces(text)
-      if text == "\n"
-        current_whitespace = lines[@line].match(/^\s*/)[0]
+      if text == "\n" and @column >= after_last_word
+        current_whitespace = current_line.match(/^\s*/)[0]
         next_whitespace = lines[@line+1].to_s.match(/^\s*/)[0]
         text = text + [current_whitespace, next_whitespace].max
       end
@@ -70,7 +70,7 @@ module Ruco
     def delete_line
       old_position = position
       move :to_column, 0
-      delete line_length
+      delete current_line.size
       if position == [0,0]
         delete(1)
       else
@@ -96,8 +96,8 @@ module Ruco
 
     protected
 
-    def line_length
-      lines[@line].size
+    def after_last_word
+      current_line.index(/\s*$/)
     end
 
     def position
@@ -105,7 +105,6 @@ module Ruco
     end
 
     def move_to_eol
-      after_last_word = current_line.index(/\s*$/)
       after_last_whitespace = current_line.size
 
       if @column == after_last_whitespace or @column < after_last_word
@@ -142,7 +141,7 @@ module Ruco
 
     def adjust_view
       @line =    [[@line,   0].max, lines.size - 1].min
-      @column =  [[@column, 0].max, (lines[@line]||'').size].min
+      @column =  [[@column, 0].max, current_line.size].min
       reposition_cursor
       scroll_column_into_view
       scroll_line_into_view
