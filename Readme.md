@@ -56,17 +56,18 @@ Customize
 
 TIPS
 ====
- - Unicode support -> install libncursesw5-dev before installing ruby 1.9 (does not work for 1.8)
+ - [Ruby1.9] Unicode support -> install libncursesw5-dev before installing ruby (does not work for 1.8)
 
 TODO
 =====
  - selecting -> delete / overwrite / copy / cut
- - support typing unicode like äöß etc (rework size / make strings utf8-aware)
  - smart staying at end of line/column when changing line
  - warnings / messages
  - syntax highlighting
  - support more key-combos/codes in keyboard.rb
+ - raise when binding to a unsupported key
  - search & replace
+ - 1.8: unicode support <-> already finished but usable due to Curses (see encoding branch)
 
 Author
 ======
