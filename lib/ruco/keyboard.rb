@@ -18,8 +18,8 @@ class Keyboard
       end
 
       next if key == NOTHING
-      log(key)
 
+      key = key.ord if key.is_a?(String) # ruby 1.9 fix
 
       code = case key
 
