@@ -1,8 +1,7 @@
 GEM
   remote: http://rubygems.org/
   specs:
-    clipboard (0.9.3)
-      zucker (>= 8)
+    clipboard (0.9.4)
     diff-lcs (1.1.2)
     git (1.2.5)
     jeweler (1.5.2)
@@ -20,13 +19,12 @@ GEM
     rspec-mocks (2.0.1)
       rspec-core (~> 2.0.1)
       rspec-expectations (~> 2.0.1)
-    zucker (8)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
-  clipboard
+  clipboard (>= 0.9.4)
   jeweler
   rake
   rspec (~> 2)

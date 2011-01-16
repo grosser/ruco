@@ -1,6 +1,6 @@
 source :rubygems
 
-gem 'clipboard'
+gem 'clipboard', '>=0.9.4'
 
 group :dev do # not development <-> would add unneeded development dependencies in gemspec
   gem 'rake'
