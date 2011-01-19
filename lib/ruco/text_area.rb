@@ -59,8 +59,12 @@ module Ruco
 
     def delete(count)
       if count > 0
-        with_lines_as_string do |content|
-          content.slice!(cursor_index, count)
+        if current_line[@column..-1].size >= count
+          current_line.slice!(@column, count)
+        else
+          with_lines_as_string do |content|
+            content.slice!(cursor_index, count)
+          end
         end
       else
         backspace(count.abs)
@@ -128,16 +132,23 @@ module Ruco
     end
 
     def backspace(count)
-      start_index = cursor_index - count
-      if start_index < 0
-        count += start_index
-        start_index = 0
-      end
+      if @column >= count
+        new_colum = @column - count
+        current_line.slice!(new_colum, count)
+        move :to_column, new_colum
+      else
+        start_index = cursor_index - count
+        if start_index < 0
+          count += start_index
+          start_index = 0
+        end
 
-      with_lines_as_string do |content|
-        content.slice!(start_index, count)
+        with_lines_as_string do |content|
+          content.slice!(start_index, count)
+        end
+
+        move :to, *position_for_index(start_index)
       end
-      move :to, *position_for_index(start_index)
     end
 
     def adjust_view
