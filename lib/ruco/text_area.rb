@@ -1,9 +1,9 @@
 module Ruco
   class TextArea
-    attr_reader :content
+    attr_reader :lines
 
     def initialize(content, options)
-      @content = tabs_to_spaces(content)
+      @lines = tabs_to_spaces(content).naive_split("\n")
       @options = options
       @line = 0
       @column = 0
@@ -16,7 +16,6 @@ module Ruco
     end
 
     def view
-      lines = self.lines
       Array.new(@options[:lines]).map_with_index do |_,i|
         (lines[i + @scrolled_lines] || "").slice(@scrolled_columns, @options[:columns])
       end * "\n" + "\n"
@@ -60,7 +59,9 @@ module Ruco
 
     def delete(count)
       if count > 0
-        @content.slice!(cursor_index, count)
+        with_lines_as_string do |content|
+          content.slice!(cursor_index, count)
+        end
       else
         backspace(count.abs)
       end
@@ -89,12 +90,22 @@ module Ruco
       index
     end
 
-    def cursor_for_index(index)
-      jump = @content.slice(0, index).to_s.naive_split("\n")
+    def position_for_index(index)
+      jump = content.slice(0, index).to_s.naive_split("\n")
       [jump.size - 1, jump.last.size]
     end
 
+    def content
+      (lines * "\n").freeze
+    end
+
     protected
+
+    def with_lines_as_string
+      string = @lines * "\n"
+      yield string
+      @lines = string.naive_split("\n")
+    end
 
     def after_last_word
       current_line.index(/\s*$/)
@@ -131,12 +142,10 @@ module Ruco
         start_index = 0
       end
 
-      @content.slice!(start_index, count)
-      move :to, *cursor_for_index(start_index)
-    end
-
-    def lines
-      @content.naive_split("\n")
+      with_lines_as_string do |content|
+        content.slice!(start_index, count)
+      end
+      move :to, *position_for_index(start_index)
     end
 
     def adjust_view
@@ -182,11 +191,13 @@ module Ruco
     end
 
     def insert_into_content(index, text)
-      # expand with newlines when inserting after maximum position
-      if index > @content.size
-        @content << "\n" * (index - @content.size)
+      with_lines_as_string do |content|
+        # expand with newlines when inserting after maximum position
+        if index > content.size
+          content << "\n" * (index - content.size)
+        end
+        content.insert(index, text)
       end
-      @content.insert(index, text)
     end
 
     def current_line

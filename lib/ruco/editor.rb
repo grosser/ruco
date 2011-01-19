@@ -13,7 +13,7 @@ module Ruco
 
     def find(text)
       index = text_area.content.index(text, text_area.cursor_index+1) || text_area.cursor_index
-      move :to, *text_area.cursor_for_index(index)
+      move :to, *text_area.position_for_index(index)
     end
 
     def reset;end
