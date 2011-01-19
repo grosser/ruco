@@ -67,17 +67,9 @@ module Ruco
       end
     end
 
-    # TODO this should go into editor
     def delete_line
-      old_position = position
-      move :to_column, 0
-      delete current_line.size
-      if position == [0,0]
-        delete(1)
-      else
-        delete(-1)
-      end
-      move :to, *old_position
+      lines.slice!(@line, 1)
+      adjust_view
     end
 
     def cursor
