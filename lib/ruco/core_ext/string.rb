@@ -12,15 +12,6 @@ class String
     found
   end
 
-  def nth_index(text, n)
-    offset = -1
-    (n+1).times do
-      offset += 1
-      offset = index(text, offset) or return
-    end
-    offset
-  end
-
   # stub for 1.8
   unless method_defined?(:force_encoding)
     def force_encoding(encoding)
