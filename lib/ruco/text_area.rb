@@ -53,8 +53,8 @@ module Ruco
         next_whitespace = lines[@line+1].to_s.match(/^\s*/)[0]
         text = text + [current_whitespace, next_whitespace].max
       end
-      insert_into_content cursor_index, text
-      move_according_to_insert(text)
+      insert_into_content text
+      move_according_to_insert text
     end
 
     def delete(count)
@@ -190,14 +190,19 @@ module Ruco
       @cursor_line = @line - @scrolled_lines
     end
 
-    def insert_into_content(index, text)
-      with_lines_as_string do |content|
-        # expand with newlines when inserting after maximum position
-        if index > content.size
-          content << "\n" * (index - content.size)
+    def insert_into_content(text)
+      if text.include?("\n")
+        with_lines_as_string do |content|
+          content.insert(cursor_index, text)
         end
-        content.insert(index, text)
+      else
+        # faster but complicated for newlines
+        lines[@line].insert(@column, text)
       end
+    end
+
+    def position_inside_content?
+      @line < lines.size and @column < lines[@line].to_s.size
     end
 
     def current_line
