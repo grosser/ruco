@@ -20,23 +20,28 @@ task :try do
 end
 
 task :key do
-  require 'curses'
+  begin
+    require 'ffi-ncurses'
+    NCurses = FFI::NCurses
 
-  Curses.noecho # do not show typed chars
-  Curses.nonl # turn off newline translation
-  Curses.stdscr.keypad(true) # enable arrow keys
-  Curses.raw # give us all other keys
-  Curses.stdscr.nodelay = 1 # do not block -> we can use timeouts
-  Curses.init_screen
+    NCurses.noecho # do not show typed chars
+    NCurses.nonl # turn off newline translation
+  #  NCurses.stdscr.keypad(true) # enable arrow keys
+    NCurses.raw # give us all other keys
+  #  NCurses.stdscr.nodelay = 1 # do not block -> we can use timeouts
+    NCurses.initscr
 
-  count = 0
-  loop do
-    key = Curses.getch || 4294967295
-    next if key == 4294967295
-    exit if key == 3 # Ctrl+c
-    count = (count + 1) % 20
-    Curses.setpos(count,0)
-    Curses.addstr("#{key.inspect}     ");
+    count = 0
+    loop do
+      key = NCurses.getch || 4294967295
+      next if key == 4294967295
+      exit if key == 3 # Ctrl+c
+      count = (count + 1) % 20
+      NCurses.move(count,0)
+      NCurses.addstr("#{key.inspect}    áßðáßf ");
+    end
+  ensure
+    NCurses.endwin
   end
 end
 
