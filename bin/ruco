@@ -104,7 +104,12 @@ init_screen do
 
   Keyboard.listen do |key|
     debug_key(key) if @options[:debug_keys]
-    result = app.key key
+    if key == :resize
+      app.resize(Curses.stdscr.maxy, Curses.stdscr.maxx)
+      @screen.clear # clear cache
+    else
+      result = app.key key
+    end
     break if result == :quit
     show_app app
   end

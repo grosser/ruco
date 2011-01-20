@@ -61,7 +61,7 @@ TIPS
 TODO
 =====
  - session storage (stay at same line/column when reopening)
- - past detection ? (ctrl+shift+insert / Cmd+v) -> no indentation
+ - paste detection ? (ctrl+shift+insert / Cmd+v) -> no indentation
  - selecting -> delete / overwrite / copy / cut
  - smart staying at end of line/column when changing line
  - warnings / messages
