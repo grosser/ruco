@@ -3,6 +3,7 @@ require 'ruco/core_ext/string'
 require 'ruco/core_ext/array'
 require 'ruco/core_ext/hash'
 
+require 'ruco/keyboard'
 require 'ruco/cursor'
 
 require 'ruco/editor'

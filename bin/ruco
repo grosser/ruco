@@ -95,7 +95,6 @@ end
 @options = parse_options
 
 require 'ruco'
-require 'ruco/keyboard' # needs curses <-> not loaded for specs
 
 app = Ruco::Application.new(ARGV[0], :lines => Curses.stdscr.maxy, :columns => Curses.stdscr.maxx)
 
