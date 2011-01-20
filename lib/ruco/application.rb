@@ -77,6 +77,13 @@ module Ruco
       instance_exec(&block)
     end
 
+    def resize(lines, columns)
+      @options[:lines] = lines
+      @options[:columns] = columns
+      create_components
+      @editor.resize(editor_lines, columns)
+    end
+
     private
 
     attr_reader :editor, :status, :command
@@ -134,14 +141,16 @@ module Ruco
 
     def create_components
       @status_lines = 1
-      command_lines = 1
-      editor_lines = @options[:lines] - @status_lines - command_lines
-      
-      @editor = Ruco::Editor.new(@file, :lines => editor_lines, :columns => @options[:columns])
+      @editor ||= Ruco::Editor.new(@file, :lines => editor_lines, :columns => @options[:columns])
       @status = Ruco::StatusBar.new(@editor, :columns => @options[:columns])
       @command = Ruco::CommandBar.new(:columns => @options[:columns])
       command.cursor_line = editor_lines
       @focused = @editor
+    end
+
+    def editor_lines
+      command_lines = 1
+      editor_lines = @options[:lines] - @status_lines - command_lines
     end
   end
 end

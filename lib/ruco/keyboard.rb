@@ -51,6 +51,7 @@ class Keyboard
       when 0 then :"Ctrl+space"
       when 1..26 then :"Ctrl+#{A_TO_Z[key-1]}"
       when 27 then :escape
+      when Curses::KEY_RESIZE then :resize
       when 195..197 # start of unicode sequence
         @sequence = [key]
         @sequence_started = Time.now.to_f

@@ -95,6 +95,11 @@ module Ruco
       (lines * "\n").freeze
     end
 
+    def resize(lines, columns)
+      @options[:lines] = lines
+      @options[:columns] = columns
+    end
+
     protected
 
     def with_lines_as_string

@@ -47,6 +47,12 @@ describe Ruco::Application do
     app.cursor.should == [2,0] # 0 offset + 1 for statusbar
   end
 
+  it "can resize" do
+    write("01234567\n1\n2\n3\n4\n5678910111213\n6\n7\n8")
+    app.resize(8, 7)
+    app.view.should == "#{status}0123456\n1\n2\n3\n4\n5678910\n6\n7\n#{command}"
+  end
+
   describe 'closing' do
     it "can quit" do
       result = app.key(:"Ctrl+w")
