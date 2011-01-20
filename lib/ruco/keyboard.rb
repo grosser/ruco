@@ -8,6 +8,7 @@ class Keyboard
   def self.listen
     loop do
       key = Curses.getch || NOTHING
+      key = key.ord if key.is_a?(String) # ruby 1.9 fix
 
       if @sequence
         if sequence_finished?
@@ -21,52 +22,53 @@ class Keyboard
 
       next if key == NOTHING
 
-      key = key.ord if key.is_a?(String) # ruby 1.9 fix
-
-      code = case key
-
-      # move
-      when Curses::Key::UP then :up
-      when Curses::Key::DOWN then :down
-      when Curses::Key::RIGHT then :right
-      when Curses::Key::LEFT then :left
-      when 554 then :"Ctrl+right"
-      when 555 then :"Ctrl+Shift+right"
-      when 539 then :"Ctrl+left"
-      when 540 then :"Ctrl+Shift+left"
-      when 560 then :"Ctrl+up"
-      when 519 then :"Ctrl+down"
-      when Curses::KEY_END then :end
-      when Curses::KEY_HOME then :home
-      when Curses::KEY_NPAGE then :page_down
-      when Curses::KEY_PPAGE then :page_up
-      when Curses::KEY_IC then :insert
-      when Curses::KEY_F0..Curses::KEY_F63 then :"F#{key - Curses::KEY_F0}"
-
-      # modify
-      when 9 then :tab
-      when 13 then :enter # shadows Ctrl+m
-      when 263, 127 then :backspace # ubuntu / mac
-      when Curses::KEY_DC then :delete
-
-      # misc
-      when 0 then :"Ctrl+space"
-      when 1..26 then :"Ctrl+#{A_TO_Z[key-1]}"
-      when 27 then :escape
-      when Curses::KEY_RESIZE then :resize
-      when 195..197 # start of unicode sequence
-        @sequence = [key]
-        @sequence_started = Time.now.to_f
-        next
-      else
-        key > 255 ? key : key.chr # output printable chars
-      end
-
-      yield code
+      code = translate_key_to_code(key)
+      yield code unless code == :next
     end
   end
 
   private
+
+  def self.translate_key_to_code(key)
+    case key
+
+    # move
+    when Curses::Key::UP then :up
+    when Curses::Key::DOWN then :down
+    when Curses::Key::RIGHT then :right
+    when Curses::Key::LEFT then :left
+    when 554 then :"Ctrl+right"
+    when 555 then :"Ctrl+Shift+right"
+    when 539 then :"Ctrl+left"
+    when 540 then :"Ctrl+Shift+left"
+    when 560 then :"Ctrl+up"
+    when 519 then :"Ctrl+down"
+    when Curses::KEY_END then :end
+    when Curses::KEY_HOME then :home
+    when Curses::KEY_NPAGE then :page_down
+    when Curses::KEY_PPAGE then :page_up
+    when Curses::KEY_IC then :insert
+    when Curses::KEY_F0..Curses::KEY_F63 then :"F#{key - Curses::KEY_F0}"
+
+    # modify
+    when 9 then :tab
+    when 13 then :enter # shadows Ctrl+m
+    when 263, 127 then :backspace # ubuntu / mac
+    when Curses::KEY_DC then :delete
+
+    # misc
+    when 0 then :"Ctrl+space"
+    when 1..26 then :"Ctrl+#{A_TO_Z[key-1]}"
+    when 27 then :escape
+    when Curses::KEY_RESIZE then :resize
+    when 195..197 # start of unicode sequence
+      @sequence = [key]
+      @sequence_started = Time.now.to_f
+      :next
+    else
+      key > 255 ? key : key.chr # output printable chars
+    end
+  end
 
   def self.sequence_finished?
     (Time.now.to_f - @sequence_started) > SEQUENCE_TIMEOUT
