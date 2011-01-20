@@ -6,24 +6,26 @@ class Keyboard
   A_TO_Z = ('a'..'z').to_a
 
   def self.listen
-    loop do
-      key = Curses.getch || NOTHING
-      key = key.ord if key.is_a?(String) # ruby 1.9 fix
+    @sequence = nil
+    @started = Time.now.to_f
 
-      if @sequence
-        if sequence_finished?
-          yield @sequence.pack('c*').force_encoding('utf-8')
-          @sequence = nil
+    loop do
+      key = fetch_user_input
+
+      if sequence_finished?
+        result = if @sequence.size == 1
+          # user pressed a key
+          translate_key_to_code(@sequence.first)
         else
-          @sequence << key unless key == NOTHING
+          # multi-byte character or paste
+          @sequence.pack('c*').gsub("\r","\n").force_encoding('utf-8')
         end
-        next
+        yield result
+        @sequence = nil
       end
 
       next if key == NOTHING
-
-      code = translate_key_to_code(key)
-      yield code unless code == :next
+      start_or_append_sequence key
     end
   end
 
@@ -61,16 +63,24 @@ class Keyboard
     when 1..26 then :"Ctrl+#{A_TO_Z[key-1]}"
     when 27 then :escape
     when Curses::KEY_RESIZE then :resize
-    when 195..197 # start of unicode sequence
-      @sequence = [key]
-      @sequence_started = Time.now.to_f
-      :next
     else
-      key > 255 ? key : key.chr # output printable chars
+      key.chr
     end
   end
 
+  def self.fetch_user_input
+    key = Curses.getch || NOTHING
+    key = key.ord if key.is_a?(String) # ruby 1.9 fix
+    key
+  end
+
+  def self.start_or_append_sequence(key)
+    @started = Time.now.to_f
+    @sequence ||= []
+    @sequence << key
+  end
+
   def self.sequence_finished?
-    (Time.now.to_f - @sequence_started) > SEQUENCE_TIMEOUT
+    @sequence and (Time.now.to_f - @started) > SEQUENCE_TIMEOUT
   end
 end

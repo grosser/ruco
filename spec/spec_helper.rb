@@ -1,5 +1,6 @@
 $LOAD_PATH.unshift 'lib'
 require 'ruco'
+require 'timeout'
 
 require 'tempfile'
 class Tempfile
