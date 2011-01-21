@@ -5,25 +5,16 @@ class Keyboard
   NOTHING = 4294967295 # getch returns this as 'nothing' on 1.8 but nil on 1.9.2
   A_TO_Z = ('a'..'z').to_a
 
-  def self.listen
+  def self.listen(&block)
     @sequence = nil
     @started = Time.now.to_f
 
     loop do
       key = fetch_user_input
-
       if sequence_finished?
-        result = if @sequence.size == 1
-          # user pressed a key
-          translate_key_to_code(@sequence.first)
-        else
-          # multi-byte character or paste
-          @sequence.pack('c*').gsub("\r","\n").force_encoding('utf-8')
-        end
-        yield result
+        yield format_sequence(@sequence)
         @sequence = nil
       end
-
       next if key == NOTHING
       start_or_append_sequence key
     end
@@ -78,6 +69,16 @@ class Keyboard
     @started = Time.now.to_f
     @sequence ||= []
     @sequence << key
+  end
+
+  def self.format_sequence(sequence)
+    if sequence.size == 1
+      # user pressed a key
+      translate_key_to_code(sequence.first)
+    else
+      # multi-byte character or paste
+      sequence.pack('c*').gsub("\r","\n").force_encoding('utf-8')
+    end
   end
 
   def self.sequence_finished?
