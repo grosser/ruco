@@ -101,7 +101,11 @@ app = Ruco::Application.new(ARGV[0], :lines => Curses.stdscr.maxy, :columns => C
 init_screen do
   show_app app
 
-  Keyboard.listen do |key|
+  Keyboard.input do
+    Curses.getch
+  end
+
+  Keyboard.output do |key|
     debug_key(key) if @options[:debug_keys]
     if key == :resize
       app.resize(Curses.stdscr.maxy, Curses.stdscr.maxx)

@@ -1,11 +1,13 @@
-require 'curses'
-
 class Keyboard
   SEQUENCE_TIMEOUT = 0.01
   NOTHING = 4294967295 # getch returns this as 'nothing' on 1.8 but nil on 1.9.2
   A_TO_Z = ('a'..'z').to_a
 
-  def self.listen(&block)
+  def self.input(&block)
+    @input = block
+  end
+
+  def self.output
     @sequence = nil
     @started = Time.now.to_f
 
@@ -60,7 +62,7 @@ class Keyboard
   end
 
   def self.fetch_user_input
-    key = Curses.getch || NOTHING
+    key = @input.call || NOTHING
     key = key.ord if key.is_a?(String) # ruby 1.9 fix
     key
   end
