@@ -1,3 +1,5 @@
+require 'curses'
+
 class Keyboard
   SEQUENCE_TIMEOUT = 0.01
   NOTHING = 4294967295 # getch returns this as 'nothing' on 1.8 but nil on 1.9.2
