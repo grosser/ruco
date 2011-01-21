@@ -1,6 +1,7 @@
 require 'curses'
 
 class Keyboard
+  ENTER = 13
   IS_18 = RUBY_VERSION =~ /^1\.8/
   SEQUENCE_TIMEOUT = 0.01
   NOTHING = 4294967295 # getch returns this as 'nothing' on 1.8 but nil on 1.9.2
@@ -17,7 +18,11 @@ class Keyboard
     loop do
       key = fetch_user_input
       if sequence_finished?
-        sequence_to_key_codes(@sequence).each{|s| yield s }
+        if needs_paste_fix?(@sequence)
+          yield bytes_to_string(@sequence)
+        else
+          bytes_to_key_codes(@sequence).each{|c| yield c }
+        end
         @sequence = nil
       end
       next if key == NOTHING
@@ -50,7 +55,7 @@ class Keyboard
 
     # modify
     when 9 then :tab
-    when 13 then :enter # shadows Ctrl+m
+    when ENTER then :enter # shadows Ctrl+m
     when 263, 127 then :backspace # ubuntu / mac
     when Curses::KEY_DC then :delete
 
@@ -74,20 +79,6 @@ class Keyboard
     @started = Time.now.to_f
     @sequence ||= []
     @sequence << key
-  end
-
-  def self.sequence_to_key_codes(sequence)
-    if sequence.size == 1
-      # user pressed a single key
-      [translate_key_to_code(sequence.first)]
-    else
-      # multi-byte character or paste or very fast typing
-      if sequence.include?(13) # enter
-        [bytes_to_string(sequence)] # single string to get nice paste
-      else
-        bytes_to_key_codes(sequence)
-      end
-    end
   end
 
   def self.bytes_to_string(bytes)
@@ -127,5 +118,10 @@ class Keyboard
 
   def self.sequence_finished?
     @sequence and (Time.now.to_f - @started) > SEQUENCE_TIMEOUT
+  end
+
+  # paste of multiple \n or \n in text would cause weird indentation
+  def self.needs_paste_fix?(sequence)
+    sequence.size > 1 and sequence.include?(ENTER)
   end
 end

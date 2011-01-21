@@ -58,7 +58,7 @@ describe Keyboard do
 
   it "cannot fetch long sequences" do
     type [195, :sleep_long, 164]
-    output.should == [195.chr, 164.chr]
+    output.map{|s|s.bytes.to_a}.should == [[195], [164]]
   end
 
   it "fetches pastes between normal key strokes" do
