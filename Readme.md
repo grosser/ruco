@@ -15,6 +15,7 @@ Finished:
  - configuration via `~/.ruco.rb`
  - keeps indentation
  - paste from clipboard (default: Ctrl+v)
+ - paste-detection (e.g. cmd+v) -> clean indentation
 
 Install
 =======
@@ -61,7 +62,6 @@ TIPS
 TODO
 =====
  - session storage (stay at same line/column when reopening)
- - paste detection ? (ctrl+shift+insert / Cmd+v) -> no indentation
  - selecting -> delete / overwrite / copy / cut
  - smart staying at end of line/column when changing line
  - warnings / messages
