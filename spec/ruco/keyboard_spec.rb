@@ -70,4 +70,9 @@ describe Keyboard do
     type [32, :sleep_long, 32, 32, 32, :sleep_long, 32]
     output.should == [' ',' ',' ',' ',' ']
   end
+
+  it "returns control chars separately" do
+    type [260, 127, 127, 261, 260, 195, 164, 261, 260, 195, 164]
+    output.should == [:left, :backspace, :backspace, :right, :left, "ä", :right, :left, "ä"]
+  end
 end

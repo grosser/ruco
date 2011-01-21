@@ -82,28 +82,47 @@ class Keyboard
       [translate_key_to_code(sequence.first)]
     else
       # multi-byte character or paste or very fast typing
-      text = sequence.pack('c*').gsub("\r","\n").force_encoding('utf-8')
-      if text.include?("\n")
-        # keep one string for nice paste
-        [text]
+      if sequence.include?(13) # enter
+        [bytes_to_string(sequence)] # single string to get nice paste
       else
-        text_to_key_codes(text)
+        bytes_to_key_codes(sequence)
       end
     end
   end
 
+  def self.bytes_to_string(bytes)
+    bytes.pack('c*').gsub("\r","\n").force_encoding('utf-8')
+  end
+
   # split a text so fast-typers do not get bugs like ^B^C in output
-  def self.text_to_key_codes(text)
-    $KCODE = 'U' if IS_18 # UTF8 Mode
-    text.scan(/./m).map do |char|
-      if char.bytes.to_a.size == 1
-        # process single-byte chars
-        translate_key_to_code char
+  def self.bytes_to_key_codes(bytes)
+    result = []
+    multi_byte = nil
+
+    bytes.each do |byte|
+      if multi_byte_part?(byte)
+        multi_byte ||= []
+        multi_byte << byte
       else
-        # leave multi-byte chars alone
-        char
+        if multi_byte
+          # finish multi-byte char
+          result << bytes_to_string(multi_byte)
+          multi_byte = nil
+        end
+        result << translate_key_to_code(byte)
       end
     end
+
+    if multi_byte
+      result << bytes_to_string(multi_byte)
+    end
+
+    result
+  end
+
+  # not ascii and not control-char
+  def self.multi_byte_part?(byte)
+    127 < byte and byte < 256
   end
 
   def self.sequence_finished?
