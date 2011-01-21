@@ -10,7 +10,7 @@ describe Keyboard do
       end
     end
     keys
-  rescue Exception
+  rescue Timeout::Error
     keys
   end
 
@@ -62,7 +62,12 @@ describe Keyboard do
   end
 
   it "fetches pastes between normal key strokes" do
+    type [32, :sleep_long, 32, 13, 32, :sleep_long, 32]
+    output.should == [' '," \n ",' ']
+  end
+
+  it "returns pastes that do not need indentation fix as normal chars" do
     type [32, :sleep_long, 32, 32, 32, :sleep_long, 32]
-    output.should == [' ','   ',' ']
+    output.should == [' ',' ',' ',' ',' ']
   end
 end

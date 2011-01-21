@@ -1,6 +1,7 @@
 require 'curses'
 
 class Keyboard
+  IS_18 = RUBY_VERSION =~ /^1\.8/
   SEQUENCE_TIMEOUT = 0.01
   NOTHING = 4294967295 # getch returns this as 'nothing' on 1.8 but nil on 1.9.2
   A_TO_Z = ('a'..'z').to_a
@@ -16,7 +17,7 @@ class Keyboard
     loop do
       key = fetch_user_input
       if sequence_finished?
-        yield format_sequence(@sequence)
+        sequence_to_key_codes(@sequence).each{|s| yield s }
         @sequence = nil
       end
       next if key == NOTHING
@@ -75,13 +76,33 @@ class Keyboard
     @sequence << key
   end
 
-  def self.format_sequence(sequence)
+  def self.sequence_to_key_codes(sequence)
     if sequence.size == 1
-      # user pressed a key
-      translate_key_to_code(sequence.first)
+      # user pressed a single key
+      [translate_key_to_code(sequence.first)]
     else
-      # multi-byte character or paste
-      sequence.pack('c*').gsub("\r","\n").force_encoding('utf-8')
+      # multi-byte character or paste or very fast typing
+      text = sequence.pack('c*').gsub("\r","\n").force_encoding('utf-8')
+      if text.include?("\n")
+        # keep one string for nice paste
+        [text]
+      else
+        text_to_key_codes(text)
+      end
+    end
+  end
+
+  # split a text so fast-typers do not get bugs like ^B^C in output
+  def self.text_to_key_codes(text)
+    $KCODE = 'U' if IS_18 # UTF8 Mode
+    text.scan(/./m).map do |char|
+      if char.bytes.to_a.size == 1
+        # process single-byte chars
+        translate_key_to_code char
+      else
+        # leave multi-byte chars alone
+        char
+      end
     end
   end
 
