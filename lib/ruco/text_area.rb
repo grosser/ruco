@@ -26,7 +26,7 @@ module Ruco
       return mask unless @selection
 
       mask.map_with_index do |part,i|
-        if @selection[0][0] == @cursor_line+i
+        if @selection[0][0] == @scrolled_lines + i
           initial_line = [0, Curses::A_NORMAL] if @selection[0][1] != 0
           [
             initial_line,

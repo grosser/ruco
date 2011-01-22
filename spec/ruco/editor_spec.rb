@@ -261,6 +261,19 @@ describe Ruco::Editor do
         nil,
       ]
     end
+
+    it "shows the selection in nth line" do
+      write("\n12345678")
+      editor.move(:to, 1, 2)
+      editor.selecting do
+        move(:to, 1, 4)
+      end
+      editor.color_mask.should == [
+        nil,
+        [[0,0], [2,262144], [4,0]],
+        nil,
+      ]
+    end
   end
 
   describe :view do
