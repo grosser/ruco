@@ -14,6 +14,11 @@ module Ruco
       status.view + "\n" + editor.view + command.view
     end
 
+    def color_mask
+      reverse = [[[0,Curses::A_REVERSE]]]
+      reverse + editor.color_mask + reverse
+    end
+
     def cursor
       Cursor.new(@focused.cursor.line + @status_lines, @focused.cursor.column)
     end

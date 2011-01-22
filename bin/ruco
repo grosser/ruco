@@ -53,31 +53,42 @@ def init_screen
   end
 end
 
-def display(lines, offset, color)
+def display(lines, offset, color_mask)
   @screen ||= [] # current screen is used as cache
-  Curses.attrset color
 
   lines.each_with_index do |content, line|
+    colors = color_mask[line] || [[0,Curses::A_NORMAL]]
+
     line += offset
     clearer = Curses.stdscr.maxx - content.size
     clearer = " " * clearer
     content += clearer
 
-    next if @screen[line] == content
-    @screen[line] = content
+    next if @screen[line] == [content, colors]
+    @screen[line] = [content, colors]
 
-    write(line, 0, content)
+    index = 0
+    Curses.setpos(line,0)
+
+    colors.each do |start, color|
+      Curses.addstr(content[index...start])
+      Curses.attrset color
+      index = start
+    end
+    Curses.addstr(content[index...-1])
+
     write(line, 0, (rand(899)+100).to_s) if @options[:debug_cache]
   end
 end
 
 def show_app(app)
   lines = app.view.naive_split("\n")
+  color_mask = app.color_mask
 
   # TODO move this logic into application
-  display([lines.first], 0, Curses::A_REVERSE)
-  display(lines[1..-2], 1, Curses::A_NORMAL)
-  display([lines.last], Curses.stdscr.maxy - 1, Curses::A_REVERSE)
+  display([lines.first], 0, [color_mask.first])
+  display(lines[1..-2], 1, color_mask[1..-2])
+  display([lines.last], Curses.stdscr.maxy - 1, [color_mask.last])
 
   Curses.setpos(app.cursor.line, app.cursor.column)
 end

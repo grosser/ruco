@@ -21,6 +21,10 @@ module Ruco
       end * "\n" + "\n"
     end
 
+    def color_mask
+      [[[0,Curses::A_NORMAL],[2,Curses::A_REVERSE],[7,Curses::A_NORMAL]]] * @options[:lines]
+    end
+
     def move(where, *args)
       case where
       when :relative then
