@@ -217,7 +217,10 @@ describe Ruco::Editor do
       write('12345678')
       editor.move(:to, 0, 4)
       editor.selecting do
-        move(:relative, 0, -4)
+        move(:relative, 0, -2)
+      end
+      editor.selecting do
+        move(:relative, 0, -2)
       end
       editor.selection.should == [[0,0],[0,4]]
     end

@@ -8,3 +8,13 @@ class Array
     dup.map_with_index!(&block)
   end
 end
+
+class Array
+  def <(other)
+    (self.<=>other) == -1
+  end
+
+  def >(other)
+    (self.<=>other) == 1
+  end
+end

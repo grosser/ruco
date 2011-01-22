@@ -64,11 +64,17 @@ module Ruco
     end
 
     def selecting(&block)
-      start = (@selection ? @selection[0] : position)
+      old_selection = @selection || [position, position]
 
       @selecting = true
       instance_exec(&block)
       @selecting = false
+
+      if old_selection[0] < position
+        start = old_selection[0]
+      else
+        start = old_selection[1]
+      end
 
       @selection = [start, position].sort
     end
