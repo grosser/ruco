@@ -213,6 +213,15 @@ describe Ruco::Editor do
       editor.selection.should == [[0,0],[0,6]]
     end
 
+    it "can select backwards" do
+      write('12345678')
+      editor.move(:to, 0, 4)
+      editor.selecting do
+        move(:relative, 0, -4)
+      end
+      editor.selection.should == [[0,0],[0,4]]
+    end
+
     it "clears the selection once I move" do
       write('12345678')
       editor.selecting do

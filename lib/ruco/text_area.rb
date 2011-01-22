@@ -70,7 +70,7 @@ module Ruco
       instance_exec(&block)
       @selecting = false
 
-      @selection = [start, position]
+      @selection = [start, position].sort
     end
 
     def insert(text)

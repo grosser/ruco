@@ -45,6 +45,16 @@ module Ruco
       when :page_up then @focused.move :page_up
       when :page_down then @focused.move :page_down
 
+      # select
+      when :"Ctrl+Shift+right"
+        @focused.selecting do
+          move(:relative, 0, 1)
+        end
+      when :"Ctrl+Shift+left" then
+        @focused.selecting do
+          move(:relative, 0, -1)
+        end
+
       # modify
       when :tab then @focused.insert("\t")
       when :enter then
