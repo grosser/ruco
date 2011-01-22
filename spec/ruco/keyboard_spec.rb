@@ -75,4 +75,14 @@ describe Keyboard do
     type [260, 127, 127, 261, 260, 195, 164, 261, 260, 195, 164]
     output.should == [:left, :backspace, :backspace, :right, :left, "ä", :right, :left, "ä"]
   end
+
+  it "ignores wtf number that is entered when using via ssh" do
+    type [2**64-1, 2**32-1]
+    output.should == []
+  end
+
+  it "returns key-code for unprintable keys" do
+    type [11121, 324234]
+    output.should == [11121, 324234]
+  end
 end

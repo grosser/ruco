@@ -1,6 +1,7 @@
 require 'curses'
 
 class Keyboard
+  MAX_CHAR = 255
   ENTER = 13
   IS_18 = RUBY_VERSION =~ /^1\.8/
   SEQUENCE_TIMEOUT = 0.01
@@ -65,12 +66,13 @@ class Keyboard
     when 27 then :escape
     when Curses::KEY_RESIZE then :resize
     else
-      key.chr
+      key > MAX_CHAR ? key : key.chr
     end
   end
 
   def self.fetch_user_input
     key = @input.call || NOTHING
+    key = NOTHING if key > NOTHING # strange key codes when starting via ssh
     key = key.ord if key.is_a?(String) # ruby 1.9 fix
     key
   end
