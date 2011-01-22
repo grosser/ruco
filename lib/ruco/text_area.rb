@@ -22,7 +22,17 @@ module Ruco
     end
 
     def color_mask
-      [[[0,Curses::A_NORMAL],[2,Curses::A_REVERSE],[7,Curses::A_NORMAL]]] * @options[:lines]
+      mask = Array.new(@options[:lines])
+      return mask unless @selection
+
+      mask.map_with_index do |part,i|
+        if @selection[0][0] == @cursor_line+i
+          [
+            [@selection[0][1], Curses::A_REVERSE],
+            [@selection[1][1], Curses::A_NORMAL],
+          ]
+        end
+      end
     end
 
     def move(where, *args)

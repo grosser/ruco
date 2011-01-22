@@ -223,6 +223,24 @@ describe Ruco::Editor do
     end
   end
 
+  describe :color_mask do
+    it "is empty by default" do
+      editor.color_mask.should == [nil,nil,nil]
+    end
+
+    it "shows the selection" do
+      write('12345678')
+      editor.selecting do
+        move(:to, 0, 4)
+      end
+      editor.color_mask.should == [
+        [[0,262144],[4,0]],
+        nil,
+        nil,
+      ]
+    end
+  end
+
   describe :view do
     before do
       write('')
