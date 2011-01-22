@@ -27,10 +27,12 @@ module Ruco
 
       mask.map_with_index do |part,i|
         if @selection[0][0] == @cursor_line+i
+          initial_line = [0, Curses::A_NORMAL] if @selection[0][1] != 0
           [
+            initial_line,
             [@selection[0][1], Curses::A_REVERSE],
             [@selection[1][1], Curses::A_NORMAL],
-          ]
+          ].compact
         end
       end
     end

@@ -239,6 +239,19 @@ describe Ruco::Editor do
         nil,
       ]
     end
+
+    it "shows the selection from offset" do
+      write('12345678')
+      editor.move(:to, 0, 2)
+      editor.selecting do
+        move(:to, 0, 4)
+      end
+      editor.color_mask.should == [
+        [[0,0], [2,262144], [4,0]],
+        nil,
+        nil,
+      ]
+    end
   end
 
   describe :view do
