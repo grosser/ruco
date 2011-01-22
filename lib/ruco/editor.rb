@@ -1,7 +1,7 @@
 module Ruco
   class Editor
     attr_reader :file
-    delegate :view, :move, :cursor, :resize, :delete_line, :to => :text_area
+    delegate :view, :selection, :selecting, :move, :cursor, :resize, :delete_line, :to => :text_area
 
     def initialize(file, options)
       @file = file

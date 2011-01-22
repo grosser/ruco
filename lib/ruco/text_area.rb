@@ -1,6 +1,6 @@
 module Ruco
   class TextArea
-    attr_reader :lines
+    attr_reader :lines, :selection
 
     def initialize(content, options)
       @lines = tabs_to_spaces(content).naive_split("\n")
@@ -43,7 +43,18 @@ module Ruco
       else
         raise "Unknown move type #{where} with #{args.inspect}"
       end
+      @selection = nil unless @selecting
       adjust_view
+    end
+
+    def selecting(&block)
+      start = (@selection ? @selection[0] : position)
+
+      @selecting = true
+      instance_exec(&block)
+      @selecting = false
+
+      @selection = [start, position]
     end
 
     def insert(text)

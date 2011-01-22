@@ -184,6 +184,45 @@ describe Ruco::Editor do
     end
   end
 
+  describe :selecting do
+    it "remembers the selection" do
+      write('12345678')
+      editor.selecting do
+        move(:to, 0, 4)
+      end
+      editor.selection.should == [[0,0],[0,4]]
+    end
+
+    it "expands the selection" do
+      write('12345678')
+      editor.selecting do
+        move(:to, 0, 4)
+        move(:to, 0, 6)
+      end
+      editor.selection.should == [[0,0],[0,6]]
+    end
+
+    it "expand an old selection" do
+      write('12345678')
+      editor.selecting do
+        move(:to, 0, 4)
+      end
+      editor.selecting do
+        move(:relative, 0, 2)
+      end
+      editor.selection.should == [[0,0],[0,6]]
+    end
+
+    it "clears the selection once I move" do
+      write('12345678')
+      editor.selecting do
+        move(:to, 0, 4)
+      end
+      editor.move(:relative, 0, 2)
+      editor.selection.should == nil
+    end
+  end
+
   describe :view do
     before do
       write('')
