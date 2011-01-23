@@ -193,7 +193,7 @@ describe Ruco::Editor do
       editor.selecting do
         move(:to, 0, 4)
       end
-      editor.selection.should == [[0,0],[0,4]]
+      editor.selection.should == ([0,0]..[0,4])
     end
 
     it "expands the selection" do
@@ -201,7 +201,7 @@ describe Ruco::Editor do
         move(:to, 0, 4)
         move(:to, 0, 6)
       end
-      editor.selection.should == [[0,0],[0,6]]
+      editor.selection.should == ([0,0]..[0,6])
     end
 
     it "expand an old selection" do
@@ -211,7 +211,7 @@ describe Ruco::Editor do
       editor.selecting do
         move(:relative, 0, 2)
       end
-      editor.selection.should == [[0,0],[0,6]]
+      editor.selection.should == ([0,0]..[0,6])
     end
 
     it "can select backwards" do
@@ -222,7 +222,7 @@ describe Ruco::Editor do
       editor.selecting do
         move(:relative, 0, -2)
       end
-      editor.selection.should == [[0,0],[0,4]]
+      editor.selection.should == ([0,0]..[0,4])
     end
 
     it "can select multiple lines" do
@@ -234,7 +234,7 @@ describe Ruco::Editor do
       editor.selecting do
         move(:relative, 1, 0)
       end
-      editor.selection.should == [[0,2],[2,2]]
+      editor.selection.should == ([0,2]..[2,2])
     end
 
     it "clears the selection once I move" do
@@ -287,7 +287,7 @@ describe Ruco::Editor do
       editor.color_mask.should == [nil,nil,nil]
     end
 
-    it "shows the selection" do
+    it "shows one-line selection" do
       write('12345678')
       editor.selecting do
         move(:to, 0, 4)
@@ -295,6 +295,19 @@ describe Ruco::Editor do
       editor.color_mask.should == [
         [[0,262144],[4,0]],
         nil,
+        nil,
+      ]
+    end
+
+    it "shows multi-line selection" do
+      write("012\n345\n678")
+      editor.move(:to, 0,1)
+      editor.selecting do
+        move(:to, 1, 1)
+      end
+      editor.color_mask.should == [
+        [[1,262144],[3,0]],
+        [[0,262144],[1,0]],
         nil,
       ]
     end

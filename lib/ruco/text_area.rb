@@ -26,12 +26,18 @@ module Ruco
       return mask unless @selection
 
       mask.map_with_index do |part,i|
-        if @selection[0][0] == @scrolled_lines + i
-          [
-            [@selection[0][1], Curses::A_REVERSE],
-            [@selection[1][1], Curses::A_NORMAL],
-          ]
-        end
+        start_of_line = [i, 0]
+        end_of_line = [i, @lines[i].to_s.size]
+
+        next unless @selection.overlap?(start_of_line..end_of_line)
+
+        first = [@selection.first, start_of_line].max
+        last = [@selection.last, end_of_line].min
+
+        [
+          [first[1],Curses::A_REVERSE],
+          [last[1], Curses::A_NORMAL]
+        ]
       end
     end
 
@@ -63,7 +69,7 @@ module Ruco
 
     def selecting(&block)
       start = if @selection
-        (position == @selection[0] ? @selection[1] : @selection[0])
+        (position == @selection.first ? @selection.last : @selection.first)
       else
         position
       end
@@ -72,7 +78,8 @@ module Ruco
       instance_exec(&block)
       @selecting = false
 
-      @selection = [start, position].sort
+      sorted = [start, position].sort
+      @selection = sorted[0]..sorted[1]
     end
 
     def insert(text)
@@ -274,10 +281,10 @@ module Ruco
 
     def delete_content_in_selection
       with_lines_as_string do |content|
-        start = index_for_position(*@selection[0])
-        finish = index_for_position(*@selection[1])
+        start = index_for_position(*@selection.first)
+        finish = index_for_position(*@selection.last)
         content.slice!(start, finish-start)
-        move(:to, *@selection[0])
+        move(:to, *@selection.first)
       end
       @selection = nil
     end
