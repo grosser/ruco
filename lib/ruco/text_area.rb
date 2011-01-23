@@ -25,18 +25,12 @@ module Ruco
       mask = Array.new(@options[:lines])
       return mask unless @selection
 
-      mask.map_with_index do |part,i|
-        line = @scrolled_lines + i
-        start_of_line = [line, @scrolled_columns]
+      mask.map_with_index do |_,line|
+        visible = visible_area(line)
+        next unless @selection.overlap?(visible)
 
-        end_of_visible_screen = @scrolled_columns + @options[:columns]
-        last_visible_columns = [current_line.size, end_of_visible_screen].min
-        end_of_line = [line, last_visible_columns]
-
-        next unless @selection.overlap?(start_of_line..end_of_line)
-
-        first = [@selection.first, start_of_line].max
-        last = [@selection.last, end_of_line].min
+        first = [@selection.first, visible.first].max
+        last = [@selection.last, visible.last].min
 
         [
           [first[1]-@scrolled_columns,Curses::A_REVERSE],
@@ -291,6 +285,14 @@ module Ruco
         move(:to, *@selection.first)
       end
       @selection = nil
+    end
+
+    def visible_area(line)
+      line += @scrolled_lines
+      start_of_line = [line, @scrolled_columns]
+      last_visible_column = @scrolled_columns + @options[:columns]
+      end_of_line = [line, last_visible_column]
+      start_of_line..end_of_line
     end
   end
 end

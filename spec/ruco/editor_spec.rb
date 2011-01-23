@@ -306,7 +306,7 @@ describe Ruco::Editor do
         move(:to, 1, 1)
       end
       editor.color_mask.should == [
-        [[1,262144],[3,0]],
+        [[1,262144],[5,0]],
         [[0,262144],[1,0]],
         nil,
       ]
@@ -348,9 +348,9 @@ describe Ruco::Editor do
       editor.view.should == "789\n789\n789\n"
       editor.cursor.should == [2,2]
       editor.color_mask.should == [
-        [[1,262144],[3,0]],
-        [[0,262144],[3,0]],
-        [[0,262144],[2,0]],
+        [[1,262144],[5,0]], # start to end of screen
+        [[0,262144],[5,0]], # 0 to end of screen
+        [[0,262144],[2,0]], # 0 to end of selection
       ]
     end
 
