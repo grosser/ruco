@@ -185,8 +185,11 @@ describe Ruco::Editor do
   end
 
   describe :selecting do
+    before do
+      write('012345678')
+    end
+
     it "remembers the selection" do
-      write('12345678')
       editor.selecting do
         move(:to, 0, 4)
       end
@@ -194,7 +197,6 @@ describe Ruco::Editor do
     end
 
     it "expands the selection" do
-      write('12345678')
       editor.selecting do
         move(:to, 0, 4)
         move(:to, 0, 6)
@@ -203,7 +205,6 @@ describe Ruco::Editor do
     end
 
     it "expand an old selection" do
-      write('12345678')
       editor.selecting do
         move(:to, 0, 4)
       end
@@ -214,7 +215,6 @@ describe Ruco::Editor do
     end
 
     it "can select backwards" do
-      write('12345678')
       editor.move(:to, 0, 4)
       editor.selecting do
         move(:relative, 0, -2)
@@ -226,12 +226,33 @@ describe Ruco::Editor do
     end
 
     it "clears the selection once I move" do
-      write('12345678')
       editor.selecting do
         move(:to, 0, 4)
       end
       editor.move(:relative, 0, 2)
       editor.selection.should == nil
+    end
+
+    it "replaces the selection with what i insert" do
+      editor.selecting do
+        move(:to, 0, 4)
+      end
+      editor.insert('X')
+      editor.selection.should == nil
+      editor.cursor.should == [0,1]
+      editor.move(:to, 0,0)
+      editor.view.should == "X4567\n\n\n"
+    end
+
+    it "replaces the multi-line-selection with what i insert" do
+      write("123\n456\n789")
+      # TODO do without hacks
+      editor.send(:text_area).instance_eval{ @selection = [[0,1],[1,2]] }
+      editor.insert('X')
+      editor.selection.should == nil
+      editor.cursor.should == [0,2]
+      editor.move(:to, 0,0)
+      editor.view.should == "1X6\n789\n\n"
     end
   end
 

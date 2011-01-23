@@ -78,6 +78,8 @@ module Ruco
     end
 
     def insert(text)
+      delete_content_in_selection if @selection
+
       text = tabs_to_spaces(text)
       if text == "\n" and @column >= after_last_word
         current_whitespace = current_line.match(/^\s*/)[0]
@@ -111,10 +113,14 @@ module Ruco
       Cursor.new @cursor_line, @cursor_column
     end
 
-    def cursor_index
-      index = lines[0...@line].join("\n").size + @column
-      index += 1 if @line > 0 # account for missing newline
+    def cursor_index(line=@line, column=@column)
+      index = lines[0...line].join("\n").size + column
+      index += 1 if line > 0 # account for missing newline
       index
+    end
+
+    def index_for_position(line, column)
+      cursor_index(line, column)
     end
 
     def position_for_index(index)
@@ -261,6 +267,16 @@ module Ruco
 
     def tabs_to_spaces(text)
       text.gsub("\t",' ' * Ruco::TAB_SIZE)
+    end
+
+    def delete_content_in_selection
+      with_lines_as_string do |content|
+        start = index_for_position(*@selection[0])
+        finish = index_for_position(*@selection[1])
+        content.slice!(start, finish-start)
+        move(:to, *@selection[0])
+      end
+      @selection = nil
     end
   end
 end
