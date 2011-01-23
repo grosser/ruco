@@ -254,6 +254,16 @@ describe Ruco::Editor do
       editor.move(:to, 0,0)
       editor.view.should == "1X6\n789\n\n"
     end
+
+    it "deletes selection when i delete" do
+      write("123\n456\n789")
+      editor.move(:to, 1,1)
+      editor.send(:text_area).instance_eval{ @selection = [[0,1],[1,2]] }
+      editor.delete(1)
+      editor.cursor.should == [0,1]
+      editor.move(:to, 0,0)
+      editor.view.should == "16\n789\n\n"
+    end
   end
 
   describe :color_mask do

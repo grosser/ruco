@@ -91,6 +91,11 @@ module Ruco
     end
 
     def delete(count)
+      if @selection
+        delete_content_in_selection
+        return
+      end
+
       if count > 0
         if current_line[@column..-1].size >= count
           current_line.slice!(@column, count)
