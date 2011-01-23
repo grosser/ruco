@@ -36,9 +36,9 @@ module Ruco
       case key
 
       # move
-      when :up then @focused.move(:relative, -1,0)
       when :down then @focused.move(:relative, 1,0)
       when :right then @focused.move(:relative, 0,1)
+      when :up then @focused.move(:relative, -1,0)
       when :left then @focused.move(:relative, 0,-1)
       when :end then @focused.move :to_eol
       when :home then @focused.move :to_bol
@@ -46,9 +46,17 @@ module Ruco
       when :page_down then @focused.move :page_down
 
       # select
+      when :"Shift+down" then
+        @focused.selecting do
+          move(:relative, 1, 0)
+        end
       when :"Shift+right"
         @focused.selecting do
           move(:relative, 0, 1)
+        end
+      when :"Shift+up"
+        @focused.selecting do
+          move(:relative, -1, 0)
         end
       when :"Shift+left" then
         @focused.selecting do
