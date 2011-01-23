@@ -46,11 +46,11 @@ module Ruco
       when :page_down then @focused.move :page_down
 
       # select
-      when :"Ctrl+Shift+right"
+      when :"Shift+right"
         @focused.selecting do
           move(:relative, 0, 1)
         end
-      when :"Ctrl+Shift+left" then
+      when :"Shift+left" then
         @focused.selecting do
           move(:relative, 0, -1)
         end

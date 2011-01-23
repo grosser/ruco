@@ -42,11 +42,15 @@ class Keyboard
     when Curses::Key::RIGHT then :right
     when Curses::Key::LEFT then :left
     when 554 then :"Ctrl+right"
+    when 393 then :"Shift+left"
     when 555 then :"Ctrl+Shift+right"
     when 539 then :"Ctrl+left"
+    when 402 then :"Shift+right"
     when 540 then :"Ctrl+Shift+left"
     when 560 then :"Ctrl+up"
+    when 337 then :"Shift+up"
     when 519 then :"Ctrl+down"
+    when 336 then :"Shift+down"
     when Curses::KEY_END then :end
     when Curses::KEY_HOME then :home
     when Curses::KEY_NPAGE then :page_down
