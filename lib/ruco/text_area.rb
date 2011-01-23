@@ -80,6 +80,13 @@ module Ruco
       @selection = sorted[0]..sorted[1]
     end
 
+    def text_in_selection
+      return '' unless @selection
+      start = index_for_position(*@selection.first)
+      finish = index_for_position(*@selection.last)
+      content.slice(start, finish-start)
+    end
+
     def insert(text)
       delete_content_in_selection if @selection
 

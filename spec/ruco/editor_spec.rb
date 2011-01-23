@@ -282,6 +282,23 @@ describe Ruco::Editor do
     end
   end
 
+  describe :text_in_selection do
+    before do
+      write("123\n456\n789")
+    end
+
+    it "returns '' if nothing is selected" do
+      editor.selecting do
+        move(:to, 1,1)
+      end
+      editor.text_in_selection.should == "123\n4"
+    end
+
+    it "returns selected text" do
+      editor.text_in_selection.should == ''
+    end
+  end
+
   describe :color_mask do
     it "is empty by default" do
       editor.color_mask.should == [nil,nil,nil]
@@ -353,7 +370,6 @@ describe Ruco::Editor do
         [[0,262144],[2,0]], # 0 to end of selection
       ]
     end
-
   end
 
   describe :view do

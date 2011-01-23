@@ -115,7 +115,16 @@ module Ruco
       @actions = {}
 
       action :paste do
-        editor.insert(Clipboard.paste('clipboard'))
+        @focused.insert(Clipboard.paste)
+      end
+
+      action :copy do
+        Clipboard.copy(@focused.text_in_selection)
+      end
+
+      action :cut do
+        Clipboard.copy(@focused.text_in_selection)
+        @focused.delete(0)
       end
 
       action :save do
@@ -153,6 +162,8 @@ module Ruco
       bind :"Ctrl+g", :go_to_line
       bind :"Ctrl+f", :find
       bind :"Ctrl+d", :delete_line
+      bind :"Ctrl+x", :cut
+      bind :"Ctrl+c", :copy
       bind :"Ctrl+v", :paste
     end
 
