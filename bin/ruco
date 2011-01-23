@@ -57,19 +57,24 @@ def display(lines, offset, color_mask)
   @screen ||= [] # current screen is used as cache
 
   lines.each_with_index do |content, line|
-    colors = color_mask[line] || [[0,Curses::A_NORMAL]]
+    colors = color_mask[line] || []
 
+    # expand line with whitespace
     line += offset
     clearer = Curses.stdscr.maxx - content.size
     clearer = " " * clearer
     content += clearer
 
+    # cache !?
     next if @screen[line] == [content, colors]
     @screen[line] = [content, colors]
 
+    # position at start of line
     index = 0
     Curses.setpos(line,0)
+    Curses.attrset(Curses::A_NORMAL)
 
+    # write colored string
     colors.each do |start, color|
       Curses.addstr(content[index...start])
       Curses.attrset color

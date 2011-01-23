@@ -306,7 +306,7 @@ describe Ruco::Editor do
         move(:to, 0, 4)
       end
       editor.color_mask.should == [
-        [[0,0], [2,262144], [4,0]],
+        [[2,262144], [4,0]],
         nil,
         nil,
       ]
@@ -320,7 +320,7 @@ describe Ruco::Editor do
       end
       editor.color_mask.should == [
         nil,
-        [[0,0], [2,262144], [4,0]],
+        [[2,262144], [4,0]],
         nil,
       ]
     end
