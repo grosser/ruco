@@ -337,6 +337,23 @@ describe Ruco::Editor do
         nil,
       ]
     end
+
+    it "shows multi-line selection in scrolled space" do
+      write("\n\n\n\n\n0123456789\n0123456789\n0123456789\n\n")
+      editor.move(:to, 5,7)
+      editor.move(:relative, 0, 1)
+      editor.selecting do
+        move(:relative, 2, 1)
+      end
+      editor.view.should == "789\n789\n789\n"
+      editor.cursor.should == [2,2]
+      editor.color_mask.should == [
+        [[1,262144],[3,0]],
+        [[0,262144],[3,0]],
+        [[0,262144],[2,0]],
+      ]
+    end
+
   end
 
   describe :view do

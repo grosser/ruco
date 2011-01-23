@@ -26,8 +26,12 @@ module Ruco
       return mask unless @selection
 
       mask.map_with_index do |part,i|
-        start_of_line = [i, 0]
-        end_of_line = [i, @lines[i].to_s.size]
+        line = @scrolled_lines + i
+        start_of_line = [line, @scrolled_columns]
+
+        end_of_visible_screen = @scrolled_columns + @options[:columns]
+        last_visible_columns = [current_line.size, end_of_visible_screen].min
+        end_of_line = [line, last_visible_columns]
 
         next unless @selection.overlap?(start_of_line..end_of_line)
 
@@ -35,8 +39,8 @@ module Ruco
         last = [@selection.last, end_of_line].min
 
         [
-          [first[1],Curses::A_REVERSE],
-          [last[1], Curses::A_NORMAL]
+          [first[1]-@scrolled_columns,Curses::A_REVERSE],
+          [last[1]-@scrolled_columns, Curses::A_NORMAL]
         ]
       end
     end
