@@ -5,6 +5,7 @@ Alpha, lets see if this works...
 Finished:
 
  - viewing / scrolling / editing / saving / creating
+ - selecting via Shift+left/right/up/down
  - Home/End + Page up/down
  - basic Tab support (tab == 2 space)
  - change-indicator (*)
@@ -63,7 +64,7 @@ TIPS
 TODO
 =====
  - session storage (stay at same line/column when reopening)
- - selecting -> delete / overwrite / copy / cut
+ - selecting -> copy / cut
  - smart staying at end of line/column when changing line
  - warnings / messages
  - syntax highlighting
