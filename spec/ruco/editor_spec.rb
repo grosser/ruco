@@ -233,7 +233,7 @@ describe Ruco::Editor do
       editor.selection.should == nil
     end
 
-    it "replaces the selection with what i insert" do
+    it "replaces the selection with insert" do
       editor.selecting do
         move(:to, 0, 4)
       end
@@ -244,7 +244,7 @@ describe Ruco::Editor do
       editor.view.should == "X4567\n\n\n"
     end
 
-    it "replaces the multi-line-selection with what i insert" do
+    it "replaces the multi-line-selection with insert" do
       write("123\n456\n789")
       # TODO do without hacks
       editor.send(:text_area).instance_eval{ @selection = [[0,1],[1,2]] }
@@ -255,7 +255,7 @@ describe Ruco::Editor do
       editor.view.should == "1X6\n789\n\n"
     end
 
-    it "deletes selection when i delete" do
+    it "deletes selection delete" do
       write("123\n456\n789")
       editor.move(:to, 1,1)
       editor.send(:text_area).instance_eval{ @selection = [[0,1],[1,2]] }
