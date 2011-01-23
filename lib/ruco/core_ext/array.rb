@@ -9,12 +9,25 @@ class Array
   end
 end
 
+# TODO move this to cursor <-> use cursor for calculations
 class Array
+  def between?(a,b)
+    self.>= a and self.<= b
+  end
+
   def <(other)
     (self.<=>other) == -1
   end
 
+  def <=(other)
+    self.<(other) or self.==other
+  end
+
   def >(other)
     (self.<=>other) == 1
+  end
+
+  def >=(other)
+    self.>(other) or self.==other
   end
 end
