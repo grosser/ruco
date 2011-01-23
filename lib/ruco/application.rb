@@ -149,6 +149,13 @@ module Ruco
         editor.delete_line
       end
 
+      action :select_all do
+        @focused.move(:to, 0, 0)
+        @focused.selecting do
+          move(:to, 9999, 9999)
+        end
+      end
+      
       action :find do
         ask("Find: ", :cache => true){|result| editor.find(result) }
       end
@@ -161,6 +168,7 @@ module Ruco
       bind :"Ctrl+q", :quit
       bind :"Ctrl+g", :go_to_line
       bind :"Ctrl+f", :find
+      bind :"Ctrl+a", :select_all
       bind :"Ctrl+d", :delete_line
       bind :"Ctrl+x", :cut
       bind :"Ctrl+c", :copy

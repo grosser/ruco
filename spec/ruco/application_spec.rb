@@ -74,6 +74,14 @@ describe Ruco::Application do
       app.key(:enter).should == :quit
     end
   end
+  
+  it "can select all" do
+    write("1\n2\n3\n4\n5\n")
+    app.key(:down)
+    app.key(:"Ctrl+a")
+    app.key(:delete)
+    app.view.should include("\n\n\n")
+  end
 
   describe 'go to line' do
     it "goes to the line" do

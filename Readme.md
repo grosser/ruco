@@ -5,7 +5,7 @@ Alpha, lets see if this works...
 Finished:
 
  - viewing / scrolling / editing / saving / creating
- - selecting via Shift+left/right/up/down
+ - selecting via Shift+left/right/up/down and Ctrl+a(all)
  - Home/End + Page up/down
  - basic Tab support (tab == 2 space)
  - change-indicator (*)
@@ -69,7 +69,7 @@ TODO
  - syntax highlighting
  - raise when binding to a unsupported key
  - search & replace
- - 1.8: unicode support <-> already finished but usable due to Curses (see encoding branch)
+ - 1.8: unicode support <-> already finished but unusable due to Curses (see encoding branch)
 
 Author
 ======
