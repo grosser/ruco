@@ -225,6 +225,18 @@ describe Ruco::Editor do
       editor.selection.should == [[0,0],[0,4]]
     end
 
+    it "can select multiple lines" do
+      write("012\n345\n678")
+      editor.move(:to, 0, 2)
+      editor.selecting do
+        move(:relative, 1, 0)
+      end
+      editor.selecting do
+        move(:relative, 1, 0)
+      end
+      editor.selection.should == [[0,2],[2,2]]
+    end
+
     it "clears the selection once I move" do
       editor.selecting do
         move(:to, 0, 4)
@@ -246,8 +258,10 @@ describe Ruco::Editor do
 
     it "replaces the multi-line-selection with insert" do
       write("123\n456\n789")
-      # TODO do without hacks
-      editor.send(:text_area).instance_eval{ @selection = [[0,1],[1,2]] }
+      editor.move(:to, 0,1)
+      editor.selecting do
+        move(:to, 1,2)
+      end
       editor.insert('X')
       editor.selection.should == nil
       editor.cursor.should == [0,2]
@@ -257,8 +271,10 @@ describe Ruco::Editor do
 
     it "deletes selection delete" do
       write("123\n456\n789")
-      editor.move(:to, 1,1)
-      editor.send(:text_area).instance_eval{ @selection = [[0,1],[1,2]] }
+      editor.move(:to, 0,1)
+      editor.selecting do
+        move(:to, 1,2)
+      end
       editor.delete(1)
       editor.cursor.should == [0,1]
       editor.move(:to, 0,0)
