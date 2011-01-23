@@ -61,7 +61,7 @@ def display(lines, offset, color_mask)
 
     # expand line with whitespace
     line += offset
-    clearer = Curses.stdscr.maxx - content.size
+    clearer = Curses.stdscr.maxx + 1 - content.size
     clearer = " " * clearer
     content += clearer
 
