@@ -106,7 +106,7 @@ end
 def debug_key(key)
   @key_line ||= -1
   @key_line = (@key_line + 1) % Curses.stdscr.maxy
-  write(@key_line, 0, "#{key}---")
+  write(@key_line, 0, "#{key.inspect}---")
 end
 
 def log(stuff)
