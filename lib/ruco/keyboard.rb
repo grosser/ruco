@@ -5,7 +5,7 @@ class Keyboard
   ENTER = 13
   IS_18 = RUBY_VERSION =~ /^1\.8/
   SEQUENCE_TIMEOUT = 0.01
-  NOTHING = 4294967295 # getch returns this as 'nothing' on 1.8 but nil on 1.9.2
+  NOTHING = (2**32 - 1) # getch returns this as 'nothing' on 1.8 but nil on 1.9.2
   A_TO_Z = ('a'..'z').to_a
 
   def self.input(&block)
@@ -26,7 +26,7 @@ class Keyboard
         end
         @sequence = nil
       end
-      next if key == NOTHING
+      next unless key
       start_or_append_sequence key
     end
   end
@@ -75,8 +75,8 @@ class Keyboard
   end
 
   def self.fetch_user_input
-    key = @input.call || NOTHING
-    key = NOTHING if key > NOTHING # strange key codes when starting via ssh
+    key = @input.call
+    return if key.nil? or key >= NOTHING
     key = key.ord if key.is_a?(String) # ruby 1.9 fix
     key
   end

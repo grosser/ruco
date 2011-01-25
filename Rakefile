@@ -28,11 +28,13 @@ task :key do
   Curses.raw # give us all other keys
   Curses.stdscr.nodelay = 1 # do not block -> we can use timeouts
   Curses.init_screen
+  nothing = (2**32 - 1)
+
 
   count = 0
   loop do
-    key = Curses.getch || 4294967295
-    next if key == 4294967295
+    key = Curses.getch || nothing
+    next if key >= nothing
     exit if key == 3 # Ctrl+c
     count = (count + 1) % 20
     Curses.setpos(count,0)
