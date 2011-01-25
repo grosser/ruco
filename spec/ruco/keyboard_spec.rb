@@ -85,4 +85,11 @@ describe Keyboard do
     type [11121, 324234]
     output.should == [11121, 324234]
   end
+
+  it "recognises weird key combos" do
+    type [27, 91, 49, 59, 50, 65]
+    output.should == [:"Shift+up"]
+    type [27, 91, 49, 59, 50, 66]
+    output.should == [:"Shift+down"]
+  end
 end

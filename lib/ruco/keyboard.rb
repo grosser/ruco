@@ -22,7 +22,14 @@ class Keyboard
         if needs_paste_fix?(@sequence)
           yield bytes_to_string(@sequence)
         else
-          bytes_to_key_codes(@sequence).each{|c| yield c }
+          # weird stuff that happens when connected via ssh
+          if @sequence == [27, 91, 49, 59, 50, 65]
+            yield :"Shift+up"
+          elsif @sequence == [27, 91, 49, 59, 50, 66]
+            yield :"Shift+down"
+          else
+            bytes_to_key_codes(@sequence).each{|c| yield c }
+          end
         end
         @sequence = nil
       end
