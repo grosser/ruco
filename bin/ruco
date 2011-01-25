@@ -21,6 +21,11 @@ Options:
 BANNER
     opts.on("--debug-cache","Show caching in action") { options[:debug_cache] = true }
     opts.on("--debug-keys", "Show pressed keys") { options[:debug_keys] = true }
+    opts.on('-v', '--version','Show Version'){
+      require 'ruco/version'
+      puts Ruco::VERSION
+      exit
+    }
     opts.on("-h", "--help","Show this.") { puts opts; exit }
   end
   parser.parse!

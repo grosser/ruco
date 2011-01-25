@@ -1,3 +1,5 @@
+require 'ruco/version'
+
 require 'ruco/core_ext/object'
 require 'ruco/core_ext/string'
 require 'ruco/core_ext/array'
@@ -19,7 +21,6 @@ require 'ruco/text_field'
 module Ruco
   autoload :Clipboard, 'clipboard' # can crash when loaded -> load if needed
 
-  VERSION = File.read( File.join(File.dirname(__FILE__),'..','VERSION') ).strip
   TAB_SIZE = 2
 
   class << self
