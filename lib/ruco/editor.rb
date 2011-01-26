@@ -18,7 +18,7 @@ module Ruco
           raise "#{@file} contains tabs.\nRuco atm does not support tabs, but will happily convert them to spaces if started with --convert-tabs or -c"
         end
       end
-      @text_area = TextArea.new(content, options)
+      @text_area = EditorArea.new(content, options)
       @modified = false
     end
 

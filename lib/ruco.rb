@@ -16,6 +16,7 @@ require 'ruco/application'
 
 require 'ruco/form'
 require 'ruco/text_area'
+require 'ruco/editor_area'
 require 'ruco/text_field'
 
 module Ruco
