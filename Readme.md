@@ -1,22 +1,15 @@
-Commandline editor written in ruby
+Simple, extendable, test-driven commandline editor written in ruby.
 
-Alpha, lets see if this works...
+Features:
 
-Finished:
-
- - viewing / scrolling / editing / saving / creating
+ - **Intuitive interface**
  - selecting via Shift+left/right/up/down and Ctrl+a(all)
- - Home/End + Page up/down
  - Tab -> indent / Shift+Tab -> unindent (tab == 2 space)
- - change-indicator (*)
- - writable indicator (!)
- - backspace / delete
- - find / go to line
- - delete line
+ - keeps indentation (+ paste-detection e.g. via Cmd+v)
+ - change (*) + writable (!) indicators
+ - find / go to line / delete line
  - configuration via `~/.ruco.rb`
- - keeps indentation
- - cut, copy and paste (defaults: Ctrl+x/c/v)
- - paste-detection (e.g. cmd+v) -> clean indentation
+ - cut, copy and paste -> Ctrl+x/c/v
 
 Install
 =======
