@@ -71,9 +71,9 @@ class Keyboard
   end
 
   def self.fetch_user_input
-    key = @input.call
-    return if key.nil? or key >= NOTHING
+    key = @input.call or return
     key = key.ord if key.is_a?(String) # ruby 1.9 fix
+    return if key >= NOTHING
     key
   end
 

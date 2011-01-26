@@ -95,4 +95,9 @@ describe Keyboard do
     type [27, 91, 49, 59, 50, 65]
     output.should == [:"Shift+up"]
   end
+
+  it "can handle strings from 1.9" do
+    type ['a']
+    output.should == ["a"]
+  end
 end
