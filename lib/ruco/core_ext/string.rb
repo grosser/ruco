@@ -22,4 +22,10 @@ class String
       self
     end
   end
+
+  unless method_defined?(:ord)
+    def ord
+      bytes.first
+    end
+  end
 end
