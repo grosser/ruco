@@ -322,8 +322,8 @@ module Ruco
       last ||= first
       if selection
         adjust_cursor = selection.first == position ? first : last
-        selection.first[1] = [selection.first[1] + first, 0].max
-        selection.last[1] = [selection.last[1] + last, 0].max
+        selection.first.column = [selection.first.column + first, 0].max
+        selection.last.column = [selection.last.column + last, 0].max
         @column += adjust_cursor
       else
         @column += first
@@ -331,7 +331,7 @@ module Ruco
     end
 
     def selected_lines
-      selection.first[0].upto(selection.last[0])
+      selection.first.line.upto(selection.last.line)
     end
   end
 end
