@@ -7,7 +7,7 @@ Finished:
  - viewing / scrolling / editing / saving / creating
  - selecting via Shift+left/right/up/down and Ctrl+a(all)
  - Home/End + Page up/down
- - basic Tab support (tab == 2 space)
+ - Tab -> indent / Shift+Tab -> unindent (tab == 2 space)
  - change-indicator (*)
  - writable indicator (!)
  - backspace / delete
