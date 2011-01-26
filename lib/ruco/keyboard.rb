@@ -23,10 +23,8 @@ class Keyboard
           yield bytes_to_string(@sequence)
         else
           # weird stuff that happens when connected via ssh
-          if @sequence == [27, 91, 49, 59, 50, 65]
-            yield :"Shift+up"
-          elsif @sequence == [27, 91, 49, 59, 50, 66]
-            yield :"Shift+down"
+          if escape_sequence?(@sequence)
+            yield escape_sequence_to_key(@sequence)
           else
             bytes_to_key_codes(@sequence).each{|c| yield c }
           end
@@ -136,5 +134,18 @@ class Keyboard
   # paste of multiple \n or \n in text would cause weird indentation
   def self.needs_paste_fix?(sequence)
     sequence.size > 1 and sequence.include?(ENTER)
+  end
+
+  def self.escape_sequence?(sequence)
+    sequence[0..1] == [27, 91] # Esc [
+  end
+
+  def self.escape_sequence_to_key(sequence)
+    case sequence
+    when [27, 91, 49, 59, 50, 65] then :"Shift+up"
+    when [27, 91, 49, 59, 50, 66] then :"Shift+down"
+    else
+      bytes_to_string(sequence)
+    end
   end
 end
