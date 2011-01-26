@@ -145,12 +145,16 @@ module Ruco
           removed << remove
           @lines[line].slice!(0,remove)
         end
+        cursor_at_start = (selection.first == position)
         selection.first[1] = [selection.first[1] - removed.first, 0].max
         selection.last[1] = [selection.last[1] - removed.last, 0].max
+        @column -= (cursor_at_start ? removed.first : removed.last)
       else
         remove = [@lines[@line].leading_whitespace.size, 2].min
         @lines[@line].slice!(0,remove)
+        @column -= remove
       end
+      adjust_view
     end
 
     def cursor
