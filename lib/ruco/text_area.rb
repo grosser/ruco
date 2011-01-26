@@ -128,34 +128,23 @@ module Ruco
 
     # TODO should be on editor
     def indent
-      indention = ' '*Ruco::TAB_SIZE
-      selection.first[0].upto(selection.last[0]) do |line|
-        @lines[line] = "#{indention}#{@lines[line]}"
+      selected_lines.each do |line|
+        @lines[line].insert(0, ' ' * Ruco::TAB_SIZE)
       end
-      selection.first[1] = selection.first[1] + indention.size
-      selection.last[1] = selection.last[1] + indention.size
-      @column += indention.size
+      adjust_to_indentation Ruco::TAB_SIZE
       adjust_view
     end
 
     # TODO should be on editor
     def unindent
-      if selection
-        removed = []
-        selection.first[0].upto(selection.last[0]) do |line|
-          remove = [@lines[line].leading_whitespace.size, Ruco::TAB_SIZE].min
-          removed << remove
-          @lines[line].slice!(0,remove)
-        end
-        cursor_at_start = (selection.first == position)
-        selection.first[1] = [selection.first[1] - removed.first, 0].max
-        selection.last[1] = [selection.last[1] - removed.last, 0].max
-        @column -= (cursor_at_start ? removed.first : removed.last)
-      else
-        remove = [@lines[@line].leading_whitespace.size, 2].min
-        @lines[@line].slice!(0,remove)
-        @column -= remove
+      lines_to_unindent = (selection ? selected_lines : [@line])
+      removed = lines_to_unindent.map do |line|
+        remove = [@lines[line].leading_whitespace.size, Ruco::TAB_SIZE].min
+        @lines[line].slice!(0, remove)
+        remove
       end
+
+      adjust_to_indentation -removed.first, -removed.last
       adjust_view
     end
 
@@ -327,6 +316,22 @@ module Ruco
       last_visible_column = @scrolled_columns + @options[:columns]
       end_of_line = [line, last_visible_column]
       start_of_line..end_of_line
+    end
+
+    def adjust_to_indentation(first, last=nil)
+      last ||= first
+      if selection
+        adjust_cursor = selection.first == position ? first : last
+        selection.first[1] = [selection.first[1] + first, 0].max
+        selection.last[1] = [selection.last[1] + last, 0].max
+        @column += adjust_cursor
+      else
+        @column += first
+      end
+    end
+
+    def selected_lines
+      selection.first[0].upto(selection.last[0])
     end
   end
 end
