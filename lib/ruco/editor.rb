@@ -8,6 +8,13 @@ module Ruco
     def initialize(file, options)
       @file = file
       content = (File.exist?(@file) ? File.read(@file) : '')
+      if content.include?("\t")
+        if options[:convert_tabs]
+          content.tabs_to_spaces!
+        else
+          raise "#{@file} contains tabs.\nRuco atm does not support tabs, but will happily convert them to spaces if started with --convert-tabs or -c"
+        end
+      end
       @text_area = TextArea.new(content, options)
       @modified = false
     end

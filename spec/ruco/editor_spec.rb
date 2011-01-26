@@ -11,9 +11,18 @@ describe Ruco::Editor do
     @file = 'spec/temp.txt'
   end
 
-  it "reads tab as spaces" do
-    write("\t\ta")
-    editor.view.should == "    a\n\n\n"
+  describe 'convert tabs' do
+    it "reads tab as spaces when option is set" do
+      write("\t\ta")
+      editor = Ruco::Editor.new(@file, :lines => 3, :columns => 5, :convert_tabs => true)
+      editor.view.should == "    a\n\n\n"
+    end
+
+    it "raises when tabs are in content and option is not set" do
+      lambda{
+        editor = Ruco::Editor.new(@file, :lines => 3, :columns => 5)
+      }.should raise_error
+    end
   end
 
   describe :move do

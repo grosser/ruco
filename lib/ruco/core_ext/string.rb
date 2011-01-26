@@ -12,6 +12,10 @@ class String
     found
   end
 
+  def tabs_to_spaces!
+    gsub!("\t",' ' * Ruco::TAB_SIZE)
+  end
+
   # stub for 1.8
   unless method_defined?(:force_encoding)
     def force_encoding(encoding)

@@ -3,7 +3,7 @@ module Ruco
     attr_reader :lines, :selection
 
     def initialize(content, options)
-      @lines = tabs_to_spaces(content).naive_split("\n")
+      @lines = content.naive_split("\n")
       @options = options
       @line = 0
       @column = 0
@@ -91,7 +91,7 @@ module Ruco
     def insert(text)
       delete_content_in_selection if @selection
 
-      text = tabs_to_spaces(text)
+      text.tabs_to_spaces!
       if text == "\n" and @column >= after_last_word
         current_whitespace = current_line.match(/^\s*/)[0]
         next_whitespace = lines[@line+1].to_s.match(/^\s*/)[0]
@@ -275,10 +275,6 @@ module Ruco
       else
         move(:relative, inserted_lines.size - 1, inserted_lines.last.size)
       end
-    end
-
-    def tabs_to_spaces(text)
-      text.gsub("\t",' ' * Ruco::TAB_SIZE)
     end
 
     def delete_content_in_selection

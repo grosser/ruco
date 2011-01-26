@@ -19,9 +19,10 @@ Usage:
 
 Options:
 BANNER
+    opts.on("-c", "--convert-tabs","Convert tabs to spaces") { options[:convert_tabs] = true }
     opts.on("--debug-cache","Show caching in action") { options[:debug_cache] = true }
     opts.on("--debug-keys", "Show pressed keys") { options[:debug_keys] = true }
-    opts.on('-v', '--version','Show Version'){
+    opts.on("-v", "--version","Show Version"){
       require 'ruco/version'
       puts Ruco::VERSION
       exit
@@ -117,7 +118,10 @@ end
 
 require 'ruco'
 
-app = Ruco::Application.new(ARGV[0], :lines => Curses.stdscr.maxy, :columns => Curses.stdscr.maxx)
+app = Ruco::Application.new(ARGV[0],
+  :convert_tabs => @options[:convert_tabs],
+  :lines => Curses.stdscr.maxy, :columns => Curses.stdscr.maxx
+)
 
 init_screen do
   show_app app
