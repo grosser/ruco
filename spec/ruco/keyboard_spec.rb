@@ -86,10 +86,13 @@ describe Keyboard do
     output.should == [11121, 324234]
   end
 
-  it "recognises weird key combos" do
-    type [27, 91, 49, 59, 50, 65]
-    output.should == [:"Shift+up"]
+  it "recognises escape sequence for Shift+down" do
     type [27, 91, 49, 59, 50, 66]
     output.should == [:"Shift+down"]
+  end
+
+  it "recognises escape sequence for Shift+up" do
+    type [27, 91, 49, 59, 50, 65]
+    output.should == [:"Shift+up"]
   end
 end

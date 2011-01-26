@@ -19,7 +19,7 @@ class Keyboard
     loop do
       key = fetch_user_input
       if sequence_finished?
-        sequence_to_keys(@sequence).each{|key| yield key }
+        sequence_to_keys(@sequence).each{|k| yield k }
         @sequence = []
       end
       next unless key
@@ -129,7 +129,7 @@ class Keyboard
     if needs_paste_fix?(sequence)
       [bytes_to_string(sequence)]
     else
-      # weird stuff that happens when connected via ssh
+      # when connected via ssh escape sequences are used
       if escape_sequence?(sequence)
         [escape_sequence_to_key(sequence)]
       else
