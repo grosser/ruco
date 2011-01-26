@@ -134,6 +134,8 @@ module Ruco
       end
       selection.first[1] = selection.first[1] + indention.size
       selection.last[1] = selection.last[1] + indention.size
+      @column += indention.size
+      adjust_view
     end
 
     # TODO should be on editor
