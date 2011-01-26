@@ -60,6 +60,7 @@ TIPS
 ====
  - [Ruby1.9] Unicode support -> install libncursesw5-dev before installing ruby (does not work for 1.8)
  - [ssh vs clipboard] access your desktops clipboard by installing `xauth` on the server and then using `ssh -X`
+ - [Alt key] if Alt does not work try your Meta/Win/Cmd key
 
 TODO
 =====
