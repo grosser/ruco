@@ -50,6 +50,7 @@ module Ruco
       when :to_eol then move_to_eol(*args)
       when :to_line then @line = args.first
       when :to_column then @column = args.first
+      when :to_index then move(:to, *position_for_index(*args))
       when :page_down then
         shift = @options[:lines] - 1
         @line += shift

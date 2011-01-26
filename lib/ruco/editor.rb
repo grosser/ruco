@@ -12,8 +12,10 @@ module Ruco
 
     def find(text)
       cursor_index = text_area.cursor_index
-      index = text_area.content.index(text, cursor_index+1) || cursor_index
-      move :to, *text_area.position_for_index(index)
+      return unless start = text_area.content.index(text, cursor_index+1)
+      finish = start + text.size
+      move(:to_index, finish)
+      selecting{ move(:to_index, start) }
     end
 
     def reset;end

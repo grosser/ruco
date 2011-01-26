@@ -564,6 +564,11 @@ describe Ruco::Editor do
       editor.find('ab')
       editor.cursor.should == [2,1]
     end
+
+    it "selects the occurrence" do
+      editor.find('ab')
+      editor.selection.should == ([1, 1]..[1, 3])
+    end
   end
 
   describe :delete_line do
