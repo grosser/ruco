@@ -478,6 +478,21 @@ describe Ruco::Editor do
       editor.selection.should == ([0,2]..[1,3])
     end
 
+    it "moves the cursor" do
+      write("a\nb\nc\n")
+      editor.selecting{move(:to, 1,1)}
+      editor.indent
+      editor.cursor.should == [1,3]
+    end
+
+    it "moves the cursor when selecting backward" do
+      write("a\nb\nc\n")
+      editor.move(:to, 1,1)
+      editor.selecting{move(:to, 0,1)}
+      editor.indent
+      editor.cursor.should == [0,3]
+    end
+
     it "marks as modified" do
       editor.selecting{move(:to, 0,1)}
       editor.indent
@@ -486,8 +501,81 @@ describe Ruco::Editor do
   end
 
   describe :unindent do
-    it "unindents selected lines"
-    it "does not unindent completely indented lines"
+    it "unindents single lines" do
+      write("   a\n\n")
+      editor.unindent
+      editor.view.should == " a\n\n\n"
+    end
+
+    it "unindents single lines by one" do
+      write(" a\n\n")
+      editor.unindent
+      editor.view.should == "a\n\n\n"
+    end
+
+    it "does not unindents single lines when not unindentable" do
+      write("a\n\n")
+      editor.unindent
+      editor.view.should == "a\n\n\n"
+    end
+
+    it "move the cursor when unindenting single line" do
+      write(" a\n\n")
+      editor.move(:to, 0,1)
+      editor.unindent
+      editor.cursor.should == [0,0]
+    end
+
+    it "unindents selected lines" do
+      write("a\n b\n   c")
+      editor.selecting{ move(:to, 2,1) }
+      editor.unindent
+      editor.view.should == "a\nb\n c\n"
+    end
+
+    it "moves the selection" do
+      write("   abcd\n b\n   c")
+      editor.move(:to, 0,3)
+      editor.selecting{ move(:to, 2,1) }
+      editor.unindent
+      editor.selection.should == ([0,1]..[2,0])
+    end
+
+    it "moves the selection when unindenting one space" do
+      write(" abcd\n b\n   c")
+      editor.move(:to, 0,3)
+      editor.selecting{ move(:to, 2,1) }
+      editor.unindent
+      editor.selection.should == ([0,2]..[2,0])
+    end
+
+    it "does not move the selection when unindent is not possible" do
+      write("abcd\n b\n   c")
+      editor.move(:to, 0,3)
+      editor.selecting{ move(:to, 2,1) }
+      editor.unindent
+      editor.selection.should == ([0,3]..[2,0])
+    end
+
+    it "moves the cursor when selecting forward" do
+      write("\n abcd\n")
+      editor.selecting{ move(:to, 1,3) }
+      editor.unindent
+      editor.cursor.should == [1,2]
+    end
+
+    it "moves the cursor when selecting backward" do
+      write(" x\n  abcd\n")
+      editor.move(:to, 1,3)
+      editor.selecting{ move(:to, 0,1) }
+      editor.unindent
+      editor.cursor.should == [0,0]
+    end
+
+    it "marks as modified" do
+      editor.unindent
+      editor.modified?.should == true
+    end
   end
 
   describe :save do

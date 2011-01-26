@@ -155,11 +155,17 @@ describe Ruco::Application do
       editor_part(app.view).should == "a\ncb\n  b"
     end
 
-    it "moves indentation when tabbing on selection" do
+    it "indents when tabbing on selection" do
       write("ab")
       app.key(:"Shift+right")
       app.key(:tab)
       editor_part(app.view).should == "  ab\n\n"
+    end
+
+    it "unindents on Shift+tab" do
+      write("  ab\n  cd\n")
+      app.key(:"Shift+tab")
+      editor_part(app.view).should == "ab\n  cd\n"
     end
   end
 

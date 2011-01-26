@@ -16,6 +16,10 @@ class String
     gsub!("\t",' ' * Ruco::TAB_SIZE)
   end
 
+  def leading_whitespace
+    match(/^\s*/)[0]
+  end
+
   # stub for 1.8
   unless method_defined?(:force_encoding)
     def force_encoding(encoding)

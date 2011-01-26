@@ -41,6 +41,11 @@ module Ruco
       @modified = true
     end
 
+    def unindent(*args)
+      text_area.unindent(*args)
+      @modified = true
+    end
+
     def delete(*args)
       text_area.delete(*args)
       @modified = true

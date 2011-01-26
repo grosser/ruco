@@ -56,6 +56,7 @@ class Keyboard
 
     # modify
     when 9 then :tab
+    when 353 then :"Shift+tab"
     when ENTER then :enter # shadows Ctrl+m
     when 263, 127 then :backspace # ubuntu / mac
     when Curses::KEY_DC then :delete

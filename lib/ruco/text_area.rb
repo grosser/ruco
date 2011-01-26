@@ -93,8 +93,8 @@ module Ruco
 
       text.tabs_to_spaces!
       if text == "\n" and @column >= after_last_word
-        current_whitespace = current_line.match(/^\s*/)[0]
-        next_whitespace = lines[@line+1].to_s.match(/^\s*/)[0]
+        current_whitespace = current_line.leading_whitespace
+        next_whitespace = lines[@line+1].to_s.leading_whitespace
         text = text + [current_whitespace, next_whitespace].max
       end
       insert_into_content text
@@ -134,6 +134,23 @@ module Ruco
       end
       selection.first[1] = selection.first[1] + indention.size
       selection.last[1] = selection.last[1] + indention.size
+    end
+
+    # TODO should be on editor
+    def unindent
+      if selection
+        removed = []
+        selection.first[0].upto(selection.last[0]) do |line|
+          remove = [@lines[line].leading_whitespace.size, Ruco::TAB_SIZE].min
+          removed << remove
+          @lines[line].slice!(0,remove)
+        end
+        selection.first[1] = [selection.first[1] - removed.first, 0].max
+        selection.last[1] = [selection.last[1] - removed.last, 0].max
+      else
+        remove = [@lines[@line].leading_whitespace.size, 2].min
+        @lines[@line].slice!(0,remove)
+      end
     end
 
     def cursor

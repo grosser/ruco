@@ -70,6 +70,7 @@ module Ruco
         else
           @focused.insert("\t")
         end
+      when :"Shift+tab" then @editor.unindent
       when :enter then
         @focused.insert("\n")
       when :backspace then @focused.delete(-1)
