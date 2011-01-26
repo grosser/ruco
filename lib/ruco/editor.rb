@@ -1,6 +1,8 @@
 module Ruco
   class Editor
     attr_reader :file
+    attr_reader :text_area
+    private :text_area
     delegate :view, :selection, :text_in_selection, :color_mask, :selecting, :move, :cursor, :resize, :to => :text_area
 
     def initialize(file, options)
@@ -21,8 +23,8 @@ module Ruco
     def reset;end
 
     def insert(text)
-      @modified = true
       text_area.insert(text)
+      @modified = true
     end
 
     def delete(*args)
@@ -30,8 +32,8 @@ module Ruco
       @modified = true
     end
 
-    def delete_line
-      text_area.delete_line
+    def delete_line(*args)
+      text_area.delete_line(*args)
       @modified = true
     end
 
@@ -43,9 +45,5 @@ module Ruco
       File.open(@file,'w'){|f| f.write(text_area.content) }
       @modified = false
     end
-
-    private
-
-    attr_reader :text_area
   end
 end
