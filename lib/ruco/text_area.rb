@@ -112,7 +112,7 @@ module Ruco
           current_line.slice!(@column, count)
         else
           with_lines_as_string do |content|
-            content.slice!(cursor_index, count)
+            content.slice!(index_for_position, count)
           end
         end
       else
@@ -129,7 +129,7 @@ module Ruco
       Cursor.new @cursor_line, @cursor_column
     end
 
-    def cursor_index(line=@line, column=@column)
+    def index_for_position(line=@line, column=@column)
       index = lines[0...line].join("\n").size + column
       index += 1 if line > 0 # account for missing newline
       index
@@ -145,10 +145,6 @@ module Ruco
     end
 
     protected
-
-    def index_for_position(line, column)
-      cursor_index(line, column)
-    end
 
     def position_for_index(index)
       jump = content.slice(0, index).to_s.naive_split("\n")
@@ -195,7 +191,7 @@ module Ruco
         current_line.slice!(new_colum, count)
         move :to_column, new_colum
       else
-        start_index = cursor_index - count
+        start_index = index_for_position - count
         if start_index < 0
           count += start_index
           start_index = 0
@@ -254,7 +250,7 @@ module Ruco
     def insert_into_content(text)
       if text.include?("\n")
         with_lines_as_string do |content|
-          content.insert(cursor_index, text)
+          content.insert(index_for_position, text)
         end
       else
         # faster but complicated for newlines

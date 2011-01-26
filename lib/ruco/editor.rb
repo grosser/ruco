@@ -13,8 +13,7 @@ module Ruco
     end
 
     def find(text)
-      cursor_index = text_area.cursor_index
-      return unless start = text_area.content.index(text, cursor_index+1)
+      return unless start = text_area.content.index(text, text_area.index_for_position+1)
       finish = start + text.size
       move(:to_index, finish)
       selecting{ move(:to_index, start) }
