@@ -66,6 +66,7 @@ TODO
  - search & replace
  - 1.8: unicode support <-> already finished but unusable due to Curses (see encoding branch)
  - support Alt+Fx keys
+ - (later) extract keyboard and html-style components into seperate project
 
 Author
 ======
