@@ -120,9 +120,20 @@ module Ruco
       end
     end
 
+    # TODO should be on editor
     def delete_line
       lines.slice!(@line, 1)
       adjust_view
+    end
+
+    # TODO should be on editor
+    def indent
+      indention = ' '*Ruco::TAB_SIZE
+      selection.first[0].upto(selection.last[0]) do |line|
+        @lines[line] = "#{indention}#{@lines[line]}"
+      end
+      selection.first[1] = selection.first[1] + indention.size
+      selection.last[1] = selection.last[1] + indention.size
     end
 
     def cursor

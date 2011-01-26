@@ -64,7 +64,12 @@ module Ruco
         end
 
       # modify
-      when :tab then @focused.insert("\t")
+      when :tab then
+        if @editor.selection
+          @editor.indent
+        else
+          @focused.insert("\t")
+        end
       when :enter then
         @focused.insert("\n")
       when :backspace then @focused.delete(-1)

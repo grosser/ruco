@@ -463,6 +463,33 @@ describe Ruco::Editor do
     end
   end
 
+  describe :indent do
+    it "indents selected lines" do
+      write("a\nb\nc\n")
+      editor.selecting{move(:to, 1,1)}
+      editor.indent
+      editor.view.should == "  a\n  b\nc\n"
+    end
+
+    it "moves the selection" do
+      write("a\nb\nc\n")
+      editor.selecting{move(:to, 1,1)}
+      editor.indent
+      editor.selection.should == ([0,2]..[1,3])
+    end
+
+    it "marks as modified" do
+      editor.selecting{move(:to, 0,1)}
+      editor.indent
+      editor.modified?.should == true
+    end
+  end
+
+  describe :unindent do
+    it "unindents selected lines"
+    it "does not unindent completely indented lines"
+  end
+
   describe :save do
     it 'stores the file' do
       write('xxx')

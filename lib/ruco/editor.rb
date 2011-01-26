@@ -3,7 +3,10 @@ module Ruco
     attr_reader :file
     attr_reader :text_area
     private :text_area
-    delegate :view, :selection, :text_in_selection, :color_mask, :selecting, :move, :cursor, :resize, :to => :text_area
+    delegate :view, :color_mask, :cursor,
+      :selecting, :selection, :text_in_selection,
+      :move, :resize,
+      :to => :text_area
 
     def initialize(file, options)
       @file = file
@@ -30,6 +33,11 @@ module Ruco
 
     def insert(text)
       text_area.insert(text)
+      @modified = true
+    end
+
+    def indent(*args)
+      text_area.indent(*args)
       @modified = true
     end
 
