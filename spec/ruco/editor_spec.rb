@@ -536,6 +536,11 @@ describe Ruco::Editor do
       editor.save
       editor.modified?.should == false
     end
+
+    it "is changed after delete_line" do
+      editor.delete_line
+      editor.modified?.should == true
+    end
   end
 
   describe :find do

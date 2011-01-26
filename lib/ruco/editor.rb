@@ -1,7 +1,7 @@
 module Ruco
   class Editor
     attr_reader :file
-    delegate :view, :selection, :text_in_selection, :color_mask, :selecting, :move, :cursor, :resize, :delete_line, :to => :text_area
+    delegate :view, :selection, :text_in_selection, :color_mask, :selecting, :move, :cursor, :resize, :to => :text_area
 
     def initialize(file, options)
       @file = file
@@ -11,7 +11,8 @@ module Ruco
     end
 
     def find(text)
-      index = text_area.content.index(text, text_area.cursor_index+1) || text_area.cursor_index
+      cursor_index = text_area.cursor_index
+      index = text_area.content.index(text, cursor_index+1) || cursor_index
       move :to, *text_area.position_for_index(index)
     end
 
@@ -24,6 +25,11 @@ module Ruco
 
     def delete(*args)
       text_area.delete(*args)
+      @modified = true
+    end
+
+    def delete_line
+      text_area.delete_line
       @modified = true
     end
 
