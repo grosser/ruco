@@ -140,7 +140,7 @@ class Keyboard
   end
 
   def self.escape_sequence?(sequence)
-    sequence[0..1] == [27, 91] # Esc [
+    sequence[0] == 27 # Esc
   end
 
   def self.escape_sequence_to_key(sequence)
@@ -148,7 +148,11 @@ class Keyboard
     when [27, 91, 49, 59, 50, 65] then :"Shift+up"
     when [27, 91, 49, 59, 50, 66] then :"Shift+down"
     else
-      bytes_to_string(sequence)
+      if sequence.size == 2
+        :"Alt+#{sequence[1].chr}"
+      else
+        bytes_to_string(sequence)
+      end
     end
   end
 end

@@ -100,4 +100,9 @@ describe Keyboard do
     type ['a']
     output.should == ["a"]
   end
+
+  it "can handle Alt+x codes" do
+    type [27,103]
+    output.should == [:"Alt+g"]
+  end
 end

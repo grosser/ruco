@@ -69,8 +69,10 @@ TODO
  - warnings / messages
  - syntax highlighting
  - raise when binding to a unsupported key
+ - search options regex + case-sensitive
  - search & replace
  - 1.8: unicode support <-> already finished but unusable due to Curses (see encoding branch)
+ - support Alt+Fx keys
 
 Author
 ======
