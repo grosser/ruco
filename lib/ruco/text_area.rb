@@ -83,8 +83,8 @@ module Ruco
 
     def text_in_selection
       return '' unless @selection
-      start = index_for_position(*@selection.first)
-      finish = index_for_position(*@selection.last)
+      start = index_for_position(@selection.first)
+      finish = index_for_position(@selection.last)
       content.slice(start, finish-start)
     end
 
@@ -152,9 +152,9 @@ module Ruco
       Position.new @cursor_line, @cursor_column
     end
 
-    def index_for_position(line=@line, column=@column)
-      index = lines[0...line].join("\n").size + column
-      index += 1 if line > 0 # account for missing newline
+    def index_for_position(position=self.position)
+      index = lines[0...position.line].join("\n").size + position.column
+      index += 1 if position.line > 0 # account for missing newline
       index
     end
 
@@ -302,8 +302,8 @@ module Ruco
 
     def delete_content_in_selection
       with_lines_as_string do |content|
-        start = index_for_position(*@selection.first)
-        finish = index_for_position(*@selection.last)
+        start = index_for_position(@selection.first)
+        finish = index_for_position(@selection.last)
         content.slice!(start, finish-start)
         move(:to, *@selection.first)
       end
