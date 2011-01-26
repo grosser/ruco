@@ -13,26 +13,17 @@ class Keyboard
   end
 
   def self.output
-    @sequence = nil
+    @sequence = []
     @started = Time.now.to_f
 
     loop do
       key = fetch_user_input
       if sequence_finished?
-        if needs_paste_fix?(@sequence)
-          yield bytes_to_string(@sequence)
-        else
-          # weird stuff that happens when connected via ssh
-          if escape_sequence?(@sequence)
-            yield escape_sequence_to_key(@sequence)
-          else
-            bytes_to_key_codes(@sequence).each{|c| yield c }
-          end
-        end
-        @sequence = nil
+        sequence_to_keys(@sequence).each{|key| yield key }
+        @sequence = []
       end
       next unless key
-      start_or_append_sequence key
+      append_to_sequence key
     end
   end
 
@@ -86,9 +77,8 @@ class Keyboard
     key
   end
 
-  def self.start_or_append_sequence(key)
+  def self.append_to_sequence(key)
     @started = Time.now.to_f
-    @sequence ||= []
     @sequence << key
   end
 
@@ -128,12 +118,25 @@ class Keyboard
   end
 
   def self.sequence_finished?
-    @sequence and (Time.now.to_f - @started) > SEQUENCE_TIMEOUT
+    @sequence.size != 0 and (Time.now.to_f - @started) > SEQUENCE_TIMEOUT
   end
 
   # paste of multiple \n or \n in text would cause weird indentation
   def self.needs_paste_fix?(sequence)
     sequence.size > 1 and sequence.include?(ENTER)
+  end
+
+  def self.sequence_to_keys(sequence)
+    if needs_paste_fix?(sequence)
+      [bytes_to_string(sequence)]
+    else
+      # weird stuff that happens when connected via ssh
+      if escape_sequence?(sequence)
+        [escape_sequence_to_key(sequence)]
+      else
+        bytes_to_key_codes(sequence)
+      end
+    end
   end
 
   def self.escape_sequence?(sequence)
