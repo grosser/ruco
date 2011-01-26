@@ -146,6 +146,10 @@ module Ruco
 
     protected
 
+    def position
+      Cursor.new(@line, @column)
+    end
+
     def position_for_index(index)
       jump = content.slice(0, index).to_s.naive_split("\n")
       [jump.size - 1, jump.last.size]
@@ -159,10 +163,6 @@ module Ruco
 
     def after_last_word
       current_line.index(/\s*$/)
-    end
-
-    def position
-      [@line, @column]
     end
 
     def move_to_eol
