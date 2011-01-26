@@ -135,15 +135,6 @@ module Ruco
       index
     end
 
-    def index_for_position(line, column)
-      cursor_index(line, column)
-    end
-
-    def position_for_index(index)
-      jump = content.slice(0, index).to_s.naive_split("\n")
-      [jump.size - 1, jump.last.size]
-    end
-
     def content
       (lines * "\n").freeze
     end
@@ -154,6 +145,15 @@ module Ruco
     end
 
     protected
+
+    def index_for_position(line, column)
+      cursor_index(line, column)
+    end
+
+    def position_for_index(index)
+      jump = content.slice(0, index).to_s.naive_split("\n")
+      [jump.size - 1, jump.last.size]
+    end
 
     def with_lines_as_string
       string = @lines * "\n"
