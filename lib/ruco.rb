@@ -7,7 +7,7 @@ require 'ruco/core_ext/hash'
 require 'ruco/core_ext/range'
 
 require 'ruco/keyboard'
-require 'ruco/cursor'
+require 'ruco/position'
 
 require 'ruco/editor'
 require 'ruco/status_bar'

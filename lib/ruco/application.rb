@@ -20,7 +20,7 @@ module Ruco
     end
 
     def cursor
-      Cursor.new(@focused.cursor.line + @status_lines, @focused.cursor.column)
+      Position.new(@focused.cursor.line + @status_lines, @focused.cursor.column)
     end
 
     def key(key)

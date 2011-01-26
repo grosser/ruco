@@ -149,7 +149,7 @@ module Ruco
     end
 
     def cursor
-      Cursor.new @cursor_line, @cursor_column
+      Position.new @cursor_line, @cursor_column
     end
 
     def index_for_position(line=@line, column=@column)
@@ -170,7 +170,7 @@ module Ruco
     protected
 
     def position
-      Cursor.new(@line, @column)
+      Position.new(@line, @column)
     end
 
     def position_for_index(index)

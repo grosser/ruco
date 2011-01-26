@@ -41,9 +41,9 @@ module Ruco
 
     def cursor
       if @form
-        Cursor.new cursor_line, @form.cursor.column
+        Position.new cursor_line, @form.cursor.column
       else
-        Cursor.new cursor_line, 0
+        Position.new cursor_line, 0
       end
     end
 

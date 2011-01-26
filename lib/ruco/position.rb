@@ -1,5 +1,5 @@
 module Ruco
-  class Cursor < Array
+  class Position < Array
     def initialize(line, column)
       super([line, column])
     end
