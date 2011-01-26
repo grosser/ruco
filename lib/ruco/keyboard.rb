@@ -89,26 +89,25 @@ class Keyboard
   # split a text so fast-typers do not get bugs like ^B^C in output
   def self.bytes_to_key_codes(bytes)
     result = []
-    multi_byte = nil
+    multi_byte = []
+
+    append_multibyte = lambda{
+      unless multi_byte.empty?
+        result << bytes_to_string(multi_byte)
+        multi_byte = []
+      end
+    }
 
     bytes.each do |byte|
       if multi_byte_part?(byte)
-        multi_byte ||= []
         multi_byte << byte
       else
-        if multi_byte
-          # finish multi-byte char
-          result << bytes_to_string(multi_byte)
-          multi_byte = nil
-        end
+        append_multibyte.call
         result << translate_key_to_code(byte)
       end
     end
 
-    if multi_byte
-      result << bytes_to_string(multi_byte)
-    end
-
+    append_multibyte.call
     result
   end
 
