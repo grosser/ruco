@@ -180,11 +180,10 @@ module Ruco
               loop_ask("Replace=Enter Skip=s Cancel=Esc") do |ok|
                 if ok == '' # enter
                   editor.insert(replace)
-                elsif ok == 's'
-                else
-                  :finished
+                elsif ok != 's'
+                  stop = true
                 end
-                :finished if not editor.find(term)
+                :finished if stop or not editor.find(term)
               end
             end
           end
