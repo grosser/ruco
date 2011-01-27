@@ -7,6 +7,7 @@ module Ruco
       '^W Exit',
       '^S Save',
       '^F Find',
+      '^R Replace',
       '^D Delete line',
       '^G Go to line'
     ]
