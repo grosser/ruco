@@ -57,6 +57,7 @@ TIPS
 
 TODO
 =====
+ - add selection colors to forms in command_bar
  - session storage (stay at same line/column when reopening)
  - smart staying at end of line/column when changing line
  - warnings / messages

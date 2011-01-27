@@ -1,7 +1,7 @@
 module Ruco
   class CommandBar
     attr_accessor :cursor_line, :form
-    delegate :move, :delete, :insert, :to => :form
+    delegate :move, :delete, :insert, :selecting, :selection, :text_in_selection, :to => :form
 
     SHORTCUTS = [
       '^W Exit',
