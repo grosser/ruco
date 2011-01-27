@@ -3,6 +3,7 @@ require 'curses'
 class Keyboard
   MAX_CHAR = 255
   ENTER = 13
+  ESCAPE = 27
   IS_18 = RUBY_VERSION =~ /^1\.8/
   SEQUENCE_TIMEOUT = 0.01
   NOTHING = (2**32 - 1) # getch returns this as 'nothing' on 1.8 but nil on 1.9.2
@@ -64,7 +65,7 @@ class Keyboard
     # misc
     when 0 then :"Ctrl+space"
     when 1..26 then :"Ctrl+#{A_TO_Z[key-1]}"
-    when 27 then :escape
+    when ESCAPE then :escape
     when Curses::KEY_RESIZE then :resize
     else
       key > MAX_CHAR ? key : key.chr
@@ -140,13 +141,13 @@ class Keyboard
   end
 
   def self.escape_sequence?(sequence)
-    sequence[0] == 27 # Esc
+    sequence[0] == ESCAPE and sequence.size.between?(2,6) # Esc
   end
 
   def self.escape_sequence_to_key(sequence)
     case sequence
-    when [27, 91, 49, 59, 50, 65] then :"Shift+up"
-    when [27, 91, 49, 59, 50, 66] then :"Shift+down"
+    when [ESCAPE, 91, 49, 59, 50, 65] then :"Shift+up"
+    when [ESCAPE, 91, 49, 59, 50, 66] then :"Shift+down"
     else
       if sequence.size == 2
         :"Alt+#{sequence[1].chr}"

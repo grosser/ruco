@@ -105,4 +105,9 @@ describe Keyboard do
     type [27,103]
     output.should == [:"Alt+g"]
   end
+
+  it "can return normal escape" do
+    type [27]
+    output.should == [:escape]
+  end
 end
