@@ -51,7 +51,9 @@ module Ruco
 
     def cached_form_if(cache, question)
       if cache
-        @forms_cache[question] ||= yield
+        new_form = yield
+        new_form.insert(@forms_cache[question].value) if @forms_cache[question]
+        @forms_cache[question] = new_form
       else
         yield
       end

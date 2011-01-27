@@ -44,6 +44,15 @@ describe Ruco::CommandBar do
       bar.cursor.column.should == 9
     end
 
+    it "does not keep block when cached" do
+      x = 0
+      bar.ask('Find: ', :cache => true){ x = 1 }
+      bar.insert("\n")
+      bar.ask('Find: ', :cache => true){ x = 2 }
+      bar.insert("\n")
+      x.should == 2
+    end
+
     it "reset the question when cached" do
       bar.ask('Find: ', :cache => true){}
       bar.insert('abc')
