@@ -7,7 +7,7 @@ Features:
  - Tab -> indent / Shift+Tab -> unindent (tab == 2 space)
  - keeps indentation (+ paste-detection e.g. via Cmd+v)
  - change (*) + writable (!) indicators
- - find / go to line / delete line
+ - find / go to line / delete line / search & replace
  - configuration via `~/.ruco.rb`
  - cut, copy and paste -> Ctrl+x/c/v
 
@@ -63,7 +63,7 @@ TODO
  - syntax highlighting
  - raise when binding to a unsupported key
  - search options regex + case-sensitive
- - search & replace
+ - add auto-confirm to 'replace?' dialog -> type s == skip, no enter needed
  - 1.8: unicode support <-> already finished but unusable due to Curses (see encoding branch)
  - support Alt+Fx keys
  - (later) extract keyboard and html-style components into seperate project

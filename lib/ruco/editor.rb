@@ -4,7 +4,7 @@ module Ruco
     attr_reader :text_area
     private :text_area
     delegate :view, :color_mask, :cursor,
-      :selecting, :selection, :text_in_selection,
+      :selecting, :selection, :text_in_selection, :reset,
       :move, :resize,
       :to => :text_area
 
@@ -23,13 +23,13 @@ module Ruco
     end
 
     def find(text)
+      move(:relative, 0,0) # reset selection
       return unless start = text_area.content.index(text, text_area.index_for_position+1)
       finish = start + text.size
       move(:to_index, finish)
       selecting{ move(:to_index, start) }
+      true
     end
-
-    def reset;end
 
     def insert(text)
       text_area.insert(text)

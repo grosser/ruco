@@ -88,6 +88,10 @@ module Ruco
       content.slice(start, finish-start)
     end
 
+    def reset
+      @selection = nil
+    end
+
     def insert(text)
       delete_content_in_selection if @selection
 

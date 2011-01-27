@@ -15,6 +15,10 @@ describe Ruco::Application do
     view.naive_split("\n")[1..-2].join("\n")
   end
 
+  def type(*keys)
+    keys.each{|k| app.key k }
+  end
+
   let(:app){ Ruco::Application.new(@file, :lines => 5, :columns => 10) }
   let(:status){ "Ruco #{Ruco::VERSION} -- spec/temp.txt  \n" }
   let(:command){ "^W Exit" }
@@ -98,6 +102,60 @@ describe Ruco::Application do
       app.key('0')
       app.key(:enter)
       app.cursor.should == [1,0] # status bar +  1
+    end
+  end
+
+  describe 'Find and replace' do
+    it "stops when nothing is found" do
+      write 'abc'
+      type :"Ctrl+r", 'x', :enter
+      app.view.should_not include("Replace with:")
+    end
+
+    it "can find and replace multiple times" do
+      write 'xabac'
+      type :"Ctrl+r", 'a', :enter
+      app.view.should include("Replace with:")
+      type 'd', :enter
+      app.view.should include("Replace")
+      type :enter # replace first
+      app.view.should include("Replace")
+      type :enter # replace second -> finished
+      app.view.should_not include("Replace")
+      editor_part(app.view).should == "xdbdc\n\n"
+    end
+
+    it "can find and skip replace multiple times" do
+      write 'xabac'
+      type :"Ctrl+r", 'a', :enter
+      app.view.should include("Replace with:")
+      type 'd', :enter
+      app.view.should include("Replace")
+      type 's', :enter # skip
+      app.view.should include("Replace")
+      type 's', :enter # skip
+      app.view.should_not include("Replace")
+      editor_part(app.view).should == "xabac\n\n"
+    end
+
+    it "breaks if neither s nor enter is entered" do
+      write 'xabac'
+      type :"Ctrl+r", 'a', :enter
+      app.view.should include("Replace with:")
+      type "d", :enter
+      app.view.should include("Replace")
+      type 'x', :enter
+      app.view.should_not include("Replace")
+      editor_part(app.view).should == "xabac\n\n"
+    end
+
+    it "reuses find" do
+      write 'xabac'
+      type :"Ctrl+f", 'a', :enter
+      type :"Ctrl+r"
+      app.view.should include("Find: a")
+      type :enter
+      app.view.should include("Replace with:")
     end
   end
 

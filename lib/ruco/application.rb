@@ -102,6 +102,13 @@ module Ruco
       end
     end
 
+    def loop_ask(question, options={}, &block)
+      ask(question, options) do |result|
+        finished = (block.call(result) == :finished)
+        loop_ask(question, options, &block) unless finished
+      end
+    end
+
     def configure(&block)
       instance_exec(&block)
     end
@@ -165,6 +172,24 @@ module Ruco
       action :find do
         ask("Find: ", :cache => true){|result| editor.find(result) }
       end
+
+      action :find_and_replace do
+        ask("Find: ", :cache => true) do |term|
+          if editor.find(term)
+            ask("Replace with: ", :cache => true) do |replace|
+              loop_ask("Replace=Enter Skip=s Cancel=Esc") do |ok|
+                if ok == '' # enter
+                  editor.insert(replace)
+                elsif ok == 's'
+                else
+                  :finished
+                end
+                :finished if not editor.find(term)
+              end
+            end
+          end
+        end
+      end
     end
 
     def setup_keys
@@ -174,6 +199,7 @@ module Ruco
       bind :"Ctrl+q", :quit
       bind :"Ctrl+g", :go_to_line
       bind :"Ctrl+f", :find
+      bind :"Ctrl+r", :find_and_replace
       bind :"Ctrl+a", :select_all
       bind :"Ctrl+d", :delete_line
       bind :"Ctrl+x", :cut
