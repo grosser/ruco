@@ -177,12 +177,19 @@ module Ruco
         ask("Find: ", :cache => true) do |term|
           if editor.find(term)
             ask("Replace with: ", :cache => true) do |replace|
-              loop_ask("Replace=Enter Skip=s Cancel=Esc") do |ok|
-                if ok == '' # enter
+              loop_ask("Replace=Enter Skip=s All=a Cancel=Esc") do |ok|
+                case ok
+                when '' # enter
                   editor.insert(replace)
-                elsif ok != 's'
+                when 'a'
+                  stop = true
+                  editor.insert(replace)
+                  editor.insert(replace) while editor.find(term)
+                when 's' # do nothing
+                else
                   stop = true
                 end
+
                 :finished if stop or not editor.find(term)
               end
             end

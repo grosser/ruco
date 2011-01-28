@@ -138,6 +138,19 @@ describe Ruco::Application do
       editor_part(app.view).should == "xabac\n\n"
     end
 
+    it "can replace all" do
+      write '_a_a_a_a'
+      type :"Ctrl+r", 'a', :enter
+      app.view.should include("Replace with:")
+      type 'd', :enter
+      app.view.should include("Replace")
+      type 's', :enter # skip first
+      app.view.should include("Replace")
+      type 'a', :enter # all
+      app.view.should_not include("Replace")
+      editor_part(app.view).should == "_a_d_d_d\n\n"
+    end
+
     it "breaks if neither s nor enter is entered" do
       write 'xabac'
       type :"Ctrl+r", 'a', :enter
