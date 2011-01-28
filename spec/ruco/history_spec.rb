@@ -1,7 +1,7 @@
 require File.expand_path('spec/spec_helper')
 
 describe Ruco::History do
-  let(:history){ Ruco::History.new(:state => {:x => 1}, :track => [:x]) }
+  let(:history){ Ruco::History.new(:state => {:x => 1}, :track => [:x], :entries => 3) }
 
   it "knows its state" do
     history.state.should == {:x => 1}
@@ -61,5 +61,17 @@ describe Ruco::History do
     history.state.should == {:x => 2, :y => 1}
     history.undo
     history.state.should == {:x => 1}
+  end
+
+  it "does not track more than x states" do
+    history.add(:x => 2)
+    history.add(:x => 3)
+    history.add(:x => 4)
+    history.add(:x => 5)
+    history.undo
+    history.undo
+    history.undo
+    history.undo
+    history.state.should == {:x => 3}
   end
 end

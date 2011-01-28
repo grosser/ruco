@@ -4,7 +4,7 @@ module Ruco
   class EditorArea < TextArea
     def initialize(*args)
       super(*args)
-      @history = History.new(:state => state, :track => [:content])
+      @history = History.new(:state => state, :track => [:content], :entries => 100)
     end
 
     def undo
