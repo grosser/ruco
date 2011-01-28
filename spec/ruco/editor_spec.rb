@@ -581,10 +581,22 @@ describe Ruco::Editor do
   describe 'history' do
     it "can undo an action" do
       write("a")
-      editor.insert("a")
-      editor.view # triggers save-point
+      editor.insert("b")
+      editor.view # trigger save point
+      editor.insert("c")
+      editor.view # trigger save point
       editor.undo
-      editor.view.should == "a\n\n\n"
+      editor.view.should == "ba\n\n\n"
+      editor.cursor.should == [0,1]
+    end
+
+    it "removes selection on undo" do
+      editor.insert('a')
+      editor.selecting{move(:to, 1,1)}
+      editor.selection.should != nil
+      editor.view # trigger save point
+      editor.undo
+      editor.selection.should == nil
     end
   end
 

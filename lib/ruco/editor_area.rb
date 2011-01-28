@@ -58,6 +58,7 @@ module Ruco
     end
 
     def state=(data)
+      @selection = nil
       @lines = data[:content].naive_split("\n")
       @line, @column = data[:position]
       @scrolled_lines, @scrolled_columns = data[:screen_position]
