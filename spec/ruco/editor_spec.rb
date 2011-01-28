@@ -578,6 +578,16 @@ describe Ruco::Editor do
     end
   end
 
+  describe 'history' do
+    it "can undo an action" do
+      write("a")
+      editor.insert("a")
+      editor.view # triggers save-point
+      editor.undo
+      editor.view.should == "a\n\n\n"
+    end
+  end
+
   describe :save do
     it 'stores the file' do
       write('xxx')

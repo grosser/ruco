@@ -2,6 +2,26 @@ module Ruco
   # everything that does not belong to a text-area
   # but is needed for Ruco::Editor
   class EditorArea < TextArea
+    def initialize(*args)
+      super(*args)
+      @history = History.new(:state => state)
+    end
+
+    def undo
+      @history.undo
+      self.state = @history.state
+    end
+
+    def redo
+      @history.redo
+      self.state = @history.state
+    end
+
+    def view
+      @history.add(state)
+      super
+    end
+
     def delete_line
       lines.slice!(@line, 1)
       adjust_view
@@ -28,6 +48,25 @@ module Ruco
     end
 
     private
+
+    def state
+      {
+        :content => content,
+        :position => position,
+        :screen_position => screen_position
+      }
+    end
+
+    def state=(data)
+      @lines = data[:content].naive_split("\n")
+      @line, @column = data[:position]
+      @scrolled_lines, @scrolled_columns = data[:screen_position]
+    end
+
+    # TODO use this instead of instance variables
+    def screen_position
+      Position.new(@scrolled_lines, @scrolled_columns)
+    end
 
     def adjust_to_indentation(first, last=nil)
       last ||= first

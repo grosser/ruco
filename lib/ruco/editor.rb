@@ -5,7 +5,7 @@ module Ruco
     private :text_area
     delegate :view, :color_mask, :cursor,
       :selecting, :selection, :text_in_selection, :reset,
-      :move, :resize,
+      :move, :resize, :undo, :redo,
       :to => :text_area
 
     def initialize(file, options)
