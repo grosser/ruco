@@ -58,6 +58,8 @@ TIPS
 
 TODO
 =====
+ - undo/redo should mark as modified <-> fix modified to be smarter and not so manual
+ - make history more efficient (e.g. no need to check when only moving / store only diffs)
  - a = replace all
  - limit possible file size to e.g. 1MB (would hang/be too slow with insanely big files)
  - find next (Alt+n)
