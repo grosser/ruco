@@ -593,7 +593,7 @@ describe Ruco::Editor do
     it "removes selection on undo" do
       editor.insert('a')
       editor.selecting{move(:to, 1,1)}
-      editor.selection.should != nil
+      editor.selection.should_not == nil
       editor.view # trigger save point
       editor.undo
       editor.selection.should == nil
