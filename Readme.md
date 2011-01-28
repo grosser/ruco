@@ -57,12 +57,15 @@ TIPS
 
 TODO
 =====
+ - undo
+ - find next (Alt+n)
  - add selection colors to forms in command_bar
  - session storage (stay at same line/column when reopening)
  - smart staying at end of line/column when changing line
  - warnings / messages
  - syntax highlighting
  - raise when binding to a unsupported key
+ - search history via up/down arrow
  - search options regex + case-sensitive
  - add auto-confirm to 'replace?' dialog -> type s == skip, no enter needed
  - 1.8: unicode support <-> already finished but unusable due to Curses (see encoding branch)
