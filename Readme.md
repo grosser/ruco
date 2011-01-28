@@ -10,6 +10,7 @@ Features:
  - find / go to line / delete line / search & replace
  - configuration via `~/.ruco.rb`
  - cut, copy and paste -> Ctrl+x/c/v
+ - undo / redo
 
 Install
 =======
@@ -57,7 +58,7 @@ TIPS
 
 TODO
 =====
- - undo
+ - a = replace all
  - find next (Alt+n)
  - add selection colors to forms in command_bar
  - session storage (stay at same line/column when reopening)
