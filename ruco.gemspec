@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{ruco}
-  s.version = "0.0.32"
+  s.version = "0.0.33"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Michael Grosser"]
-  s.date = %q{2011-01-27}
+  s.date = %q{2011-01-28}
   s.default_executable = %q{ruco}
   s.email = %q{michael@grosser.it}
   s.executables = ["ruco"]
@@ -31,6 +31,7 @@ Gem::Specification.new do |s|
     "lib/ruco/editor.rb",
     "lib/ruco/editor_area.rb",
     "lib/ruco/form.rb",
+    "lib/ruco/history.rb",
     "lib/ruco/keyboard.rb",
     "lib/ruco/position.rb",
     "lib/ruco/status_bar.rb",
@@ -44,6 +45,7 @@ Gem::Specification.new do |s|
     "spec/ruco/core_ext/string_spec.rb",
     "spec/ruco/editor_spec.rb",
     "spec/ruco/form_spec.rb",
+    "spec/ruco/history_spec.rb",
     "spec/ruco/keyboard_spec.rb",
     "spec/ruco/status_bar_spec.rb",
     "spec/ruco/text_area_spec.rb",
@@ -61,6 +63,7 @@ Gem::Specification.new do |s|
     "spec/ruco/core_ext/string_spec.rb",
     "spec/ruco/editor_spec.rb",
     "spec/ruco/form_spec.rb",
+    "spec/ruco/history_spec.rb",
     "spec/ruco/keyboard_spec.rb",
     "spec/ruco/status_bar_spec.rb",
     "spec/ruco/text_area_spec.rb",
