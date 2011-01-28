@@ -190,8 +190,8 @@ module Ruco
         end
       end
 
-      action(:undo){ @editor.undo }
-      action(:redo){ @editor.redo }
+      action(:undo){ @editor.undo if @focused == @editor }
+      action(:redo){ @editor.redo if @focused == @editor }
     end
 
     def setup_keys
