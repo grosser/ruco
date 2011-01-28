@@ -5,7 +5,7 @@ module Ruco
     private :text_area
     delegate :view, :color_mask, :cursor,
       :selecting, :selection, :text_in_selection, :reset,
-      :move, :resize, :undo, :redo,
+      :move, :resize,
       :to => :text_area
 
     def initialize(file, options)
@@ -31,29 +31,13 @@ module Ruco
       true
     end
 
-    def insert(text)
-      text_area.insert(text)
-      @modified = true
-    end
-
-    def indent(*args)
-      text_area.indent(*args)
-      @modified = true
-    end
-
-    def unindent(*args)
-      text_area.unindent(*args)
-      @modified = true
-    end
-
-    def delete(*args)
-      text_area.delete(*args)
-      @modified = true
-    end
-
-    def delete_line(*args)
-      text_area.delete_line(*args)
-      @modified = true
+    %w[insert indent unindent delete delete_line redo undo].each do |modifying|
+      eval <<-RUBY
+        def #{modifying}(*args)
+          text_area.#{modifying}(*args)
+          @modified = true
+        end
+      RUBY
     end
 
     def modified?

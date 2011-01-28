@@ -598,6 +598,25 @@ describe Ruco::Editor do
       editor.undo
       editor.selection.should == nil
     end
+
+    it "sets modified on undo" do
+      editor.insert('a')
+      editor.view # trigger save point
+      editor.save
+      editor.modified?.should == false
+      editor.undo
+      editor.modified?.should == true
+    end
+
+    it "sets modified on undo" do
+      editor.insert('a')
+      editor.view # trigger save point
+      editor.undo
+      editor.save
+      editor.modified?.should == false
+      editor.redo
+      editor.modified?.should == true
+    end
   end
 
   describe :save do
