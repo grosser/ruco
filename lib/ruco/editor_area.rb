@@ -4,7 +4,7 @@ module Ruco
   class EditorArea < TextArea
     def initialize(*args)
       super(*args)
-      @history = History.new(:state => state)
+      @history = History.new(:state => state, :track => [:content])
     end
 
     def undo
@@ -61,6 +61,7 @@ module Ruco
       @lines = data[:content].naive_split("\n")
       @line, @column = data[:position]
       @scrolled_lines, @scrolled_columns = data[:screen_position]
+      adjust_view
     end
 
     # TODO use this instead of instance variables

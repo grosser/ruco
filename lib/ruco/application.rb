@@ -189,6 +189,9 @@ module Ruco
           end
         end
       end
+
+      action(:undo){ @editor.undo }
+      action(:redo){ @editor.redo }
     end
 
     def setup_keys
@@ -204,6 +207,8 @@ module Ruco
       bind :"Ctrl+x", :cut
       bind :"Ctrl+c", :copy
       bind :"Ctrl+v", :paste
+      bind :"Ctrl+z", :undo
+      bind :"Ctrl+y", :redo
     end
 
     def load_user_config
