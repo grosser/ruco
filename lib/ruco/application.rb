@@ -16,7 +16,7 @@ module Ruco
 
     def color_mask
       reverse = StyleMap.new(1)
-      reverse.add(:reverse, 0, 0..@options[:columns])
+      reverse.add(:reverse, 0, 0...@options[:columns])
       reverse + editor.color_mask + reverse
     end
 

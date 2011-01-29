@@ -69,7 +69,7 @@ def display(lines, offset, color_mask)
 
     # expand line with whitespace
     line += offset
-    clearer = Curses.stdscr.maxx + 1 - content.size
+    clearer = Curses.stdscr.maxx - content.size
     clearer = " " * clearer
     content += clearer
     content.gsub!("\t",' ') # display tabs as single-space -> nothing breaks
@@ -79,24 +79,17 @@ def display(lines, offset, color_mask)
     @screen[line] = [content, colors]
 
     # position at start of line
-    index = 0
     Curses.setpos(line,0)
     Curses.attrset(Curses::A_NORMAL)
 
     # write colored string
-#    colors.each do |start, color|
-#      Curses.addstr(content[index...start])
-#      Curses.attrset color
-#      index = start
-#    end
-#    Curses.addstr(content[index...-1])
     if colors
       colors.each_with_index do |color,i|
         if color
           color = (color.empty? ? Curses::A_NORMAL : Curses::A_REVERSE)
           Curses.attrset color
         end
-        Curses.addstr(content.slice(i,1))
+        Curses.addstr(content[i..i])
       end
     else
       Curses.addstr(content)

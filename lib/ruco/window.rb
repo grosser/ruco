@@ -62,7 +62,7 @@ module Ruco
         last = [selection.last, visible.last].min
         last = last[1] - left
 
-        mask.add(:reverse, line, first..last)
+        mask.add(:reverse, line, first...last)
       end
 
       mask

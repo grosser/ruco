@@ -16,7 +16,6 @@ module Ruco
       @window.crop(lines) * "\n" + "\n"
     end
 
-<<<<<<< HEAD
     def cursor
       adjust_window
       @window.cursor
