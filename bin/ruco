@@ -112,9 +112,11 @@ def show_app(app)
   color_mask = app.color_mask
 
   # TODO move this logic into application
-#  display([lines.first], 0, [color_mask.first])
-  display(lines[1..-2], 1, color_mask)#[1..-2])
-#  display([lines.last], Curses.stdscr.maxy - 1, [color_mask.last])
+  first = color_mask.shift
+  last = color_mask.pop
+  display([lines.first], 0, first)
+  display(lines[1..-2], 1, color_mask)
+  display([lines.last], Curses.stdscr.maxy - 1, last)
 
   Curses.setpos(app.cursor.line, app.cursor.column)
 end
