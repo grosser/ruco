@@ -74,4 +74,44 @@ describe Ruco::History do
     history.undo
     history.state.should == {:x => 3}
   end
+
+  describe 'with timeout' do
+    let(:history){ Ruco::History.new(:state => {:x => 1}, :track => [:x], :entries => 3, :timeout => 0.1) }
+
+    it "adds fast changes" do
+      history.add(:x => 2)
+      history.add(:x => 3)
+      history.add(:x => 4)
+      history.undo
+      history.state.should == {:x => 1}
+    end
+
+    it "does not modify undone states" do
+      history.undo
+      history.state.should == {:x => 1}
+      history.add(:x => 4)
+      history.undo
+      history.state.should == {:x => 1}
+    end
+
+    it "does not modify redone states" do
+      history.add(:x => 2)
+      history.undo
+      sleep 0.2
+      history.redo
+      history.state.should == {:x => 2}
+      history.add(:x => 3)
+      history.undo
+      history.state.should == {:x => 2}
+    end
+
+    it "does not add slow changes" do
+      history.add(:x => 2)
+      history.add(:x => 3)
+      sleep 0.2
+      history.add(:x => 4)
+      history.undo
+      history.state.should == {:x => 3}
+    end
+  end
 end
