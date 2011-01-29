@@ -25,14 +25,18 @@ Customize
 
     # ~/.ruco.rb
     Ruco.configure do
-      # bind a key, you can use Integers and Symbols
-      # use "ruco --debug-keys foo" to see which keys are possible
-      # or have a look at lib/ruco/keyboard.rb
+      # bind a key
+      # - you can use Integers and Symbols
+      # - use "ruco --debug-keys foo" to see which keys are possible
+      # - have a look at lib/ruco/keyboard.rb
       bind(:"Ctrl+e") do
-        ask('delete ?') do |response|
-          if response or not response
-            editor.move(:to, 0, 0)
-            editor.delete(9999)
+        ask('foo') do |response|
+          if response == 'bar'
+            editor.insert('baz')
+          else
+            editor.move(:to, 0,0)
+            editor.delete(99999)
+            editor.insert('FAIL!')
           end
         end
       end
@@ -40,11 +44,11 @@ Customize
       # bind an existing action
       puts @actions.keys
 
-      bind(:"Ctrl+x", :quit)
-      bind(:"Ctrl+o", :save)
-      bind(:"Ctrl+k", :delete_line)
+      bind :"Ctrl+x", :quit
+      bind :"Ctrl+o", :save
+      bind :"Ctrl+k", :delete_line
 
-      # define a new action and bind it to multiple keys
+      # create reusable actions
       action(:first){ editor.move(:to_column, 0) }
       bind(:"Ctrl+a", :first)
       bind(:home, :first)
