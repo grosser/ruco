@@ -12,6 +12,7 @@ require 'ruco/position'
 require 'ruco/history'
 require 'ruco/file_store'
 require 'ruco/window'
+require 'ruco/style_map'
 
 require 'ruco/editor'
 require 'ruco/status_bar'
