@@ -12,8 +12,11 @@ describe Ruco::Editor do
   end
 
   describe 'convert tabs' do
-    it "reads tab as spaces when option is set" do
+    before do
       write("\t\ta")
+    end
+
+    it "reads tab as spaces when option is set" do
       editor = Ruco::Editor.new(@file, :lines => 3, :columns => 5, :convert_tabs => true)
       editor.view.should == "    a\n\n\n"
     end
@@ -22,6 +25,23 @@ describe Ruco::Editor do
       lambda{
         editor = Ruco::Editor.new(@file, :lines => 3, :columns => 5)
       }.should raise_error
+    end
+  end
+
+  describe 'huge-files' do
+    it "does not try to open huge files" do
+      write('a'*(1024*1024 + 1))
+      lambda{
+        Ruco::Editor.new(@file, :lines => 3, :columns => 5)
+      }.should raise_error
+    end
+
+    it "opens large files and does not take forever" do
+      write('a'*(1024*1024))
+      Time.benchmark do
+        editor = Ruco::Editor.new(@file, :lines => 3, :columns => 5)
+        editor.view
+      end.should < 1
     end
   end
 
@@ -678,7 +698,7 @@ describe Ruco::Editor do
     end
   end
 
-  describe :changes? do
+  describe :modified? do
     it "is unchanged by default" do
       editor.modified?.should == false
     end

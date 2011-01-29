@@ -12,7 +12,15 @@ module Ruco
 
     def initialize(file, options)
       @file = file
+
+      # check for size (10000 lines * 100 chars should be enough for everybody !?)
+      if File.exist?(@file) and File.size(@file) > (1024 * 1024)
+        raise "#{@file} is larger than 1MB, did you really want to open that with Ruco?"
+      end
+
       content = (File.exist?(@file) ? File.read(@file) : '')
+
+      # check for tabs
       if content.include?("\t")
         if options[:convert_tabs]
           content.tabs_to_spaces!
@@ -20,6 +28,7 @@ module Ruco
           raise "#{@file} contains tabs.\nRuco atm does not support tabs, but will happily convert them to spaces if started with --convert-tabs or -c"
         end
       end
+
       @saved_content = content
       @text_area = EditorArea.new(content, options)
     end

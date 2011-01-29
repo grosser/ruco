@@ -58,7 +58,6 @@ TIPS
 
 TODO
 =====
- - limit possible file size to e.g. 1MB (would hang/be too slow with big files)
  - find next (Alt+n)
  - add selection colors to forms in command_bar
  - session storage (stay at same line/column when reopening)

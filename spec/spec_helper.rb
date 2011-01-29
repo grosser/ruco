@@ -14,3 +14,11 @@ class Tempfile
     result
   end
 end
+
+class Time
+  def self.benchmark
+    t = Time.now.to_f
+    yield
+    Time.now.to_f - t
+  end
+end
