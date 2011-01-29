@@ -4,6 +4,8 @@ module Ruco
     attr_reader :text_area
     private :text_area
     delegate :view, :color_mask, :cursor,
+      :insert, :indent, :unindent, :delete, :delete_line,
+      :redo, :undo,
       :selecting, :selection, :text_in_selection, :reset,
       :move, :resize,
       :to => :text_area
@@ -18,8 +20,8 @@ module Ruco
           raise "#{@file} contains tabs.\nRuco atm does not support tabs, but will happily convert them to spaces if started with --convert-tabs or -c"
         end
       end
+      @saved_content = content
       @text_area = EditorArea.new(content, options)
-      @modified = false
     end
 
     def find(text)
@@ -31,22 +33,14 @@ module Ruco
       true
     end
 
-    %w[insert indent unindent delete delete_line redo undo].each do |modifying|
-      eval <<-RUBY
-        def #{modifying}(*args)
-          text_area.#{modifying}(*args)
-          @modified = true
-        end
-      RUBY
-    end
-
     def modified?
-      @modified
+      @saved_content != text_area.content
     end
 
     def save
-      File.open(@file,'w'){|f| f.write(text_area.content) }
-      @modified = false
+      content = text_area.content
+      File.open(@file,'w'){|f| f.write(content) }
+      @saved_content = content
     end
   end
 end
