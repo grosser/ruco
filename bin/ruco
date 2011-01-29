@@ -83,16 +83,13 @@ def display(lines, offset, color_mask)
     Curses.attrset(Curses::A_NORMAL)
 
     if colors
-      # buffer color output -> use as few addstr/attrset as possible
-      last_color = nil
+      # buffer color output -> use as few addstr/attrset as possible -> better ssh performance ?
       buffered = ''
       colors.each_with_index do |color,i|
-        if color and color != last_color
-          log(buffered)
+        if color
           # write buffer
           Curses.addstr(buffered)
           buffered = ''
-          last_color = color
 
           # set new color
           color = (color.empty? ? Curses::A_NORMAL : Curses::A_REVERSE)

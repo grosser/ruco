@@ -16,11 +16,20 @@ module Ruco
         next unless styles
         flat = []
 
-        # add style info to every column
+        # add style info to every column the style targets
         styles.each do |style, columns|
           columns.to_a.each do |column|
             flat[column] ||= []
             flat[column].unshift style
+          end
+        end
+
+        # remove duplicate style info
+        last_style = nil
+        flat.map! do |style|
+          if last_style != style
+            last_style = style
+            style
           end
         end
 
