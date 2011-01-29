@@ -82,20 +82,29 @@ def display(lines, offset, color_mask)
     Curses.setpos(line,0)
     Curses.attrset(Curses::A_NORMAL)
 
-    # write colored string
     if colors
+      # buffer color output -> use as few addstr/attrset as possible
+      last_color = nil
+      buffered = ''
       colors.each_with_index do |color,i|
-        if color
+        if color and color != last_color
+          log(buffered)
+          # write buffer
+          Curses.addstr(buffered)
+          buffered = ''
+          last_color = color
+
+          # set new color
           color = (color.empty? ? Curses::A_NORMAL : Curses::A_REVERSE)
           Curses.attrset color
         end
-        Curses.addstr(content[i..i])
+        buffered << content[i..i]
       end
+      Curses.addstr(buffered)
     else
       Curses.addstr(content)
     end
 
-#    Curses.addstr(content[index...-1])
     write(line, 0, (rand(899)+100).to_s) if @options[:debug_cache]
   end
 end
