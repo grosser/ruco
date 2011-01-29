@@ -50,21 +50,22 @@ module Ruco
     end
 
     def color_mask(selection)
-      mask = Array.new(lines)
+      mask = StyleMap.new(lines)
       return mask unless selection
 
-      mask.map_with_index do |_,line|
+      lines.times do |line|
         visible = visible_area(line)
         next unless selection.overlap?(visible)
 
         first = [selection.first, visible.first].max
+        first = first[1] - left
         last = [selection.last, visible.last].min
+        last = last[1] - left
 
-        [
-          [first[1]-left, Curses::A_REVERSE],
-          [last[1]-left, Curses::A_NORMAL]
-        ]
+        mask.add(:reverse, line, first..last)
       end
+
+      mask
     end
 
     def left=(x)

@@ -29,4 +29,34 @@ describe Ruco::StyleMap do
       ]
     end
   end
+
+  describe 'array style operations' do
+    it "adds two maps" do
+      s1 = Ruco::StyleMap.new(1)
+      s1.add(:reverse, 0, 0..1)
+      s2 = Ruco::StyleMap.new(2)
+      s2.add(:reverse, 0, 2..3)
+      (s1 + s2).flatten.should == [
+        [[:reverse], [:reverse], []],
+        [nil, nil, [:reverse], [:reverse], []],
+        nil
+      ]
+    end
+
+    it "can shift" do
+      s = Ruco::StyleMap.new(2)
+      s.add(:reverse, 0, 0..1)
+      s.add(:reverse, 1, 1..2)
+      s.shift.flatten.should == [[[:reverse],[:reverse],[]]]
+      s.flatten.should == [[nil, [:reverse],[:reverse],[]]]
+    end
+
+    it "can pop" do
+      s = Ruco::StyleMap.new(2)
+      s.add(:reverse, 0, 0..1)
+      s.add(:reverse, 1, 1..2)
+      s.pop.flatten.should == [[nil, [:reverse],[:reverse],[]]]
+      s.flatten.should == [[[:reverse],[:reverse],[]]]
+    end
+  end
 end

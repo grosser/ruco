@@ -62,9 +62,10 @@ end
 
 def display(lines, offset, color_mask)
   @screen ||= [] # current screen is used as cache
+  color_mask = color_mask.flatten
 
   lines.each_with_index do |content, line|
-    colors = color_mask[line] || []
+    colors = color_mask[line]
 
     # expand line with whitespace
     line += offset
@@ -83,13 +84,25 @@ def display(lines, offset, color_mask)
     Curses.attrset(Curses::A_NORMAL)
 
     # write colored string
-    colors.each do |start, color|
-      Curses.addstr(content[index...start])
-      Curses.attrset color
-      index = start
+#    colors.each do |start, color|
+#      Curses.addstr(content[index...start])
+#      Curses.attrset color
+#      index = start
+#    end
+#    Curses.addstr(content[index...-1])
+    if colors
+      colors.each_with_index do |color,i|
+        if color
+          color = (color.empty? ? Curses::A_NORMAL : Curses::A_REVERSE)
+          Curses.attrset color
+        end
+        Curses.addstr(content.slice(i,1))
+      end
+    else
+      Curses.addstr(content)
     end
-    Curses.addstr(content[index...-1])
 
+#    Curses.addstr(content[index...-1])
     write(line, 0, (rand(899)+100).to_s) if @options[:debug_cache]
   end
 end
@@ -99,9 +112,9 @@ def show_app(app)
   color_mask = app.color_mask
 
   # TODO move this logic into application
-  display([lines.first], 0, [color_mask.first])
-  display(lines[1..-2], 1, color_mask[1..-2])
-  display([lines.last], Curses.stdscr.maxy - 1, [color_mask.last])
+#  display([lines.first], 0, [color_mask.first])
+  display(lines[1..-2], 1, color_mask)#[1..-2])
+#  display([lines.last], Curses.stdscr.maxy - 1, [color_mask.last])
 
   Curses.setpos(app.cursor.line, app.cursor.column)
 end

@@ -15,7 +15,10 @@ module Ruco
     end
 
     def color_mask
-      reverse = [[[0,Curses::A_REVERSE]]]
+      reverse = StyleMap.new(1)
+      reverse.add(:reverse, 0, 0..@options[:columns])
+#      reverse = [[[0,Curses::A_REVERSE]]]
+#      reverse + editor.color_mask + reverse
       reverse + editor.color_mask + reverse
     end
 
