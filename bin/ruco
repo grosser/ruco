@@ -65,7 +65,7 @@ def display(lines, offset, color_mask)
   color_mask = color_mask.flatten
 
   lines.each_with_index do |content, line|
-    colors = color_mask[line]
+    styles = color_mask[line]
 
     # expand line with whitespace
     line += offset
@@ -75,24 +75,24 @@ def display(lines, offset, color_mask)
     content.gsub!("\t",' ') # display tabs as single-space -> nothing breaks
 
     # cache !?
-    next if @screen[line] == [content, colors]
-    @screen[line] = [content, colors]
+    next if @screen[line] == [content, styles]
+    @screen[line] = [content, styles]
 
     # position at start of line
     Curses.setpos(line,0)
     Curses.attrset(Curses::A_NORMAL)
 
-    if colors
+    if styles
       buffered = ''
-      colors.each_with_index do |color,i|
-        if color
+      styles.each_with_index do |style,i|
+        if style
           # write buffer
           Curses.addstr(buffered)
           buffered = ''
 
           # set new color
-          color = (color.empty? ? Curses::A_NORMAL : Curses::A_REVERSE)
-          Curses.attrset color
+          style = Ruco::StyleMap.curses_style(style)
+          Curses.attrset style
         end
         buffered << (content[i..i]||'')
       end

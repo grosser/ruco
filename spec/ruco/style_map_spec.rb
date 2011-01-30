@@ -59,4 +59,18 @@ describe Ruco::StyleMap do
       s.flatten.should == [[[:reverse],nil,[]]]
     end
   end
+
+  describe :curses_style do
+    it "is 'normal' for nothing" do
+      Ruco::StyleMap.curses_style([]).should == Curses::A_NORMAL
+    end
+
+    it "is red for red" do
+      Ruco::StyleMap.curses_style([:red]).should == Curses::color_pair( Curses::COLOR_RED )
+    end
+
+    it "is reverse for reverse" do
+      Ruco::StyleMap.curses_style([:reverse]).should == Curses::A_REVERSE
+    end
+  end
 end

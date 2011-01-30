@@ -33,3 +33,15 @@ class String
     end
   end
 end
+
+# http://grosser.it/2010/12/31/ruby-string-indexes-indices-find-all-indexes-in-a-string
+class String
+  def indexes(needle)
+    found = []
+    current_index = -1
+    while current_index = index(needle, current_index+1)
+      found << current_index
+    end
+    found
+  end
+end
