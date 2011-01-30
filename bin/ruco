@@ -95,7 +95,7 @@ def display(lines, offset, color_mask)
           color = (color.empty? ? Curses::A_NORMAL : Curses::A_REVERSE)
           Curses.attrset color
         end
-        buffered << content[i..i]
+        buffered << (content[i..i]||'')
       end
       Curses.addstr(buffered)
     else

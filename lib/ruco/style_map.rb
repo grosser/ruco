@@ -12,28 +12,25 @@ module Ruco
     end
 
     def flatten
+
       @lines.map do |styles|
         next unless styles
+
+        # start and one after end of every column-range changes styles
+        points_of_change = styles.map{|s,c| [c.first, c.last+1] }.flatten
+
         flat = []
 
-        # add style info to every column the style targets
         styles.each do |style, columns|
-          columns.to_a.each do |column|
-            flat[column] ||= []
-            flat[column].unshift style
+          points_of_change.each do |point|
+            next unless columns.include?(point)
+            flat[point] ||= []
+            flat[point].unshift style
           end
         end
 
-        # remove duplicate style info
-        last_style = nil
-        flat.map! do |style|
-          if last_style != style
-            last_style = style
-            style
-          end
-        end
-
-        flat << [] # reset styles after last
+        max = styles.map{|s,c|c.last}.max
+        flat[max+1] = []
         flat
       end
     end
