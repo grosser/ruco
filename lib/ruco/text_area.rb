@@ -1,12 +1,12 @@
 module Ruco
   class TextArea
-    attr_reader :lines, :selection
+    attr_reader :lines, :selection, :column, :line
 
     def initialize(content, options)
       @lines = content.naive_split("\n")
       @options = options.dup
-      @line = 0
-      @column = 0
+      self.line = 0
+      self.column = 0
       @window = Window.new(@options.delete(:lines), @options.delete(:columns))
       @window.position = position
     end
@@ -17,36 +17,37 @@ module Ruco
     end
 
     def cursor
+      @window.position = position
       @window.cursor
     end
 
     def color_mask
+      @window.position = position
       @window.color_mask(@selection)
     end
 
     def move(where, *args)
       case where
       when :relative then
-        @line += args.first
-        @column += args.last
+        self.line += args.first
+        self.column += args.last
       when :to then
-        @line, @column = args
+        self.line, self.column = args
       when :to_bol then move_to_bol(*args)
       when :to_eol then move_to_eol(*args)
-      when :to_line then @line = args.first
-      when :to_column then @column = args.first
+      when :to_line then self.line = args.first
+      when :to_column then self.column = args.first
       when :to_index then move(:to, *position_for_index(*args))
       when :page_down then
         shift = @window.lines - 1
-        @line += shift
+        self.line += shift
       when :page_up then
         shift = @window.lines - 1
-        @line -= shift
+        self.line -= shift
       else
         raise "Unknown move type #{where} with #{args.inspect}"
       end
       @selection = nil unless @selecting
-      adjust_view
     end
 
     def selecting(&block)
@@ -81,7 +82,7 @@ module Ruco
       text.tabs_to_spaces!
       if text == "\n" and @column >= after_last_word
         current_whitespace = current_line.leading_whitespace
-        next_whitespace = lines[@line+1].to_s.leading_whitespace
+        next_whitespace = lines[line+1].to_s.leading_whitespace
         text = text + [current_whitespace, next_whitespace].max
       end
       insert_into_content text
@@ -125,7 +126,7 @@ module Ruco
     protected
 
     def position
-      Position.new(@line, @column)
+      Position.new(line, column)
     end
 
     def position_for_index(index)
@@ -183,9 +184,12 @@ module Ruco
       end
     end
 
-    def adjust_view
-      @line =    [[@line,   0].max, lines.size - 1].min
-      @column =  [[@column, 0].max, current_line.size].min
+    def line=(x)
+      @line = [[x, 0].max, lines.size - 1].min
+    end
+
+    def column=(x)
+      @column = [[x, 0].max, current_line.size].min
     end
 
     def insert_into_content(text)
@@ -195,16 +199,16 @@ module Ruco
         end
       else
         # faster but complicated for newlines
-        lines[@line].insert(@column, text)
+        lines[line].insert(@column, text)
       end
     end
 
     def position_inside_content?
-      @line < lines.size and @column < lines[@line].to_s.size
+      line < lines.size and @column < lines[line].to_s.size
     end
 
     def current_line
-      lines[@line] || ''
+      lines[line] || ''
     end
 
     def move_according_to_insert(text)
