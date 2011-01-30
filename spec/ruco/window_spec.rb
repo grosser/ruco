@@ -32,6 +32,10 @@ describe Ruco::Window do
       result.should == ['1234','1234']
     end
 
+    it "can display empty lines" do
+      window.crop([]).should == ['','']
+    end
+
     describe 'scrolled' do
       it "goes out of frame if line is out of frame" do
         window = Ruco::Window.new(6,1)

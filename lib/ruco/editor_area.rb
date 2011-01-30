@@ -24,6 +24,7 @@ module Ruco
 
     def delete_line
       lines.slice!(line, 1)
+      sanitize_position
     end
 
     def indent

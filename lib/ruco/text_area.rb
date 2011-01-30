@@ -185,7 +185,7 @@ module Ruco
     end
 
     def line=(x)
-      @line = [[x, 0].max, lines.size - 1].min
+      @line = [[x, 0].max, [lines.size - 1, 0].max ].min
     end
 
     def column=(x)
@@ -215,7 +215,7 @@ module Ruco
       inserted_lines = text.naive_split("\n")
       if inserted_lines.size > 1
         # column position does not add up when hitting return
-        @column = inserted_lines.last.size
+        self.column = inserted_lines.last.size
         move(:relative, inserted_lines.size - 1, 0)
       else
         move(:relative, inserted_lines.size - 1, inserted_lines.last.size)
@@ -230,6 +230,11 @@ module Ruco
         move(:to, *@selection.first)
       end
       @selection = nil
+    end
+
+    def sanitize_position
+      self.line = line
+      self.column = column
     end
   end
 end
