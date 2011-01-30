@@ -32,17 +32,21 @@ describe Ruco::Window do
       result.should == ['1234','1234']
     end
 
-#    it "goes out of frame if position is out of frame" do
-#      window.position = Ruco::Position.new(1,4)
-#      result = window.crop(['1234567890','1234567890'])
-#      result.should == ['5678','5678']
-#    end
-#
-#    it "goes far out of frame" do
-#      window.position = Ruco::Position.new(1,8)
-#      result = window.crop(['1234567890','1234567890'])
-#      result.should == ['5678','5678']
-#    end
+    describe 'scrolled' do
+      it "goes out of frame if line is out of frame" do
+        window = Ruco::Window.new(6,1)
+        window.position = Ruco::Position.new(6,0)
+        result = window.crop(['1','2','3','4','5','6','7','8'])
+        result.should == ['2','3','4','5','6','7']
+      end
+
+      it "goes out of frame if column is out of frame" do
+        window = Ruco::Window.new(1,6)
+        window.position = Ruco::Position.new(0,6)
+        result = window.crop(['1234567890'])
+        result.should == ['234567']
+      end
+    end
   end
 
   describe :top do

@@ -13,12 +13,13 @@ module Ruco
     end
 
     def crop(content)
-      lines = content.slice(0, @lines)
+      lines = content[visible_lines] || []
       lines[@lines-1] ||= nil
       lines.map do |line|
         line ||= ''
-        line.slice!(@columns, 99999) # drop everything we dont need
-        line + (' ' * (@columns - line.size))
+        line = line[visible_columns] || ''
+        whitespace = ' ' * (@columns - line.size)
+        line << whitespace
       end
     end
 
