@@ -83,7 +83,6 @@ def display(lines, offset, color_mask)
     Curses.attrset(Curses::A_NORMAL)
 
     if colors
-      # buffer color output -> use as few addstr/attrset as possible -> better ssh performance ?
       buffered = ''
       colors.each_with_index do |color,i|
         if color
