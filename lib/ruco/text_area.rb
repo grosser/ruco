@@ -4,10 +4,10 @@ module Ruco
 
     def initialize(content, options)
       @lines = content.naive_split("\n")
-      @options = options
+      @options = options.dup
       @line = 0
       @column = 0
-      @window = Window.new(@options[:lines], @options[:columns])
+      @window = Window.new(@options.delete(:lines), @options.delete(:columns))
       @window.position = position
     end
 
@@ -21,7 +21,7 @@ module Ruco
     end
 
     def color_mask
-      mask = Array.new(@options[:lines])
+      mask = Array.new(@window.lines)
 #      return mask unless @selection
 #
 #      mask.map_with_index do |_,line|
@@ -51,10 +51,10 @@ module Ruco
       when :to_column then @column = args.first
       when :to_index then move(:to, *position_for_index(*args))
       when :page_down then
-        shift = @options[:lines] - 1
+        shift = @window.lines - 1
         @line += shift
       when :page_up then
-        shift = @options[:lines] - 1
+        shift = @window.lines - 1
         @line -= shift
       else
         raise "Unknown move type #{where} with #{args.inspect}"
@@ -132,8 +132,8 @@ module Ruco
     end
 
     def resize(lines, columns)
-      @options[:lines] = lines
-      @options[:columns] = columns
+      @window.lines = lines
+      @window.columns = columns
     end
 
     protected

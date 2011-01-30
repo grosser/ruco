@@ -2,7 +2,7 @@ module Ruco
   class Window
     OFFSET = 5
 
-    attr_writer :position
+    attr_accessor :position, :lines, :columns
     attr_reader :top, :left, :cursor
 
     def initialize(lines, columns)
