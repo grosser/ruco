@@ -30,7 +30,33 @@ module Ruco
       @cursor = Position.new(pos.line - @top, pos.column - @left)
     end
 
+    def color_mask(selection)
+      mask = Array.new(lines)
+      return mask unless selection
+
+      mask.map_with_index do |_,line|
+        visible = visible_area(line)
+        next unless selection.overlap?(visible)
+
+        first = [selection.first, visible.first].max
+        last = [selection.last, visible.last].min
+
+        [
+          [first[1]-left, Curses::A_REVERSE],
+          [last[1]-left, Curses::A_NORMAL]
+        ]
+      end
+    end
+
     private
+
+    def visible_area(line)
+      line += @top
+      start_of_line = [line, @left]
+      last_visible_column = @left + @columns
+      end_of_line = [line, last_visible_column]
+      start_of_line..end_of_line
+    end
 
     def line_offset
       @lines / 2
