@@ -5,8 +5,8 @@ module Ruco
     def initialize(content, options)
       @lines = content.naive_split("\n")
       @options = options.dup
-      self.line = 0
-      self.column = 0
+      @column = 0
+      @line = 0
       @window = Window.new(@options.delete(:lines), @options.delete(:columns))
       @window.position = position
     end
@@ -40,10 +40,14 @@ module Ruco
       when :to_index then move(:to, *position_for_index(*args))
       when :page_down then
         shift = @window.lines - 1
+        old = self.line
         self.line += shift
+        @window.top += (line - old) # force scroll
       when :page_up then
         shift = @window.lines - 1
+        old = self.line 
         self.line -= shift
+        @window.top += (line - old) # force scroll
       else
         raise "Unknown move type #{where} with #{args.inspect}"
       end
@@ -186,10 +190,15 @@ module Ruco
 
     def line=(x)
       @line = [[x, 0].max, [lines.size - 1, 0].max ].min
+      self.column = @column # e.g. now in an empty line
     end
 
     def column=(x)
       @column = [[x, 0].max, current_line.size].min
+    end
+
+    def position=(pos)
+      self.line, self.column = pos
     end
 
     def insert_into_content(text)
@@ -214,9 +223,8 @@ module Ruco
     def move_according_to_insert(text)
       inserted_lines = text.naive_split("\n")
       if inserted_lines.size > 1
-        # column position does not add up when hitting return
+        self.line += inserted_lines.size - 1
         self.column = inserted_lines.last.size
-        move(:relative, inserted_lines.size - 1, 0)
       else
         move(:relative, inserted_lines.size - 1, inserted_lines.last.size)
       end

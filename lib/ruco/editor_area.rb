@@ -58,13 +58,17 @@ module Ruco
     def state=(data)
       @selection = nil
       @lines = data[:content].naive_split("\n")
-      self.line, self.column = data[:position]
-      @window.top, @window.left = data[:screen_position]
+      self.position = data[:position]
+      self.screen_position = data[:screen_position]
     end
 
     # TODO use this instead of instance variables
     def screen_position
       Position.new(@window.top, @window.left)
+    end
+
+    def screen_position=(pos)
+      @window.top, @window.left = pos
     end
 
     def adjust_to_indentation(first, last=nil)
@@ -73,9 +77,9 @@ module Ruco
         cursor_adjustment = (selection.first == position ? first : last)
         selection.first.column = [selection.first.column + first, 0].max
         selection.last.column = [selection.last.column + last, 0].max
-        @column += cursor_adjustment
+        self.column += cursor_adjustment
       else
-        @column += first
+        self.column += first
       end
     end
 

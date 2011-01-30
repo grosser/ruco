@@ -91,26 +91,26 @@ describe Ruco::Editor do
         editor.cursor.column.should == 4
 
         editor.move(:relative, 0,1)
-        editor.view.should == "6789\n\n\n"
-        editor.cursor.column.should == 0
+        editor.view.should == "45678\n\n\n"
+        editor.cursor.column.should == 2
       end
 
       it "cannot scroll past the screen" do
         write('123456789')
         editor.move(:relative, 0,4)
         6.times{ editor.move(:relative, 0,1) }
-        editor.view.should == "6789\n\n\n"
-        editor.cursor.column.should == 4
+        editor.view.should == "89\n\n\n"
+        editor.cursor.column.should == 2
       end
 
       it "can scroll columns backwards" do
         write('123456789')
         editor.move(:relative, 0,5)
-        editor.view.should == "6789\n\n\n"
+        editor.view.should == "45678\n\n\n"
 
-        editor.move(:relative, 0,-1)
+        editor.move(:relative, 0,-3)
         editor.view.should == "12345\n\n\n"
-        editor.cursor.column.should == 4
+        editor.cursor.column.should == 2
       end
     end
 
@@ -119,19 +119,19 @@ describe Ruco::Editor do
         write("1\n2\n3\n4\n5\n6\n7\n8\n9")
       end
 
-      it "can scroll lines down (at maximum of screen size)" do
+      it "can scroll lines down" do
         editor.move(:relative, 2,0)
         editor.view.should == "1\n2\n3\n"
 
         editor.move(:relative, 1,0)
-        editor.view.should == "4\n5\n6\n"
-        editor.cursor.line.should == 0
+        editor.view.should == "3\n4\n5\n"
+        editor.cursor.line.should == 1
       end
 
       it "can scroll till end of file" do
         editor.move(:relative, 15,0)
-        editor.view.should == "9\n\n\n"
-        editor.cursor.line.should == 0
+        editor.view.should == "8\n9\n\n"
+        editor.cursor.line.should == 1
       end
     end
 
@@ -386,8 +386,9 @@ describe Ruco::Editor do
 
     it "shows multi-line selection in scrolled space" do
       write("\n\n\n\n\n0123456789\n0123456789\n0123456789\n\n")
-      editor.move(:to, 5,7)
-      editor.move(:relative, 0, 1)
+      ta = editor.send(:text_area)
+      ta.send(:position=, [5,8])
+      ta.send(:screen_position=, [5,7])
       editor.selecting do
         move(:relative, 2, 1)
       end
@@ -591,11 +592,6 @@ describe Ruco::Editor do
       editor.unindent
       editor.cursor.should == [0,0]
     end
-
-    it "marks as modified" do
-      editor.unindent
-      editor.modified?.should == true
-    end
   end
 
   describe 'history' do
@@ -627,16 +623,6 @@ describe Ruco::Editor do
       editor.save
       editor.modified?.should == false
       editor.undo
-      editor.modified?.should == true
-    end
-
-    it "sets modified on undo" do
-      editor.insert('a')
-      editor.view # trigger save point
-      editor.undo
-      editor.save
-      editor.modified?.should == false
-      editor.redo
       editor.modified?.should == true
     end
   end
