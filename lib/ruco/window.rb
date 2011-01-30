@@ -18,9 +18,7 @@ module Ruco
       lines[@lines-1] ||= nil
       lines.map do |line|
         line ||= ''
-        line = line[visible_columns] || ''
-        whitespace = ' ' * (@columns - line.size)
-        line << whitespace
+        line[visible_columns] || ''
       end
     end
 
