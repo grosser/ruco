@@ -36,15 +36,15 @@ describe Ruco::Window do
       it "goes out of frame if line is out of frame" do
         window = Ruco::Window.new(6,1)
         window.position = Ruco::Position.new(6,0)
-        result = window.crop(['1','2','3','4','5','6','7','8'])
-        result.should == ['2','3','4','5','6','7']
+        result = window.crop(['1','2','3','4','5','6','7','8','9'])
+        result.should == ['4','5','6','7','8','9']
       end
 
       it "goes out of frame if column is out of frame" do
         window = Ruco::Window.new(1,6)
         window.position = Ruco::Position.new(0,6)
         result = window.crop(['1234567890'])
-        result.should == ['234567']
+        result.should == ['456789']
       end
     end
   end
