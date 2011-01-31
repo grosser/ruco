@@ -63,6 +63,8 @@ TIPS
 
 TODO
 =====
+ - big warning when editing a not-writeable file
+ - nice warning when failing to write a write-only file
  - find next (Alt+n)
  - add selection colors to forms in command_bar
  - session storage (stay at same line/column when reopening)
