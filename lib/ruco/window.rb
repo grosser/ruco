@@ -23,8 +23,8 @@ module Ruco
     end
 
     def position=(pos)
-      @top = pos.line - line_offset unless visible_lines.include?(pos.line)
-      @left = pos.column - column_offset  unless visible_columns.include?(pos.column)
+      self.top = pos.line - line_offset unless visible_lines.include?(pos.line)
+      self.left = pos.column - column_offset  unless visible_columns.include?(pos.column)
       @cursor = Position.new(pos.line - @top, pos.column - @left)
     end
 
@@ -44,6 +44,14 @@ module Ruco
           [last[1]-left, Curses::A_NORMAL]
         ]
       end
+    end
+
+    def top=(x)
+      @top = [x,0].max
+    end
+
+    def left=(x)
+      @left = [x,0].max
     end
 
     private

@@ -1,6 +1,7 @@
 require File.expand_path('spec/spec_helper')
 
 describe Ruco::Window do
+  let(:window){ Ruco::Window.new(10,10) }
 
   describe :crop do
     let(:window){ Ruco::Window.new(2,4) }
@@ -54,8 +55,6 @@ describe Ruco::Window do
   end
 
   describe :top do
-    let(:window){ Ruco::Window.new(10,10) }
-
     it "does not change when staying in frame" do
       window.top.should == 0
       window.position = Ruco::Position.new(9,0)
@@ -80,8 +79,6 @@ describe Ruco::Window do
   end
 
   describe :left do
-    let(:window){ Ruco::Window.new(10,10) }
-
     it "does not change when staying in frame" do
       window.left.should == 0
       window.position = Ruco::Position.new(0,9)
@@ -105,12 +102,42 @@ describe Ruco::Window do
       window.left.should == 2
     end
 
+    it "changes to 0 when going left out of frame to 1" do
+      window.position = Ruco::Position.new(0,20)
+      window.position = Ruco::Position.new(0,1)
+      window.left.should == 0
+    end
+
     it "does not change when staying in changed frame" do
       window.position = Ruco::Position.new(0,9)
       window.position = Ruco::Position.new(0,10)
       window.left.should == 5
       window.position = Ruco::Position.new(0,14)
       window.left.should == 5
+    end
+  end
+
+  describe :top= do
+    it "sets" do
+      window.top = 1
+      window.top.should == 1
+    end
+
+    it "does not allow negative" do
+      window.top = -1
+      window.top.should == 0
+    end
+  end
+
+  describe :left= do
+    it "sets" do
+      window.left = 1
+      window.left.should == 1
+    end
+
+    it "does not allow negative" do
+      window.left = -1
+      window.left.should == 0
     end
   end
 end
