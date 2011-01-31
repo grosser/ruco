@@ -1,69 +1,57 @@
 module Ruco
   class TextArea
-    attr_reader :lines, :selection
+    attr_reader :lines, :selection, :column, :line
 
     def initialize(content, options)
       @lines = content.naive_split("\n")
-      @options = options
-      @line = 0
+      @options = options.dup
       @column = 0
-      @cursor_line = 0
-      @cursor_column = 0
-      @scrolled_lines = 0
-      @scrolled_columns = 0
-      @options[:line_scrolling_offset] ||= @options[:lines] / 2
-      @options[:column_scrolling_offset] ||= @options[:columns] / 2
+      @line = 0
+      @window = Window.new(@options.delete(:lines), @options.delete(:columns))
+      @window.position = position
     end
 
     def view
-      Array.new(@options[:lines]).map_with_index do |_,i|
-        (lines[i + @scrolled_lines] || "").slice(@scrolled_columns, @options[:columns])
-      end * "\n" + "\n"
+      @window.position = position
+      @window.crop(lines) * "\n" + "\n"
+    end
+
+    def cursor
+      @window.position = position
+      @window.cursor
     end
 
     def color_mask
-      mask = Array.new(@options[:lines])
-      return mask unless @selection
-
-      mask.map_with_index do |_,line|
-        visible = visible_area(line)
-        next unless @selection.overlap?(visible)
-
-        first = [@selection.first, visible.first].max
-        last = [@selection.last, visible.last].min
-
-        [
-          [first[1]-@scrolled_columns,Curses::A_REVERSE],
-          [last[1]-@scrolled_columns, Curses::A_NORMAL]
-        ]
-      end
+      @window.position = position
+      @window.color_mask(@selection)
     end
 
     def move(where, *args)
       case where
       when :relative then
-        @line += args.first
-        @column += args.last
+        self.line += args.first
+        self.column += args.last
       when :to then
-        @line, @column = args
+        self.line, self.column = args
       when :to_bol then move_to_bol(*args)
       when :to_eol then move_to_eol(*args)
-      when :to_line then @line = args.first
-      when :to_column then @column = args.first
+      when :to_line then self.line = args.first
+      when :to_column then self.column = args.first
       when :to_index then move(:to, *position_for_index(*args))
       when :page_down then
-        shift = @options[:lines] - 1
-        @line += shift
-        @scrolled_lines += shift
+        shift = @window.lines - 1
+        old = self.line
+        self.line += shift
+        @window.top += (line - old) # force scroll
       when :page_up then
-        shift = @options[:lines] - 1
-        @line -= shift
-        @scrolled_lines -= shift
+        shift = @window.lines - 1
+        old = self.line 
+        self.line -= shift
+        @window.top += (line - old) # force scroll
       else
         raise "Unknown move type #{where} with #{args.inspect}"
       end
       @selection = nil unless @selecting
-      adjust_view
     end
 
     def selecting(&block)
@@ -98,7 +86,7 @@ module Ruco
       text.tabs_to_spaces!
       if text == "\n" and @column >= after_last_word
         current_whitespace = current_line.leading_whitespace
-        next_whitespace = lines[@line+1].to_s.leading_whitespace
+        next_whitespace = lines[line+1].to_s.leading_whitespace
         text = text + [current_whitespace, next_whitespace].max
       end
       insert_into_content text
@@ -124,10 +112,6 @@ module Ruco
       end
     end
 
-    def cursor
-      Position.new @cursor_line, @cursor_column
-    end
-
     def index_for_position(position=self.position)
       index = lines[0...position.line].join("\n").size + position.column
       index += 1 if position.line > 0 # account for missing newline
@@ -139,14 +123,14 @@ module Ruco
     end
 
     def resize(lines, columns)
-      @options[:lines] = lines
-      @options[:columns] = columns
+      @window.lines = lines
+      @window.columns = columns
     end
 
     protected
 
     def position
-      Position.new(@line, @column)
+      Position.new(line, column)
     end
 
     def position_for_index(index)
@@ -204,46 +188,17 @@ module Ruco
       end
     end
 
-    def adjust_view
-      @line =    [[@line,   0].max, lines.size - 1].min
-      @column =  [[@column, 0].max, current_line.size].min
-      reposition_cursor
-      scroll_column_into_view
-      scroll_line_into_view
-      reposition_cursor
+    def line=(x)
+      @line = [[x, 0].max, [lines.size - 1, 0].max ].min
+      self.column = @column # e.g. now in an empty line
     end
 
-    def scroll_column_into_view
-      offset = [@options[:column_scrolling_offset], @options[:columns]].min
-
-      if @cursor_column >= @options[:columns]
-        @scrolled_columns = @column - @options[:columns] + offset
-      end
-
-      if @cursor_column < 0
-        @scrolled_columns = @column - offset
-      end
-
-      @scrolled_columns = [[@scrolled_columns, 0].max, @column].min
+    def column=(x)
+      @column = [[x, 0].max, current_line.size].min
     end
 
-    def scroll_line_into_view
-      offset = [@options[:line_scrolling_offset], @options[:lines]].min
-
-      if @cursor_line >= @options[:lines]
-        @scrolled_lines = @line - @options[:lines] + offset
-      end
-
-      if @cursor_line < 0
-        @scrolled_lines = @line - offset
-      end
-
-      @scrolled_lines = [[@scrolled_lines, 0].max, @line].min
-    end
-
-    def reposition_cursor
-      @cursor_column = @column - @scrolled_columns
-      @cursor_line = @line - @scrolled_lines
+    def position=(pos)
+      self.line, self.column = pos
     end
 
     def insert_into_content(text)
@@ -253,24 +208,23 @@ module Ruco
         end
       else
         # faster but complicated for newlines
-        lines[@line].insert(@column, text)
+        lines[line].insert(@column, text)
       end
     end
 
     def position_inside_content?
-      @line < lines.size and @column < lines[@line].to_s.size
+      line < lines.size and @column < lines[line].to_s.size
     end
 
     def current_line
-      lines[@line] || ''
+      lines[line] || ''
     end
 
     def move_according_to_insert(text)
       inserted_lines = text.naive_split("\n")
       if inserted_lines.size > 1
-        # column position does not add up when hitting return
-        @column = inserted_lines.last.size
-        move(:relative, inserted_lines.size - 1, 0)
+        self.line += inserted_lines.size - 1
+        self.column = inserted_lines.last.size
       else
         move(:relative, inserted_lines.size - 1, inserted_lines.last.size)
       end
@@ -286,12 +240,9 @@ module Ruco
       @selection = nil
     end
 
-    def visible_area(line)
-      line += @scrolled_lines
-      start_of_line = [line, @scrolled_columns]
-      last_visible_column = @scrolled_columns + @options[:columns]
-      end_of_line = [line, last_visible_column]
-      start_of_line..end_of_line
+    def sanitize_position
+      self.line = line
+      self.column = column
     end
   end
 end

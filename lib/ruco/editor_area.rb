@@ -23,28 +23,26 @@ module Ruco
     end
 
     def delete_line
-      lines.slice!(@line, 1)
-      adjust_view
+      lines.slice!(line, 1)
+      sanitize_position
     end
 
     def indent
       selected_lines.each do |line|
-        @lines[line].insert(0, ' ' * Ruco::TAB_SIZE)
+        lines[line].insert(0, ' ' * Ruco::TAB_SIZE)
       end
       adjust_to_indentation Ruco::TAB_SIZE
-      adjust_view
     end
 
     def unindent
-      lines_to_unindent = (selection ? selected_lines : [@line])
+      lines_to_unindent = (selection ? selected_lines : [line])
       removed = lines_to_unindent.map do |line|
-        remove = [@lines[line].leading_whitespace.size, Ruco::TAB_SIZE].min
-        @lines[line].slice!(0, remove)
+        remove = [lines[line].leading_whitespace.size, Ruco::TAB_SIZE].min
+        lines[line].slice!(0, remove)
         remove
       end
 
       adjust_to_indentation -removed.first, -removed.last
-      adjust_view
     end
 
     private
@@ -60,14 +58,17 @@ module Ruco
     def state=(data)
       @selection = nil
       @lines = data[:content].naive_split("\n")
-      @line, @column = data[:position]
-      @scrolled_lines, @scrolled_columns = data[:screen_position]
-      adjust_view
+      self.position = data[:position]
+      self.screen_position = data[:screen_position]
     end
 
     # TODO use this instead of instance variables
     def screen_position
-      Position.new(@scrolled_lines, @scrolled_columns)
+      Position.new(@window.top, @window.left)
+    end
+
+    def screen_position=(pos)
+      @window.top, @window.left = pos
     end
 
     def adjust_to_indentation(first, last=nil)
@@ -76,9 +77,9 @@ module Ruco
         cursor_adjustment = (selection.first == position ? first : last)
         selection.first.column = [selection.first.column + first, 0].max
         selection.last.column = [selection.last.column + last, 0].max
-        @column += cursor_adjustment
+        self.column += cursor_adjustment
       else
-        @column += first
+        self.column += first
       end
     end
 

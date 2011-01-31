@@ -21,36 +21,36 @@ describe Ruco::TextArea do
       it "can move up a page" do
         text = Ruco::TextArea.new("0\n1\n2\n3\n4\n5\n6\n7\n8\n", :lines => 3, :columns => 3)
         text.move(:to, 4, 0)
-        text.view.should == "2\n3\n4\n"
-        text.cursor.should == [2,0]
+        text.view.should == "3\n4\n5\n"
+        text.cursor.should == [1,0]
         text.move(:page_up)
-        text.view.should == "0\n1\n2\n"
-        text.cursor.should == [2,0]
+        text.view.should == "1\n2\n3\n"
+        text.cursor.should == [1,0]
       end
 
       it "keeps column position when moving up" do
         text = Ruco::TextArea.new("0\n1\n2\n3ab\n4\n5abc\n6\n7\n8\n", :lines => 3, :columns => 5)
         text.move(:to, 5, 4)
-        text.view.should == "3ab\n4\n5abc\n"
-        text.cursor.should == [2,4]
+        text.view.should == "4\n5abc\n6\n"
+        text.cursor.should == [1,4]
         text.move(:page_up)
-        text.view.should == "1\n2\n3ab\n"
-        text.cursor.should == [2,3]
+        text.view.should == "2\n3ab\n4\n"
+        text.cursor.should == [1,3]
       end
 
       it "moves pages symetric" do
         text = Ruco::TextArea.new("0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n", :lines => 3, :columns => 3)
         text.move(:to, 4, 1)
-        text.view.should == "2\n3\n4\n"
-        text.cursor.should == [2,1]
+        text.view.should == "3\n4\n5\n"
+        text.cursor.should == [1,1]
 
         text.move(:page_down)
         text.move(:page_down)
         text.move(:page_up)
         text.move(:page_up)
 
-        text.cursor.should == [2,1]
-        text.view.should == "2\n3\n4\n"
+        text.cursor.should == [1,1]
+        text.view.should == "3\n4\n5\n"
       end
     end
   end
