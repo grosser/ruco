@@ -11,6 +11,11 @@ describe Ruco::Application do
     File.open(@file,'w'){|f| f.write(content) }
   end
 
+  def read
+    File.read(@file)
+  end
+
+
   def editor_part(view)
     view.naive_split("\n")[1..-2].join("\n")
   end
@@ -248,6 +253,29 @@ describe Ruco::Application do
         app.view.should_not include('TEST')
         app.key(:"Ctrl+e")
         app.view.should include("TEST")
+      end
+    end
+  end
+
+  describe :save do
+    it "just saves" do
+      write('')
+      app.key('x')
+      app.key(:'Ctrl+s')
+      read.should == 'x'
+    end
+
+    it "warns when saving failed" do
+      begin
+        `chmod -w #{@file}`
+        app.key(:'Ctrl+s')
+        app.view.should include('Permission denied')
+        app.key(:enter) # retry ?
+        app.view.should include('Permission denied')
+        app.key(:escape)
+        app.view.should_not include('Permission denied')
+      ensure
+        `chmod +w #{@file}`
       end
     end
   end

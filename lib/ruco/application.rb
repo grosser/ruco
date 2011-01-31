@@ -141,7 +141,10 @@ module Ruco
       end
 
       action :save do
-        editor.save
+        result = editor.save
+        if result != true
+          ask("#{result.slice(0,100)} -- Enter=Retry Esc=Cancel "){ @actions[:save].call }
+        end
       end
 
       action :quit do

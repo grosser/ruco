@@ -631,15 +631,24 @@ describe Ruco::Editor do
     it 'stores the file' do
       write('xxx')
       editor.insert('a')
-      editor.save
+      editor.save.should == true
       File.read(@file).should == 'axxx'
     end
 
     it 'creates the file' do
       `rm #{@file}`
       editor.insert('a')
-      editor.save
+      editor.save.should == true
       File.read(@file).should == 'a'
+    end
+
+    it 'does not crash when it cannot save a file' do
+      begin
+        `chmod -w #{@file}`
+        editor.save.should == "Permission denied - #{@file}"
+      ensure
+        `chmod +w #{@file}`
+      end
     end
   end
 

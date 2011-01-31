@@ -63,8 +63,7 @@ TIPS
 
 TODO
 =====
- - big warning when editing a not-writeable file
- - nice warning when failing to write a write-only file
+ - big warning when editing a not-writable file
  - find next (Alt+n)
  - add selection colors to forms in command_bar
  - session storage (stay at same line/column when reopening)
@@ -77,7 +76,7 @@ TODO
  - add auto-confirm to 'replace?' dialog -> type s == skip, no enter needed
  - 1.8: unicode support <-> already finished but unusable due to Curses (see encoding branch)
  - support Alt+Fx keys
- - (later) extract keyboard and html-style components into seperate project
+ - (later) extract keyboard and html-style components into separate project
 
 Author
 ======

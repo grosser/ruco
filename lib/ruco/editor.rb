@@ -50,6 +50,9 @@ module Ruco
       content = text_area.content
       File.open(@file,'w'){|f| f.write(content) }
       @saved_content = content
+      true
+    rescue Object => e
+      e.message
     end
   end
 end
