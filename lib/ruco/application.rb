@@ -158,7 +158,9 @@ module Ruco
       end
 
       action :go_to_line do
-        ask('Go to Line: '){|result| editor.move(:to_line, result.to_i - 1) }
+        ask('Go to Line: ') do |result|
+          editor.move(:to_line, result.to_i - 1)
+        end
       end
 
       action :delete_line do

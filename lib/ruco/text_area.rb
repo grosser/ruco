@@ -208,6 +208,7 @@ module Ruco
         end
       else
         # faster but complicated for newlines
+        lines[line] ||= ''
         lines[line].insert(@column, text)
       end
     end

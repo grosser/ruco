@@ -808,5 +808,12 @@ describe Ruco::Editor do
       editor.view.should == "5\n7\n8\n"
       editor.cursor.should == [1, 1]
     end
+
+    it "can remove the last line" do
+      write('xxx')
+      editor.delete_line
+      editor.insert('yyy')
+      editor.view.should == "yyy\n\n\n"
+    end
   end
 end
