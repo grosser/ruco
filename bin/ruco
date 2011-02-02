@@ -70,6 +70,7 @@ def display(lines, offset, color_mask)
     clearer = Curses.stdscr.maxx + 1 - content.size
     clearer = " " * clearer
     content += clearer
+    content.gsub!("\t",' ') # display tabs as single-space -> nothing breaks
 
     # cache !?
     next if @screen[line] == [content, colors]

@@ -4,7 +4,7 @@ Features:
 
  - **Intuitive interface**
  - selecting via Shift+left/right/up/down and Ctrl+a(all)
- - Tab -> indent / Shift+Tab -> unindent (tab == 2 space)
+ - Tab -> indent / Shift+Tab -> unindent
  - keeps indentation (+ paste-detection e.g. via Cmd+v)
  - change (*) + writable (!) indicators
  - find / go to line / delete line / search & replace
@@ -56,6 +56,7 @@ Customize
 
 TIPS
 ====
+ - [Tabs] Ruco does not like tabs. Existing tabs are displayed as ' ' and pressing tab inserts 2*' '
  - [RVM] `alias r="rvm ree exec ruco"` and you only have to install ruco once 
  - [Ruby1.9] Unicode support -> install libncursesw5-dev before installing ruby (does not work for 1.8)
  - [ssh vs clipboard] access your desktops clipboard by installing `xauth` on the server and then using `ssh -X`
@@ -63,6 +64,7 @@ TIPS
 
 TODO
 =====
+ - highlight tabs (e.g. strange character or reverse/underline/color)
  - big warning when editing a not-writable file
  - find next (Alt+n)
  - add selection colors to forms in command_bar

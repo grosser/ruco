@@ -21,10 +21,9 @@ describe Ruco::Editor do
       editor.view.should == "    a\n\n\n"
     end
 
-    it "raises when tabs are in content and option is not set" do
-      lambda{
-        editor = Ruco::Editor.new(@file, :lines => 3, :columns => 5)
-      }.should raise_error
+    it "reads them normally when option is not set" do
+      editor = Ruco::Editor.new(@file, :lines => 3, :columns => 5)
+      editor.view.should == "\t\ta\n\n\n"
     end
   end
 

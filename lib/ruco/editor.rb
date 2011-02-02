@@ -19,15 +19,7 @@ module Ruco
       end
 
       content = (File.exist?(@file) ? File.read(@file) : '')
-
-      # check for tabs
-      if content.include?("\t")
-        if options[:convert_tabs]
-          content.tabs_to_spaces!
-        else
-          raise "#{@file} contains tabs.\nRuco atm does not support tabs, but will happily convert them to spaces if started with --convert-tabs or -c"
-        end
-      end
+      content.tabs_to_spaces! if options[:convert_tabs]
 
       @saved_content = content
       @text_area = EditorArea.new(content, options)
