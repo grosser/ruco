@@ -231,7 +231,7 @@ module Ruco
 
     def create_components
       @status_lines = 1
-      @editor ||= Ruco::Editor.new(@file, :lines => editor_lines, :columns => @options[:columns], :convert_tabs => @options[:convert_tabs])
+      @editor ||= Ruco::Editor.new(@file, :lines => editor_lines, :columns => @options[:columns], :convert_tabs => @options[:convert_tabs], :convert_return => @options[:convert_return])
       @status = Ruco::StatusBar.new(@editor, :columns => @options[:columns])
       @command = Ruco::CommandBar.new(:columns => @options[:columns])
       command.cursor_line = editor_lines

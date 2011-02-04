@@ -22,6 +22,12 @@ describe Ruco::Editor do
       lambda{editor}.should raise_error
     end
     
+    it "converts \\r if flag is given" do
+      write("a\nb\rc\r\n")
+      editor = Ruco::Editor.new(@file, :lines => 3, :columns => 5, :convert_return => true)
+      editor.view.should == "a\nb\nc\n"
+    end
+    
     it "is happy with \n" do
       write("\n")
       editor

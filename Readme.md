@@ -64,7 +64,8 @@ TIPS
 
 TODO
 =====
- - handle \\r and \\r\\n nicely <-> would break output otherwise
+ - strip whitespace after content / whitespace only lines, without removing intentional whitespace e.g. from markdown
+ - handle \\r and \\r\\n nicely <-> breaks curses output
  - highlight tabs (e.g. strange character or reverse/underline/color)
  - big warning when editing a not-writable file
  - find next (Alt+n)

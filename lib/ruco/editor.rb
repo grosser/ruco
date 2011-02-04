@@ -20,7 +20,12 @@ module Ruco
 
       content = (File.exist?(@file) ? File.read(@file) : '')
       content.tabs_to_spaces! if options[:convert_tabs]
-      raise "Ruco does not support \\r characters" if content.include?("\r")
+      
+      if options[:convert_return]
+        content.gsub!(/\r\n?/,"\n")
+      else
+        raise "Ruco does not support \\r characters, start with --convert-return to remove them" if content.include?("\r")
+      end
 
       @saved_content = content
       @text_area = EditorArea.new(content, options)

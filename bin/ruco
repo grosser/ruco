@@ -20,6 +20,7 @@ Usage:
 Options:
 BANNER
     opts.on("-c", "--convert-tabs","Convert tabs to spaces") { options[:convert_tabs] = true }
+    opts.on("--convert-return","Convert \\r characters to \\n") { options[:convert_return] = true }
     opts.on("--debug-cache","Show caching in action") { options[:debug_cache] = true }
     opts.on("--debug-keys", "Show pressed keys") { options[:debug_keys] = true }
     opts.on("-v", "--version","Show Version"){
@@ -121,6 +122,7 @@ require 'ruco'
 
 app = Ruco::Application.new(ARGV[0],
   :convert_tabs => @options[:convert_tabs],
+  :convert_return => @options[:convert_return],
   :lines => Curses.stdscr.maxy, :columns => Curses.stdscr.maxx
 )
 
