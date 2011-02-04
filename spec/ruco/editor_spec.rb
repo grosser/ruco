@@ -11,6 +11,23 @@ describe Ruco::Editor do
     @file = 'spec/temp.txt'
   end
 
+  describe "\\r" do
+    it "raises on \r" do
+      write("\r")
+      lambda{editor}.should raise_error
+    end
+    
+    it "raises on \r\n" do
+      write("\r\n")
+      lambda{editor}.should raise_error
+    end
+    
+    it "is happy with \n" do
+      write("\n")
+      editor
+    end
+  end
+  
   describe 'convert tabs' do
     before do
       write("\t\ta")

@@ -64,6 +64,7 @@ TIPS
 
 TODO
 =====
+ - handle \\r and \\r\\n nicely <-> would break output otherwise
  - highlight tabs (e.g. strange character or reverse/underline/color)
  - big warning when editing a not-writable file
  - find next (Alt+n)
