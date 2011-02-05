@@ -139,15 +139,20 @@ describe Ruco::Window do
     end
   end
 
-  describe :top= do
+  describe :set_top do
     it "sets" do
-      window.top = 1
+      window.set_top 1, 20
       window.top.should == 1
     end
 
     it "does not allow negative" do
-      window.top = -1
+      window.set_top -1, 20
       window.top.should == 0
+    end
+
+    it "does not go above maximum top" do
+      window.set_top 20, 20
+      window.top.should == 20 - 10 + 3 - 1
     end
   end
 

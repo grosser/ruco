@@ -2,8 +2,8 @@ module Ruco
   class Window
     OFFSET = 5
 
-    attr_accessor :position, :lines, :columns, :top, :left
-    attr_reader :cursor
+    attr_accessor :lines, :columns, :left
+    attr_reader :cursor, :top
 
     def initialize(lines, columns, options={})
       @options = options
@@ -20,29 +20,44 @@ module Ruco
       @cursor = Position.new(0,0)
     end
 
-    def crop(content)
-      lines = content[visible_lines] || []
-      lines[@lines-1] ||= nil
-      lines.map do |line|
+    def position=(x)
+      set_position(x)
+    end
+
+    def set_position(position, options={})
+      adjust_top(position.line, options[:max_lines] || 9999)
+      adjust_left(position.column)
+      @cursor = Position.new(position.line - @top, position.column - @left)
+    end
+
+    def crop(lines)
+      lines_to_display = lines[visible_lines] || []
+      lines_to_display[@lines-1] ||= nil
+      lines_to_display.map do |line|
         line ||= ''
         line[visible_columns] || ''
       end
     end
 
-    def position=(pos)
-      if pos.line < visible_lines.first + @options[:line_scroll_threshold]
-        self.top = pos.line - @options[:line_scroll_offset]
-      elsif pos.line > visible_lines.last - @options[:line_scroll_threshold]
-        self.top = pos.line - lines + 1 + @options[:line_scroll_offset]
-      end
+    def scroll_lines(amount, max)
+      set_top(@top + amount, max)
+    end
 
-      if pos.column < visible_columns.first + @options[:column_scroll_threshold]
-        self.left = pos.column - @options[:column_scroll_offset]
-      elsif pos.column > visible_columns.last - @options[:column_scroll_threshold]
-        self.left = pos.column - columns + 1 + @options[:column_scroll_offset]
+    def adjust_top(line, max)
+      if line < (visible_lines.first + @options[:line_scroll_threshold])
+        set_top line - @options[:line_scroll_offset], max
+      elsif line > (visible_lines.last - @options[:line_scroll_threshold])
+        top = line - lines + 1 + @options[:line_scroll_offset]
+        set_top top, max
       end
+    end
 
-      @cursor = Position.new(pos.line - @top, pos.column - @left)
+    def adjust_left(column)
+      if column < visible_columns.first + @options[:column_scroll_threshold]
+        self.left = column - @options[:column_scroll_offset]
+      elsif column > visible_columns.last - @options[:column_scroll_threshold]
+        self.left = column - columns + 1 + @options[:column_scroll_offset]
+      end
     end
 
     def color_mask(selection)
@@ -63,12 +78,13 @@ module Ruco
       end
     end
 
-    def top=(x)
-      @top = [x,0].max
-    end
-
     def left=(x)
       @left = [x,0].max
+    end
+
+    def set_top(line, max)
+      max_top = max - lines + 1 + @options[:line_scroll_offset]
+      @top = [[line, max_top].min, 0].max
     end
 
     private

@@ -68,7 +68,8 @@ module Ruco
     end
 
     def screen_position=(pos)
-      @window.top, @window.left = pos
+      @window.set_top(pos[0], @lines.size)
+      @window.left = pos[1]
     end
 
     def adjust_to_indentation(first, last=nil)

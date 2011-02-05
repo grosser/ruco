@@ -8,21 +8,21 @@ module Ruco
       @column = 0
       @line = 0
       @window = Window.new(@options.delete(:lines), @options.delete(:columns))
-      @window.position = position
+      adjust_window
     end
 
     def view
-      @window.position = position
+      adjust_window
       @window.crop(lines) * "\n" + "\n"
     end
 
     def cursor
-      @window.position = position
+      adjust_window
       @window.cursor
     end
 
     def color_mask
-      @window.position = position
+      adjust_window
       @window.color_mask(@selection)
     end
 
@@ -39,15 +39,11 @@ module Ruco
       when :to_column then self.column = args.first
       when :to_index then move(:to, *position_for_index(*args))
       when :page_down then
-        shift = @window.lines - 1
-        old = self.line
-        self.line += shift
-        @window.top += (line - old) # force scroll
+        self.line += @window.lines
+        @window.set_top(@window.top + @window.lines, @lines.size)
       when :page_up then
-        shift = @window.lines - 1
-        old = self.line 
-        self.line -= shift
-        @window.top += (line - old) # force scroll
+        self.line -= @window.lines
+        @window.set_top(@window.top - @window.lines, @lines.size)
       else
         raise "Unknown move type #{where} with #{args.inspect}"
       end
@@ -244,6 +240,10 @@ module Ruco
     def sanitize_position
       self.line = line
       self.column = column
+    end
+
+    def adjust_window
+      @window.set_position(position, :max_lines => @lines.size)
     end
   end
 end

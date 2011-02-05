@@ -39,7 +39,7 @@ describe Ruco::Application do
     app.key(:enter)
     app.key('2')
     app.key(:enter)
-    app.view.should == "#{status.sub('.txt ','.txt*')}22\n2\n\n#{command}"
+    app.view.should == "#{status.sub('.txt ','.txt*')}2\n\n\n#{command}"
   end
 
   it "does not enter key-codes" do
@@ -204,7 +204,7 @@ describe Ruco::Application do
       app.key(:tab)
       app.key(:tab)
       app.key(:'Ctrl+v') # paste
-      editor_part(app.view).should == "    ab\n  cd\n  ef"
+      editor_part(app.view).should == "  cd\n  ef\n"
     end
 
     it "indents when typing" do

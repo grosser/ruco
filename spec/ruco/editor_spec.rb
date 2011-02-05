@@ -13,6 +13,7 @@ describe Ruco::Editor do
         @options[:line_scroll_threshold] = 0
         @options[:line_scroll_offset] = 1
         @options[:column_scroll_threshold] = 0
+        @options[:column_scroll_offset] = 1
       }
     }
     editor
@@ -124,26 +125,26 @@ describe Ruco::Editor do
         editor.cursor.column.should == 4
 
         editor.move(:relative, 0,1)
-        editor.view.should == "45678\n\n\n"
-        editor.cursor.column.should == 2
+        editor.view.should == "34567\n3\n\n"
+        editor.cursor.column.should == 3
       end
 
       it "cannot scroll past the screen" do
         write('123456789')
         editor.move(:relative, 0,4)
         6.times{ editor.move(:relative, 0,1) }
-        editor.view.should == "89\n\n\n"
-        editor.cursor.column.should == 2
+        editor.view.should == "789\n\n\n"
+        editor.cursor.column.should == 3
       end
 
       it "can scroll columns backwards" do
         write('0123456789')
         editor.move(:relative, 0,5)
-        editor.view.should == "6789\n\n\n"
+        editor.view.should == "23456\n\n\n"
 
-        editor.move(:relative, 0,-3)
+        editor.move(:relative, 0,-4)
         editor.view.should == "01234\n\n\n"
-        editor.cursor.column.should == 2
+        editor.cursor.column.should == 1
       end
     end
 
