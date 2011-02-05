@@ -4,7 +4,7 @@ describe Ruco::Window do
   let(:window){ Ruco::Window.new(10,10) }
 
   describe :crop do
-    let(:window){ Ruco::Window.new(2,4) }
+    let(:window){ Ruco::Window.new(2,4, :line_scroll_threshold => 0, :line_scroll_offset => 1) }
 
     it "does not modify given lines" do
       original = ['1234','1234']
@@ -42,7 +42,7 @@ describe Ruco::Window do
         window = Ruco::Window.new(6,1)
         window.position = Ruco::Position.new(6,0)
         result = window.crop(['1','2','3','4','5','6','7','8','9'])
-        result.should == ['4','5','6','7','8','9']
+        result.should == ['3','4','5','6','7','8']
       end
 
       it "goes out of frame if column is out of frame" do
@@ -55,26 +55,28 @@ describe Ruco::Window do
   end
 
   describe :top do
+    let(:window){ Ruco::Window.new(10,10, :line_scroll_threshold => 1, :line_scroll_offset => 3) }
+
     it "does not change when staying in frame" do
       window.top.should == 0
-      window.position = Ruco::Position.new(9,0)
+      window.position = Ruco::Position.new(8,0)
       window.top.should == 0
     end
 
-    it "changes by offset when going vertically out of frame" do
-      window.position = Ruco::Position.new(10,0)
-      window.top.should == 5
+    it "changes by offset when going down out of frame" do
+      window.position = Ruco::Position.new(9,0)
+      window.top.should == 3
     end
 
-    it "changes to x - offset when going down out of frame" do
+    it "stays at bottom when going down out of frame" do
       window.position = Ruco::Position.new(20,0)
-      window.top.should == 15
+      window.top.should == 20 - 10 + 3 + 1
     end
 
-    it "changes to x - offset when going down out of frame" do
+    it "stays at top when going up out of frame" do
       window.position = Ruco::Position.new(20,0)
       window.position = Ruco::Position.new(7,0)
-      window.top.should == 2
+      window.top.should == 7 - 3
     end
   end
 

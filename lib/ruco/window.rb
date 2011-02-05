@@ -5,7 +5,10 @@ module Ruco
     attr_accessor :position, :lines, :columns, :top, :left
     attr_reader :cursor
 
-    def initialize(lines, columns)
+    def initialize(lines, columns, options={})
+      @options = options
+      @options[:line_scroll_threshold] ||= 1
+      @options[:line_scroll_offset] ||= 1
       @lines = lines
       @columns = columns
       @top = 0
@@ -23,7 +26,12 @@ module Ruco
     end
 
     def position=(pos)
-      self.top = pos.line - line_offset unless visible_lines.include?(pos.line)
+      if pos.line < visible_lines.first + @options[:line_scroll_threshold]
+        self.top = pos.line - @options[:line_scroll_offset]
+      elsif pos.line > visible_lines.last - @options[:line_scroll_threshold]
+        self.top = pos.line - lines + 1 + @options[:line_scroll_offset]
+      end
+
       self.left = pos.column - column_offset  unless visible_columns.include?(pos.column)
       @cursor = Position.new(pos.line - @top, pos.column - @left)
     end

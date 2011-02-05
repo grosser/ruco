@@ -7,7 +7,10 @@ module Ruco
       @options = options.dup
       @column = 0
       @line = 0
-      @window = Window.new(@options.delete(:lines), @options.delete(:columns))
+      @window = Window.new(
+        @options.delete(:lines), @options.delete(:columns),
+        :line_scroll_threshold => 1, :line_scroll_offset => 1
+      )
       @window.position = position
     end
 
