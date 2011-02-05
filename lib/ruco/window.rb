@@ -25,8 +25,8 @@ module Ruco
     end
 
     def set_position(position, options={})
-      adjust_top(position.line, options[:max_lines] || 9999)
-      adjust_left(position.column)
+      scroll_line_into_view position.line, (options[:max_lines] || 9999)
+      scroll_column_into_view position.column
       @cursor = Position.new(position.line - @top, position.column - @left)
     end
 
@@ -39,25 +39,14 @@ module Ruco
       end
     end
 
-    def scroll_lines(amount, max)
-      set_top(@top + amount, max)
+    def scroll_line_into_view(line, total_lines)
+      result = adjustment(line, visible_lines, @options[:line_scroll_threshold], @options[:line_scroll_offset])
+      set_top result, total_lines if result
     end
 
-    def adjust_top(line, max)
-      if line < (visible_lines.first + @options[:line_scroll_threshold])
-        set_top line - @options[:line_scroll_offset], max
-      elsif line > (visible_lines.last - @options[:line_scroll_threshold])
-        top = line - lines + 1 + @options[:line_scroll_offset]
-        set_top top, max
-      end
-    end
-
-    def adjust_left(column)
-      if column < visible_columns.first + @options[:column_scroll_threshold]
-        self.left = column - @options[:column_scroll_offset]
-      elsif column > visible_columns.last - @options[:column_scroll_threshold]
-        self.left = column - columns + 1 + @options[:column_scroll_offset]
-      end
+    def scroll_column_into_view(column)
+      result = adjustment(column, visible_columns, @options[:column_scroll_threshold], @options[:column_scroll_offset])
+      self.left = result if result
     end
 
     def color_mask(selection)
@@ -82,12 +71,21 @@ module Ruco
       @left = [x,0].max
     end
 
-    def set_top(line, max)
-      max_top = max - lines + 1 + @options[:line_scroll_offset]
+    def set_top(line, total_lines)
+      max_top = total_lines - lines + 1 + @options[:line_scroll_offset]
       @top = [[line, max_top].min, 0].max
     end
 
     private
+
+    def adjustment(current, allowed, threshold, offset)
+      if current < (allowed.first + threshold)
+        current - offset
+      elsif current > (allowed.last - threshold)
+        size = allowed.last - allowed.first + 1
+        current - size + 1 + offset
+      end
+    end
 
     def visible_area(line)
       line += @top
@@ -95,14 +93,6 @@ module Ruco
       last_visible_column = @left + @columns
       end_of_line = [line, last_visible_column]
       start_of_line..end_of_line
-    end
-
-    def line_offset
-      @lines / 2
-    end
-
-    def column_offset
-      @columns / 2
     end
 
     def visible_lines
