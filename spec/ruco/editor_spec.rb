@@ -5,7 +5,18 @@ describe Ruco::Editor do
     File.open(@file,'w'){|f| f.write(content) }
   end
 
-  let(:editor){ Ruco::Editor.new(@file, :lines => 3, :columns => 5, :line_scrolling_offset => 5, :column_scrolling_offset => 5) }
+  let(:editor){
+    editor = Ruco::Editor.new(@file, :lines => 3, :columns => 5)
+    # only scroll when we reach end of lines/columns <-> able to test with smaller area
+    editor.send(:text_area).instance_eval{
+      @window.instance_eval{
+        @options[:line_scroll_threshold] = 0
+        @options[:line_scroll_offset] = 1
+        @options[:column_scroll_threshold] = 0
+      }
+    }
+    editor
+  }
 
   before do
     @file = 'spec/temp.txt'
@@ -126,12 +137,12 @@ describe Ruco::Editor do
       end
 
       it "can scroll columns backwards" do
-        write('123456789')
+        write('0123456789')
         editor.move(:relative, 0,5)
-        editor.view.should == "45678\n\n\n"
+        editor.view.should == "6789\n\n\n"
 
         editor.move(:relative, 0,-3)
-        editor.view.should == "12345\n\n\n"
+        editor.view.should == "01234\n\n\n"
         editor.cursor.column.should == 2
       end
     end
