@@ -7,8 +7,12 @@ module Ruco
 
     def initialize(lines, columns, options={})
       @options = options
+
       @options[:line_scroll_threshold] ||= 1
       @options[:line_scroll_offset] ||= 1
+      @options[:column_scroll_threshold] ||= 1
+      @options[:column_scroll_offset] ||= 5
+
       @lines = lines
       @columns = columns
       @top = 0
@@ -32,7 +36,12 @@ module Ruco
         self.top = pos.line - lines + 1 + @options[:line_scroll_offset]
       end
 
-      self.left = pos.column - column_offset  unless visible_columns.include?(pos.column)
+      if pos.column < visible_columns.first + @options[:column_scroll_threshold]
+        self.left = pos.column - @options[:column_scroll_offset]
+      elsif pos.column > visible_columns.last - @options[:column_scroll_threshold]
+        self.left = pos.column - columns + 1 + @options[:column_scroll_offset]
+      end
+
       @cursor = Position.new(pos.line - @top, pos.column - @left)
     end
 

@@ -4,7 +4,12 @@ describe Ruco::Window do
   let(:window){ Ruco::Window.new(10,10) }
 
   describe :crop do
-    let(:window){ Ruco::Window.new(2,4, :line_scroll_threshold => 0, :line_scroll_offset => 1) }
+    let(:window){
+      Ruco::Window.new(2,4,
+        :line_scroll_threshold => 0, :line_scroll_offset => 1,
+        :column_scroll_threshold => 0, :column_scroll_offset => 1
+      )
+    }
 
     it "does not modify given lines" do
       original = ['1234','1234']
@@ -39,17 +44,17 @@ describe Ruco::Window do
 
     describe 'scrolled' do
       it "goes out of frame if line is out of frame" do
-        window = Ruco::Window.new(6,1)
+        window = Ruco::Window.new(6,1, :line_scroll_offset => 0, :line_scroll_threshold => 0)
         window.position = Ruco::Position.new(6,0)
         result = window.crop(['1','2','3','4','5','6','7','8','9'])
-        result.should == ['3','4','5','6','7','8']
+        result.should == ['2','3','4','5','6','7']
       end
 
       it "goes out of frame if column is out of frame" do
-        window = Ruco::Window.new(1,6)
+        window = Ruco::Window.new(1,6, :column_scroll_offset => 0, :column_scroll_threshold => 0)
         window.position = Ruco::Position.new(0,6)
         result = window.crop(['1234567890'])
-        result.should == ['456789']
+        result.should == ['234567']
       end
     end
   end
@@ -78,30 +83,45 @@ describe Ruco::Window do
       window.position = Ruco::Position.new(7,0)
       window.top.should == 7 - 3
     end
+
+    it "changes to 0 when going up to 1" do
+      window.position = Ruco::Position.new(20,0)
+      window.position = Ruco::Position.new(1,0)
+      window.top.should == 0
+    end
+
+    it "does not change when staying in changed frame" do
+      window.position = Ruco::Position.new(9,0)
+      window.top.should == 3
+      window.position = Ruco::Position.new(11,0)
+      window.top.should == 3
+    end
   end
 
   describe :left do
+    let(:window){ Ruco::Window.new(10,10, :column_scroll_threshold => 1, :column_scroll_offset => 3) }
+
     it "does not change when staying in frame" do
       window.left.should == 0
-      window.position = Ruco::Position.new(0,9)
+      window.position = Ruco::Position.new(0,8)
       window.left.should == 0
     end
 
     it "changes by offset when going vertically out of frame" do
+      window.position = Ruco::Position.new(0,8)
       window.position = Ruco::Position.new(0,9)
-      window.position = Ruco::Position.new(0,10)
-      window.left.should == 5
+      window.left.should == 3
     end
 
-    it "changes to x - offset when going right out of frame" do
+    it "stays right when going right out of frame" do
       window.position = Ruco::Position.new(0,20)
-      window.left.should == 15
+      window.left.should == 20 - 10 + 3 + 1
     end
 
-    it "changes to x - offset when going left out of frame" do
+    it "stays left when going left out of frame" do
       window.position = Ruco::Position.new(0,20)
       window.position = Ruco::Position.new(0,7)
-      window.left.should == 2
+      window.left.should == 7 - 3
     end
 
     it "changes to 0 when going left out of frame to 1" do
@@ -111,11 +131,11 @@ describe Ruco::Window do
     end
 
     it "does not change when staying in changed frame" do
+      window.position = Ruco::Position.new(0,8)
       window.position = Ruco::Position.new(0,9)
-      window.position = Ruco::Position.new(0,10)
-      window.left.should == 5
-      window.position = Ruco::Position.new(0,14)
-      window.left.should == 5
+      window.left.should == 3
+      window.position = Ruco::Position.new(0,11)
+      window.left.should == 3
     end
   end
 
