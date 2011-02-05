@@ -5,10 +5,12 @@ require 'ruco/core_ext/string'
 require 'ruco/core_ext/array'
 require 'ruco/core_ext/hash'
 require 'ruco/core_ext/range'
+require 'ruco/core_ext/file'
 
 require 'ruco/keyboard'
 require 'ruco/position'
 require 'ruco/history'
+require 'ruco/file_store'
 require 'ruco/window'
 
 require 'ruco/editor'
