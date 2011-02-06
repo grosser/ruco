@@ -62,7 +62,7 @@ module Ruco
     }
     
     def self.curses_style(styles)
-      styles.sum{|style| STYLES[style] }
+      styles.sum{|style| STYLES[style] or raise("Unknown style #{style}") }
     end
   end
 end

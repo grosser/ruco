@@ -66,11 +66,18 @@ describe Ruco::StyleMap do
     end
 
     it "is red for red" do
+      pending
       Ruco::StyleMap.curses_style([:red]).should == Curses::color_pair( Curses::COLOR_RED )
     end
 
     it "is reverse for reverse" do
       Ruco::StyleMap.curses_style([:reverse]).should == Curses::A_REVERSE
+    end
+
+    it "raises on unknown style" do
+      lambda{
+        Ruco::StyleMap.curses_style([:foo])
+      }.should raise_error
     end
   end
 end

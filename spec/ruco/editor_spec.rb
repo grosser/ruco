@@ -365,7 +365,7 @@ describe Ruco::Editor do
 
   describe :color_mask do
     it "is empty by default" do
-      editor.color_mask.should == [nil,nil,nil]
+      editor.color_mask.flatten.should == [nil,nil,nil]
     end
 
     it "shows one-line selection" do
@@ -373,10 +373,10 @@ describe Ruco::Editor do
       editor.selecting do
         move(:to, 0, 4)
       end
-      editor.color_mask.should == [
-        [[0,262144],[4,0]],
+      editor.color_mask.flatten.should == [
+        [[:reverse], nil, nil, nil, nil, []],
         nil,
-        nil,
+        nil
       ]
     end
 
@@ -386,10 +386,10 @@ describe Ruco::Editor do
       editor.selecting do
         move(:to, 1, 1)
       end
-      editor.color_mask.should == [
-        [[1,262144],[5,0]],
-        [[0,262144],[1,0]],
-        nil,
+      editor.color_mask.flatten.should == [
+        [nil, [:reverse], nil, nil, nil, nil, []],
+        [[:reverse], nil, []],
+        nil
       ]
     end
 
@@ -399,10 +399,10 @@ describe Ruco::Editor do
       editor.selecting do
         move(:to, 0, 4)
       end
-      editor.color_mask.should == [
-        [[2,262144], [4,0]],
+      editor.color_mask.flatten.should == [
+        [nil, nil, [:reverse], nil, nil, []],
         nil,
-        nil,
+        nil
       ]
     end
 
@@ -412,10 +412,10 @@ describe Ruco::Editor do
       editor.selecting do
         move(:to, 1, 4)
       end
-      editor.color_mask.should == [
+      editor.color_mask.flatten.should == [
         nil,
-        [[2,262144], [4,0]],
-        nil,
+        [nil, nil, [:reverse], nil, nil, []],
+        nil
       ]
     end
 
@@ -429,10 +429,10 @@ describe Ruco::Editor do
       end
       editor.view.should == "789\n789\n789\n"
       editor.cursor.should == [2,2]
-      editor.color_mask.should == [
-        [[1,262144],[5,0]], # start to end of screen
-        [[0,262144],[5,0]], # 0 to end of screen
-        [[0,262144],[2,0]], # 0 to end of selection
+      editor.color_mask.flatten.should == [
+        [nil, [:reverse], nil, nil, nil, nil, []], # start to end of screen
+        [[:reverse], nil, nil, nil, nil, nil, []], # 0 to end of screen
+        [[:reverse], nil, nil, []] # 0 to end of selection
       ]
     end
   end
