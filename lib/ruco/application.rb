@@ -14,10 +14,10 @@ module Ruco
       status.view + "\n" + editor.view + command.view
     end
 
-    def color_mask
+    def style_map
       reverse = StyleMap.new(1)
       reverse.add(:reverse, 0, 0...@options[:columns])
-      reverse + editor.color_mask + reverse
+      reverse + editor.style_map + reverse
     end
 
     def cursor

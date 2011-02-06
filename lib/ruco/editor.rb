@@ -3,7 +3,7 @@ module Ruco
     attr_reader :file
     attr_reader :text_area
     private :text_area
-    delegate :view, :color_mask, :cursor,
+    delegate :view, :style_map, :cursor,
       :insert, :indent, :unindent, :delete, :delete_line,
       :redo, :undo,
       :selecting, :selection, :text_in_selection, :reset,

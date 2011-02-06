@@ -60,14 +60,13 @@ def init_screen
   end
 end
 
-def display(lines, offset, style_mask)
+def display(lines, style_mask)
   columns = Curses.stdscr.maxx
   @screen ||= [] # current screen is used as cache
   style_mask = style_mask.flatten
 
   lines.each_with_index do |content, line|
     styles = style_mask[line]
-    screen_line = line + offset
 
     # expand line with whitespace to overwrite previous content
     missing = columns - content.size
@@ -77,33 +76,28 @@ def display(lines, offset, style_mask)
     content.gsub!("\t",' ')
 
     # cache !?
-    next if @screen[screen_line] == [content, styles]
-    @screen[screen_line] = [content, styles]
+    next if @screen[line] == [content, styles]
+    @screen[line] = [content, styles]
 
     # position at start of line and draw
-    Curses.setpos(screen_line,0)
+    Curses.setpos(line,0)
     Ruco::StyleMap.styled(content, styles).each do |style, part|
       Curses.attrset Ruco::StyleMap.curses_style(style)
       Curses.addstr part
     end
 
     if @options[:debug_cache]
-      write(screen_line, 0, (rand(899)+100).to_s)
+      write(line, 0, (rand(899)+100).to_s)
     end
   end
 end
 
 def show_app(app)
   lines = app.view.naive_split("\n")
-  color_mask = app.color_mask
+  style_map = app.style_map
 
   # TODO move this logic into application
-  first = color_mask.shift
-  last = color_mask.pop
-  display([lines.first], 0, first)
-  display(lines[1..-2], 1, color_mask)
-  display([lines.last], Curses.stdscr.maxy - 1, last)
-
+  display(lines, style_map)
   Curses.setpos(app.cursor.line, app.cursor.column)
 end
 

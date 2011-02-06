@@ -21,9 +21,9 @@ module Ruco
       @window.cursor
     end
 
-    def color_mask
+    def style_map
       adjust_window
-      @window.color_mask(@selection)
+      @window.style_map(@selection)
     end
 
     def move(where, *args)

@@ -363,9 +363,9 @@ describe Ruco::Editor do
     end
   end
 
-  describe :color_mask do
+  describe :style_map do
     it "is empty by default" do
-      editor.color_mask.flatten.should == [nil,nil,nil]
+      editor.style_map.flatten.should == [nil,nil,nil]
     end
 
     it "shows one-line selection" do
@@ -373,7 +373,7 @@ describe Ruco::Editor do
       editor.selecting do
         move(:to, 0, 4)
       end
-      editor.color_mask.flatten.should == [
+      editor.style_map.flatten.should == [
         [[:reverse], nil, nil, nil, nil, []],
         nil,
         nil
@@ -386,7 +386,7 @@ describe Ruco::Editor do
       editor.selecting do
         move(:to, 1, 1)
       end
-      editor.color_mask.flatten.should == [
+      editor.style_map.flatten.should == [
         [nil, [:reverse], nil, nil, nil, nil, []],
         [[:reverse], nil, []],
         nil
@@ -399,7 +399,7 @@ describe Ruco::Editor do
       editor.selecting do
         move(:to, 0, 4)
       end
-      editor.color_mask.flatten.should == [
+      editor.style_map.flatten.should == [
         [nil, nil, [:reverse], nil, nil, []],
         nil,
         nil
@@ -412,7 +412,7 @@ describe Ruco::Editor do
       editor.selecting do
         move(:to, 1, 4)
       end
-      editor.color_mask.flatten.should == [
+      editor.style_map.flatten.should == [
         nil,
         [nil, nil, [:reverse], nil, nil, []],
         nil
@@ -429,7 +429,7 @@ describe Ruco::Editor do
       end
       editor.view.should == "789\n789\n789\n"
       editor.cursor.should == [2,2]
-      editor.color_mask.flatten.should == [
+      editor.style_map.flatten.should == [
         [nil, [:reverse], nil, nil, nil, nil, []], # start to end of screen
         [[:reverse], nil, nil, nil, nil, nil, []], # 0 to end of screen
         [[:reverse], nil, nil, []] # 0 to end of selection

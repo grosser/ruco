@@ -49,7 +49,7 @@ module Ruco
       self.left = result if result
     end
 
-    def color_mask(selection)
+    def style_map(selection)
       mask = StyleMap.new(lines)
       return mask unless selection
 
