@@ -11,6 +11,7 @@ Features:
  - configuration via `~/.ruco.rb`
  - cut, copy and paste -> Ctrl+x/c/v
  - undo / redo
+ - stays at last position when reopening a file
 
 Install
 =======
@@ -70,7 +71,6 @@ TODO
  - big warning when editing a not-writable file
  - find next (Alt+n)
  - add selection colors to forms in command_bar
- - session storage (stay at same line/column when reopening)
  - smart staying at column when changing line
  - warnings / messages
  - syntax highlighting
