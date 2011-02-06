@@ -80,7 +80,7 @@ module Ruco
       delete_content_in_selection if @selection
 
       text.tabs_to_spaces!
-      if text == "\n" and @column >= after_last_word
+      if text == "\n" and @column >= current_line.leading_whitespace.size
         current_whitespace = current_line.leading_whitespace
         next_whitespace = lines[line+1].to_s.leading_whitespace
         text = text + [current_whitespace, next_whitespace].max

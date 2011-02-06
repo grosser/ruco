@@ -239,12 +239,16 @@ describe Ruco::Application do
       editor_part(app.view).should == "a\n  c\n  b"
     end
 
-    it "does not indent when inside line and next line has more whitespace" do
+    it "indents when inside line and next line has more whitespace" do
       write("ab\n  b\n")
-      app.key(:right)
-      app.key(:enter)
-      app.key('c')
-      editor_part(app.view).should == "a\ncb\n  b"
+      type :right, :enter, 'c'
+      editor_part(app.view).should == "a\n  cb\n  b"
+    end
+
+    it "indents when inside indented line" do
+      write("  ab\nc\n")
+      type :right, :right, :right, :enter, 'd'
+      editor_part(app.view).should == "  a\n  db\nc"
     end
 
     it "indents when tabbing on selection" do

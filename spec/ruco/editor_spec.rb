@@ -517,6 +517,12 @@ describe Ruco::Editor do
       editor.view.should == "  \n\n\n"
       editor.cursor.should == [0,2]
     end
+
+    it "keeps indentation" do
+      write("ab\n  cd")
+      editor.move(:to, 1,2)
+      editor.insert("\n")
+    end
   end
 
   describe :indent do
