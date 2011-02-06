@@ -60,48 +60,36 @@ def init_screen
   end
 end
 
-def display(lines, offset, color_mask)
+def display(lines, offset, style_mask)
   columns = Curses.stdscr.maxx
   @screen ||= [] # current screen is used as cache
-  color_mask = color_mask.flatten
+  style_mask = style_mask.flatten
 
   lines.each_with_index do |content, line|
-    # expand line with whitespace to overwrite previous line
+    styles = style_mask[line]
     screen_line = line + offset
+
+    # expand line with whitespace to overwrite previous content
     missing = columns - content.size
     content += " " * missing
 
     # display tabs as single-space -> nothing breaks
     content.gsub!("\t",' ')
 
-    # styles contain an additional 'clearer' we do not need when full line is filled
-    styles = (color_mask[line] || []).slice(0, columns)
-
     # cache !?
     next if @screen[screen_line] == [content, styles]
     @screen[screen_line] = [content, styles]
 
-    # position at start of line and clear
+    # position at start of line and draw
     Curses.setpos(screen_line,0)
-    Curses.attrset(Curses::A_NORMAL)
-
-    # print styled parts of content and then the rest
-    # style is 'nil' if nothing changed
-    buffered = ''
-    styles.each_with_index do |style,i|
-      if style
-        Curses.addstr(buffered)
-        buffered = ''
-
-        # set new style
-        Curses.attrset Ruco::StyleMap.curses_style(style)
-      end
-      buffered << (content.slice(i,1) || '')
+    Ruco::StyleMap.styled(content, styles).each do |style, part|
+      Curses.attrset Ruco::StyleMap.curses_style(style)
+      Curses.addstr part
     end
-    Curses.addstr(buffered)
-    Curses.addstr(content[styles.size..-1])
 
-    write(screen_line, 0, (rand(899)+100).to_s) if @options[:debug_cache]
+    if @options[:debug_cache]
+      write(screen_line, 0, (rand(899)+100).to_s)
+    end
   end
 end
 

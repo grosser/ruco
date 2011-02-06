@@ -60,7 +60,29 @@ module Ruco
       :normal => 0,
       :reverse => Curses::A_REVERSE
     }
-    
+
+    def self.styled(content, styles)
+      styles ||= []
+      content = content.dup
+
+      build = []
+      build << [[]]
+
+      buffered = ''
+      styles.each do |style|
+        if style
+          build[-1] << buffered
+          buffered = ''
+
+          # set new style
+          build << [style]
+        end
+        buffered << (content.slice!(0,1) || '')
+      end
+      build[-1] << buffered + content
+      build
+    end
+
     def self.curses_style(styles)
       styles.sum{|style| STYLES[style] or raise("Unknown style #{style}") }
     end

@@ -60,6 +60,20 @@ describe Ruco::StyleMap do
     end
   end
 
+  describe :styled do
+    it "can style an unstyled line" do
+      Ruco::StyleMap.styled("a", nil).should == [[[], "a"]]
+    end
+
+    it "can style an styled line" do
+      Ruco::StyleMap.styled("a", [[:reverse],nil]).should == [[[], ""], [[:reverse], "a"]]
+    end
+
+    it "keeps unstyled parts" do
+      Ruco::StyleMap.styled("abc", [[:reverse],[]]).should == [[[], ""], [[:reverse], "a"],[[],'bc']]
+    end
+  end
+
   describe :curses_style do
     it "is 'normal' for nothing" do
       Ruco::StyleMap.curses_style([]).should == Curses::A_NORMAL
