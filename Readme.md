@@ -72,7 +72,6 @@ TODO
  - find next (Alt+n)
  - add selection colors to forms in command_bar
  - smart staying at column when changing line
- - warnings / messages
  - syntax highlighting
  - raise when binding to a unsupported key
  - search history via up/down arrow
@@ -84,6 +83,6 @@ TODO
 
 Author
 ======
-[Michael Grosser](http://grosser.it)  
-grosser.michael@gmail.com  
+[Michael Grosser](http://grosser.it)<br/>
+grosser.michael@gmail.com<br/>
 Hereby placed under public domain, do what you want, just do not hold me accountable...
