@@ -1,3 +1,5 @@
+require "digest/md5"
+
 module Ruco
   class FileStore
     def initialize(folder, options)
@@ -24,7 +26,7 @@ module Ruco
     end
 
     def file(key)
-      "#{@folder}/#{key.hash}.yml"
+      "#{@folder}/#{Digest::MD5.hexdigest(key)}.yml"
     end
 
     def serialize(value)
