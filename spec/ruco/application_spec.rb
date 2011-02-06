@@ -3,6 +3,7 @@ require File.expand_path('spec/spec_helper')
 
 describe Ruco::Application do
   before do
+    `rm -rf ~/.ruco/sessions`
     @file = 'spec/temp.txt'
     write('')
   end
@@ -14,7 +15,6 @@ describe Ruco::Application do
   def read
     File.read(@file)
   end
-
 
   def editor_part(view)
     view.naive_split("\n")[1..-2].join("\n")
@@ -81,6 +81,22 @@ describe Ruco::Application do
       app.key(:"Ctrl+w")
       app.view.split("\n").last.should include("Loose changes")
       app.key(:enter).should == :quit
+    end
+  end
+
+  describe 'session' do
+    it "stores the session so I can reopen at the same position" do
+      write("0\n1\n2\n")
+      type :right, :down, :"Ctrl+q"
+      reopened = Ruco::Application.new(@file, :lines => 5, :columns => 10)
+      reopened.cursor.should == [2,1]
+    end
+
+    it "does not store or restore content" do
+      write('')
+      type 'x', :"Ctrl+s", :enter, :enter, 'a', :"Ctrl+q"
+      reopened = Ruco::Application.new(@file, :lines => 5, :columns => 10)
+      editor_part(reopened.view).should == "x\n\n"
     end
   end
   
@@ -246,14 +262,18 @@ describe Ruco::Application do
   end
 
   describe '.ruco.rb' do
+    around do |block|
+      rucorc = File.expand_path('~/.ruco.rb')
+      `mv #{rucorc} #{rucorc}.backup  2>&1`
+      File.write(rucorc, "Ruco.configure{ bind(:'Ctrl+e'){ @editor.insert('TEST') } }")
+      block.call
+      `rm #{rucorc} && mv #{rucorc}.backup #{rucorc} 2>&1`
+    end
+
     it "loads it and can use the bound keys" do
-      Tempfile.string_as_file("Ruco.configure{ bind(:'Ctrl+e'){ @editor.insert('TEST') } }") do |file|
-        File.stub!(:exist?).and_return true
-        File.should_receive(:expand_path).with("~/.ruco.rb").and_return file
-        app.view.should_not include('TEST')
-        app.key(:"Ctrl+e")
-        app.view.should include("TEST")
-      end
+      app.view.should_not include('TEST')
+      app.key(:"Ctrl+e")
+      app.view.should include("TEST")
     end
   end
 

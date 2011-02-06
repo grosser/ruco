@@ -45,8 +45,6 @@ module Ruco
       adjust_to_indentation -removed.first, -removed.last
     end
 
-    private
-
     def state
       {
         :content => content,
@@ -57,10 +55,12 @@ module Ruco
 
     def state=(data)
       @selection = nil
-      @lines = data[:content].naive_split("\n")
+      @lines = data[:content].naive_split("\n") if data[:content]
       self.position = data[:position]
       self.screen_position = data[:screen_position]
     end
+
+    private
 
     # TODO use this instead of instance variables
     def screen_position

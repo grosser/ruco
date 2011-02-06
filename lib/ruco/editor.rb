@@ -29,6 +29,7 @@ module Ruco
 
       @saved_content = content
       @text_area = EditorArea.new(content, options)
+      restore_session
     end
 
     def find(text)
@@ -51,6 +52,22 @@ module Ruco
       true
     rescue Object => e
       e.message
+    end
+
+    def store_session
+      session_store.set(@file, text_area.state.slice(:position, :screen_position))
+    end
+
+    private
+
+    def restore_session
+      if state = session_store.get(@file)
+        text_area.state = state
+      end
+    end
+
+    def session_store
+      FileStore.new(File.expand_path('~/.ruco/sessions'), :keep => 20)
     end
   end
 end

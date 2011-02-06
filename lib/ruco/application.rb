@@ -150,9 +150,11 @@ module Ruco
       action :quit do
         if editor.modified?
           ask("Loose changes? Enter=Yes Esc=Cancel") do
+            editor.store_session
             :quit
           end
         else
+          editor.store_session
           :quit
         end
       end

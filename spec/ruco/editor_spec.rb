@@ -20,6 +20,7 @@ describe Ruco::Editor do
   }
 
   before do
+    `rm -rf ~/.ruco/sessions`
     @file = 'spec/temp.txt'
   end
 
