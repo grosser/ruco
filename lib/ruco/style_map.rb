@@ -55,15 +55,14 @@ module Ruco
     def pop
       slice!(-1, 1)
     end
-
+    
+    STYLES = {
+      :normal => 0,
+      :reverse => Curses::A_REVERSE
+    }
+    
     def self.curses_style(styles)
-      colors = {
-        :red => Curses::color_pair(Curses::COLOR_RED),
-        :normal => 0,
-        :reverse => Curses::A_REVERSE
-      }
-
-      styles.sum{|s| colors[s] }
+      styles.sum{|style| STYLES[style] }
     end
   end
 end
