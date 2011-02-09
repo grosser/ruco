@@ -4,8 +4,13 @@ require File.expand_path('spec/spec_helper')
 describe Ruco::Application do
   before do
     `rm -rf ~/.ruco/sessions`
+    `rm #{rucorc} 2>&1`
     @file = 'spec/temp.txt'
     write('')
+  end
+
+  after do
+    `rm #{rucorc} 2>&1`
   end
 
   def write(content)
@@ -24,7 +29,8 @@ describe Ruco::Application do
     keys.each{|k| app.key k }
   end
 
-  let(:app){ Ruco::Application.new(@file, :lines => 5, :columns => 10) }
+  let(:rucorc){ 'spec/.ruco.rb' }
+  let(:app){ Ruco::Application.new(@file, :lines => 5, :columns => 10, :rc => rucorc) }
   let(:status){ "Ruco #{Ruco::VERSION} -- spec/temp.txt  \n" }
   let(:command){ "^W Exit" }
 
@@ -266,18 +272,26 @@ describe Ruco::Application do
   end
 
   describe '.ruco.rb' do
-    around do |block|
-      rucorc = File.expand_path('~/.ruco.rb')
-      `mv #{rucorc} #{rucorc}.backup  2>&1`
-      File.write(rucorc, "Ruco.configure{ bind(:'Ctrl+e'){ @editor.insert('TEST') } }")
-      block.call
-      `rm #{rucorc} && mv #{rucorc}.backup #{rucorc} 2>&1`
-    end
-
     it "loads it and can use the bound keys" do
+      File.write(rucorc, "Ruco.configure{ bind(:'Ctrl+e'){ @editor.insert('TEST') } }")
       app.view.should_not include('TEST')
       app.key(:"Ctrl+e")
       app.view.should include("TEST")
+    end
+
+    it "uses settings" do
+      File.write(rucorc, "Ruco.configure{ options.convert_tabs = true }")
+      app.options[:convert_tabs].should == true
+    end
+
+    it "passes settings to the window" do
+      File.write(rucorc, "Ruco.configure{ options.window_line_scroll_offset = 10 }")
+      app.send(:editor).send(:text_area).instance_eval{@window}.instance_eval{@options[:line_scroll_offset]}.should == 10
+    end
+
+    it "passes settings to history" do
+      File.write(rucorc, "Ruco.configure{ options.history_entries = 10 }")
+      app.send(:editor).send(:text_area).instance_eval{@history}.instance_eval{@options[:entries]}.should == 10
     end
   end
 

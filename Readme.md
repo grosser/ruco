@@ -26,6 +26,11 @@ Customize
 
     # ~/.ruco.rb
     Ruco.configure do
+      # set options
+      options.window_line_scroll_offset = 5 # default 1
+      options.history_entries = 10          # default 100
+      ...
+
       # bind a key
       # - you can use Integers and Symbols
       # - use "ruco --debug-keys foo" to see which keys are possible
@@ -65,6 +70,7 @@ TIPS
 
 TODO
 =====
+ - align soft-tabs
  - strip whitespace after content / whitespace only lines, without removing intentional whitespace e.g. from markdown
  - handle \\r and \\r\\n nicely <-> breaks curses output
  - highlight tabs (e.g. strange character or reverse/underline/color)

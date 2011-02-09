@@ -7,7 +7,7 @@ module Ruco
       @options = options.dup
       @column = 0
       @line = 0
-      @window = Window.new(@options.delete(:lines), @options.delete(:columns))
+      @window = Window.new(@options.delete(:lines), @options.delete(:columns), @options[:window]||{})
       adjust_window
     end
 

@@ -13,4 +13,8 @@ class Hash
     hash = self
     keys.inject({}){|returned, key| returned.update key => hash[key]}
   end
+
+  def reverse_merge(other)
+    other.merge(self)
+  end
 end

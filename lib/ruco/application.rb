@@ -1,8 +1,10 @@
 module Ruco
   class Application
+    attr_reader :editor, :status, :command, :options
+
     def initialize(file, options)
       @file = file
-      @options = options
+      @options = OptionAccessor.new(options)
 
       setup_actions
       setup_keys
@@ -123,8 +125,6 @@ module Ruco
 
     private
 
-    attr_reader :editor, :status, :command
-
     def setup_actions
       @actions = {}
 
@@ -228,22 +228,31 @@ module Ruco
 
     def load_user_config
       Ruco.application = self
-      config = File.expand_path("~/.ruco.rb")
+      config = File.expand_path(@options[:rc] || "~/.ruco.rb")
       load config if File.exist?(config)
     end
 
     def create_components
       @status_lines = 1
-      @editor ||= Ruco::Editor.new(@file, :lines => editor_lines, :columns => @options[:columns], :convert_tabs => @options[:convert_tabs], :convert_return => @options[:convert_return])
-      @status = Ruco::StatusBar.new(@editor, :columns => @options[:columns])
-      @command = Ruco::CommandBar.new(:columns => @options[:columns])
+
+      editor_options = @options.slice(
+        :columns, :convert_tabs, :convert_newlines
+      ).merge(
+        :window => @options.nested(:window),
+        :history => @options.nested(:history),
+        :lines => editor_lines
+      ).merge(@options.nested(:editor))
+
+      @editor ||= Ruco::Editor.new(@file, editor_options)
+      @status = Ruco::StatusBar.new(@editor, @options.nested(:status_bar).merge(:columns => options[:columns]))
+      @command = Ruco::CommandBar.new(@options.nested(:command_bar).merge(:columns => options[:columns]))
       command.cursor_line = editor_lines
       @focused = @editor
     end
 
     def editor_lines
       command_lines = 1
-      editor_lines = @options[:lines] - @status_lines - command_lines
+      @options[:lines] - @status_lines - command_lines
     end
   end
 end
