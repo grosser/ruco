@@ -38,16 +38,16 @@ class Keyboard
     when Curses::Key::DOWN then :down
     when Curses::Key::RIGHT then :right
     when Curses::Key::LEFT then :left
-    when 554 then :"Ctrl+right"
-    when 393 then :"Shift+left"
-    when 555 then :"Ctrl+Shift+right"
-    when 539 then :"Ctrl+left"
-    when 402 then :"Shift+right"
-    when 540 then :"Ctrl+Shift+left"
-    when 560 then :"Ctrl+up"
-    when 337 then :"Shift+up"
-    when 519 then :"Ctrl+down"
-    when 336 then :"Shift+down"
+    when 402, '^[1;2C' then :"Shift+right"
+    when 554, '^[1;5C' then :"Ctrl+right"
+    when 555, '^[1;6C' then :"Ctrl+Shift+right"
+    when 393, '^[1;2D' then :"Shift+left"
+    when 539, '^[1;5D' then :"Ctrl+left"
+    when 540, '^[1;6D' then :"Ctrl+Shift+left"
+    when 337, '^[1;2A' then :"Shift+up"
+    when 560, '^[1;5A' then :"Ctrl+up"
+    when 336, '^[1;2B' then :"Shift+down"
+    when 519, '^[1;5B' then :"Ctrl+down"
     when Curses::KEY_END then :end
     when Curses::KEY_HOME then :home
     when Curses::KEY_NPAGE then :page_down
@@ -68,7 +68,13 @@ class Keyboard
     when ESCAPE then :escape
     when Curses::KEY_RESIZE then :resize
     else
-      key > MAX_CHAR ? key : key.chr
+      if key.is_a? Fixnum
+        key > MAX_CHAR ? key : key.chr
+      elsif is_alt_key_code?(key)
+        :"Alt+#{key.slice(1,1)}"
+      else
+        key
+      end
     end
   end
 
@@ -133,7 +139,8 @@ class Keyboard
     else
       # when connected via ssh escape sequences are used
       if escape_sequence?(sequence)
-        [escape_sequence_to_key(sequence)]
+        stringified = bytes_to_string(sequence).sub("\e",'^').sub('[[','[')
+        [translate_key_to_code(stringified)]
       else
         bytes_to_key_codes(sequence)
       end
@@ -144,16 +151,7 @@ class Keyboard
     sequence[0] == ESCAPE and sequence.size.between?(2,6) # Esc
   end
 
-  def self.escape_sequence_to_key(sequence)
-    case sequence
-    when [ESCAPE, 91, 49, 59, 50, 65] then :"Shift+up"
-    when [ESCAPE, 91, 49, 59, 50, 66] then :"Shift+down"
-    else
-      if sequence.size == 2
-        :"Alt+#{sequence[1].chr}"
-      else
-        bytes_to_string(sequence)
-      end
-    end
+  def self.is_alt_key_code?(key)
+    key.slice(0,1) == "^" and key.size == 2
   end
 end
