@@ -12,6 +12,7 @@ module Ruco
 
     def initialize(file, options)
       @file = file
+      @options = options
 
       # check for size (10000 lines * 100 chars should be enough for everybody !?)
       if File.exist?(@file) and File.size(@file) > (1024 * 1024)
@@ -19,16 +20,16 @@ module Ruco
       end
 
       content = (File.exist?(@file) ? File.read(@file) : '')
-      content.tabs_to_spaces! if options[:convert_tabs]
+      content.tabs_to_spaces! if @options[:convert_tabs]
       
-      if options[:convert_return]
+      if @options[:convert_return]
         content.gsub!(/\r\n?/,"\n")
       else
         raise "Ruco does not support \\r characters, start with --convert-return to remove them" if content.include?("\r")
       end
 
       @saved_content = content
-      @text_area = EditorArea.new(content, options)
+      @text_area = EditorArea.new(content, @options)
       restore_session
     end
 
@@ -46,9 +47,13 @@ module Ruco
     end
 
     def save
-      content = text_area.content
+      lines = text_area.send(:lines)
+      lines.each(&:rstrip!) if @options[:remove_trailing_whitespace_on_save]
+      content = lines * "\n"
+
       File.open(@file,'w'){|f| f.write(content) }
       @saved_content = content
+
       true
     rescue Object => e
       e.message

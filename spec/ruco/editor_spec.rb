@@ -691,6 +691,33 @@ describe Ruco::Editor do
         `chmod +w #{@file}`
       end
     end
+
+    describe 'remove trailing whitespace' do
+      it "can remove trailing whitespace" do
+        write("a  \n  \nb\n\n")
+        editor.move(:to, 0,2)
+        editor.instance_eval{@options[:remove_trailing_whitespace_on_save] = true}
+        editor.save
+        editor.view.should == "a\n\nb\n"
+        editor.cursor.should == [0,1]
+      end
+
+      it "does not affect trailing newlines" do
+        write("\n\n\n")
+        editor.move(:to, 2,0)
+        editor.instance_eval{@options[:remove_trailing_whitespace_on_save] = true}
+        editor.save
+        editor.view.should == "\n\n\n"
+        editor.cursor.should == [2,0]
+      end
+
+      it "does not remove trailing whitespace by default" do
+        write("a  \n  \nb\n\n")
+        editor.save
+        editor.view.should == "a  \n  \nb\n"
+        editor.cursor.should == [0,0]
+      end
+    end
   end
 
   describe :delete do

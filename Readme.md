@@ -12,6 +12,7 @@ Features:
  - cut, copy and paste -> Ctrl+x/c/v
  - undo / redo
  - stays at last position when reopening a file
+ - (optional) remove trailing whitespace on save
 
 Install
 =======
@@ -29,6 +30,7 @@ Customize
       # set options
       options.window_line_scroll_offset = 5 # default 1
       options.history_entries = 10          # default 100
+      options.editor_remove_trailing_whitespace_on_save = true # default false
       ...
 
       # bind a key
@@ -63,7 +65,7 @@ Customize
 TIPS
 ====
  - [Tabs] Ruco does not like tabs. Existing tabs are displayed as ' ' and pressing tab inserts 2*' '
- - [RVM] `alias r="rvm ree exec ruco"` and you only have to install ruco once 
+ - [RVM] `alias r="rvm ree exec ruco"` and you only have to install ruco once
  - [Ruby1.9] Unicode support -> install libncursesw5-dev before installing ruby (does not work for 1.8)
  - [ssh vs clipboard] access your desktops clipboard by installing `xauth` on the server and then using `ssh -X`
  - [Alt key] if Alt does not work try your Meta/Win/Cmd key
@@ -71,7 +73,6 @@ TIPS
 TODO
 =====
  - align soft-tabs
- - strip whitespace after content / whitespace only lines, without removing intentional whitespace e.g. from markdown
  - handle \\r and \\r\\n nicely <-> breaks curses output
  - highlight tabs (e.g. strange character or reverse/underline/color)
  - big warning when editing a not-writable file

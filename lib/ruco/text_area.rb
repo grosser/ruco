@@ -243,6 +243,7 @@ module Ruco
     end
 
     def adjust_window
+      sanitize_position
       @window.set_position(position, :max_lines => @lines.size)
     end
   end
