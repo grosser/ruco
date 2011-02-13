@@ -12,6 +12,7 @@ Features:
  - cut, copy and paste -> Ctrl+x/c/v
  - undo / redo
  - stays at last position when reopening a file
+ - keeps whatever newline format you use (\r \n \r\n)
  - (optional) remove trailing whitespace on save
 
 Install

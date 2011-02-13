@@ -5,6 +5,10 @@ describe Ruco::Editor do
     File.open(@file,'w'){|f| f.write(content) }
   end
 
+  def read
+    File.read(@file)
+  end
+
   let(:editor){
     editor = Ruco::Editor.new(@file, :lines => 3, :columns => 5)
     # only scroll when we reach end of lines/columns <-> able to test with smaller area
@@ -24,26 +28,46 @@ describe Ruco::Editor do
     @file = 'spec/temp.txt'
   end
 
-  describe "\\r" do
-    it "raises on \r" do
-      write("\r")
-      lambda{editor}.should raise_error
-    end
-    
-    it "raises on \r\n" do
-      write("\r\n")
-      lambda{editor}.should raise_error
-    end
-    
-    it "converts \\r if flag is given" do
-      write("a\nb\rc\r\n")
-      editor = Ruco::Editor.new(@file, :lines => 3, :columns => 5, :convert_return => true)
+  describe "strange newline formats" do
+    it 'views \r normally' do
+      write("a\rb\rc\r")
       editor.view.should == "a\nb\nc\n"
     end
-    
-    it "is happy with \n" do
-      write("\n")
-      editor
+
+    it 'views \r\n normally' do
+      write("a\r\nb\r\nc\r\n")
+      editor.view.should == "a\nb\nc\n"
+    end
+
+    it 'saves \r as \r' do
+      write("a\rb\rc\r")
+      editor.save
+      read.should == "a\rb\rc\r"
+    end
+
+    it 'saves \r\n as \r\n' do
+      write("a\r\nb\r\nc\r\n")
+      editor.save
+      read.should == "a\r\nb\r\nc\r\n"
+    end
+
+    it "converts mixed formats to first" do
+      write("a\rb\r\nc\n")
+      editor.save
+      read.should == "a\rb\rc\r"
+    end
+
+    it "converts newline-free to \n" do
+      write("a")
+      editor.insert("\n")
+      editor.save
+      read.should == "\na"
+    end
+
+    it "is not modified after saving strange newline format" do
+      write("a\r\nb\r\nc\r\n")
+      editor.save
+      editor.modified?.should == false
     end
   end
   
