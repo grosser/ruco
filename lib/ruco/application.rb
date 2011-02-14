@@ -178,7 +178,7 @@ module Ruco
           move(:to, 9999, 9999)
         end
       end
-      
+
       action :find do
         ask("Find: ", :cache => true){|result| editor.find(result) }
       end
@@ -258,7 +258,7 @@ module Ruco
     end
 
     def parse_file_and_line(file)
-      if not File.exist?(file)
+      if file.to_s.include?(':') and not File.exist?(file)
         short_file, go_to_line = file.split(':',2)
         if File.exist?(short_file)
           file = short_file
