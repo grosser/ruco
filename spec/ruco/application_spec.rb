@@ -11,6 +11,7 @@ describe Ruco::Application do
 
   after do
     `rm #{rucorc} 2>&1`
+    `rm -f #{@file}`
   end
 
   def write(content)
@@ -66,6 +67,35 @@ describe Ruco::Application do
     write("01234567\n1\n2\n3\n4\n5678910111213\n6\n7\n8")
     app.resize(8, 7)
     app.view.should == "#{status}0123456\n1\n2\n3\n4\n5678910\n#{command}"
+  end
+
+  describe 'opening with line' do
+    before do
+      write("\n1\n2\n3\n4\n5\n")
+      @file = @file+":2"
+    end
+
+    it "opens file at given line" do
+      app.cursor.should == [2,0]
+      app.view.should_not include(@file)
+    end
+
+    it "can save when opening with line" do
+      type 'a', :"Ctrl+s"
+      @file = @file[0..-3]
+      read.should == "\na1\n2\n3\n4\n5\n"
+    end
+
+    it "opens file with : if file with : exist" do
+      write("\n1\n2\n3\n4\n5\n")
+      app.view.should include(@file)
+    end
+
+    it "opens file with : if file with and without : do not exist" do
+      @file[-2..-1] = 'xxx:5'
+      app.cursor.should == [1,0]
+      app.view.should include(@file)
+    end
   end
 
   describe 'closing' do

@@ -4,12 +4,23 @@ module Ruco
 
     def initialize(file, options)
       @file = file
+      if not File.exist?(@file)
+        short_file, go_to_line = @file.split(':',2)
+        if File.exist?(short_file)
+          @file = short_file
+        else
+          go_to_line = nil
+        end
+      end
+
       @options = OptionAccessor.new(options)
 
       setup_actions
       setup_keys
       load_user_config
       create_components
+
+      @editor.move(:to, go_to_line.to_i-1,0) if go_to_line
     end
 
     def view

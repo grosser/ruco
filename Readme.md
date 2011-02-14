@@ -12,6 +12,7 @@ Features:
  - cut, copy and paste -> Ctrl+x/c/v
  - undo / redo
  - stays at last position when reopening a file
+ - opens file at line with `ruco foo/bar.rb:32` syntax
  - keeps whatever newline format you use (\r \n \r\n)
  - (optional) remove trailing whitespace on save
 
