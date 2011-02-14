@@ -3,16 +3,7 @@ module Ruco
     attr_reader :editor, :status, :command, :options
 
     def initialize(file, options)
-      @file = file
-      if not File.exist?(@file)
-        short_file, go_to_line = @file.split(':',2)
-        if File.exist?(short_file)
-          @file = short_file
-        else
-          go_to_line = nil
-        end
-      end
-
+      @file, go_to_line = parse_file_and_line(file)
       @options = OptionAccessor.new(options)
 
       setup_actions
@@ -264,6 +255,18 @@ module Ruco
     def editor_lines
       command_lines = 1
       @options[:lines] - @status_lines - command_lines
+    end
+
+    def parse_file_and_line(file)
+      if not File.exist?(file)
+        short_file, go_to_line = file.split(':',2)
+        if File.exist?(short_file)
+          file = short_file
+        else
+          go_to_line = nil
+        end
+      end
+      [file, go_to_line]
     end
   end
 end
