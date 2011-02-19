@@ -48,6 +48,7 @@ module Ruco
     def save
       lines = text_area.send(:lines)
       lines.each(&:rstrip!) if @options[:remove_trailing_whitespace_on_save]
+      lines << '' if @options[:blank_line_before_eof_on_save] and lines.last.to_s !~ /^\s*$/
       content = lines * @newline
 
       File.open(@file,'w'){|f| f.write(content) }

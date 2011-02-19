@@ -70,6 +70,57 @@ describe Ruco::Editor do
       editor.modified?.should == false
     end
   end
+
+  describe 'blank line before end of file on save' do
+    it "adds a newline" do
+      write("aaa")
+      editor = Ruco::Editor.new(@file, :lines => 3, :columns => 5, :blank_line_before_eof_on_save => true)
+      editor.save
+      read.should == "aaa\n"
+    end
+
+    it "does not add a newline without option" do
+      write("aaa")
+      editor = Ruco::Editor.new(@file, :lines => 3, :columns => 5)
+      editor.save
+      read.should == "aaa"
+    end
+
+    it "adds weird newline" do
+      write("aaa\r\nbbb")
+      editor = Ruco::Editor.new(@file, :lines => 3, :columns => 5, :blank_line_before_eof_on_save => true)
+      editor.save
+      read.should == "aaa\r\nbbb\r\n"
+    end
+
+    it "does not add a newline for empty lines" do
+      write("aaa\n ")
+      editor = Ruco::Editor.new(@file, :lines => 3, :columns => 5, :blank_line_before_eof_on_save => true)
+      editor.save
+      read.should == "aaa\n "
+    end
+
+    it "does not add a newline when one is there" do
+      write("aaa\n")
+      editor = Ruco::Editor.new(@file, :lines => 3, :columns => 5, :blank_line_before_eof_on_save => true)
+      editor.save
+      read.should == "aaa\n"
+    end
+
+    it "does not add a weird newline when one is there" do
+      write("aaa\r\n")
+      editor = Ruco::Editor.new(@file, :lines => 3, :columns => 5, :blank_line_before_eof_on_save => true)
+      editor.save
+      read.should == "aaa\r\n"
+    end
+
+    it "does not add a newline when many are there" do
+      write("aaa\n\n")
+      editor = Ruco::Editor.new(@file, :lines => 3, :columns => 5, :blank_line_before_eof_on_save => true)
+      editor.save
+      read.should == "aaa\n\n"
+    end
+  end
   
   describe 'convert tabs' do
     before do
