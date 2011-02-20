@@ -38,16 +38,37 @@ class Keyboard
     when Curses::Key::DOWN then :down
     when Curses::Key::RIGHT then :right
     when Curses::Key::LEFT then :left
-    when 402, '^[1;2C' then :"Shift+right"
-    when 554, '^[1;5C' then :"Ctrl+right"
-    when 555, '^[1;6C' then :"Ctrl+Shift+right"
-    when 393, '^[1;2D' then :"Shift+left"
-    when 539, '^[1;5D' then :"Ctrl+left"
-    when 540, '^[1;6D' then :"Ctrl+Shift+left"
+
     when 337, '^[1;2A' then :"Shift+up"
-    when 560, '^[1;5A' then :"Ctrl+up"
     when 336, '^[1;2B' then :"Shift+down"
+    when 402, '^[1;2C' then :"Shift+right"
+    when 393, '^[1;2D' then :"Shift+left"
+
+    when 558, '^[1;3A' then :"Alt+up"
+    when 517, '^[1;3B' then :"Alt+down"
+    when 552, '^[1;3C' then :"Alt+right"
+    when 537, '^[1;3D' then :"Alt+left"
+
+    when 560, '^[1;5A' then :"Ctrl+up"
     when 519, '^[1;5B' then :"Ctrl+down"
+    when 554, '^[1;5C' then :"Ctrl+right"
+    when 539, '^[1;5D' then :"Ctrl+left"
+
+    when 561, '^[1;6A' then :"Ctrl+Shift+up"
+    when 520, '^[1;6B' then :"Ctrl+Shift+down"
+    when 555, '^[1;6C' then :"Ctrl+Shift+right"
+    when 540, '^[1;6D' then :"Ctrl+Shift+left"
+
+    when 562, '^[1;7A' then :"Alt+Ctrl+up"
+    when 521, '^[1;7B' then :"Alt+Ctrl+down"
+    when 556, '^[1;7C' then :"Alt+Ctrl+right"
+    when 541, '^[1;7D' then :"Alt+Ctrl+left"
+
+    when      '^[1;8A' then :"Alt+Ctrl+Shift+up"
+    when      '^[1;8B' then :"Alt+Ctrl+Shift+down"
+    when      '^[1;8C' then :"Alt+Ctrl+Shift+right"
+    when      '^[1;8D' then :"Alt+Ctrl+Shift+left"
+
     when Curses::KEY_END then :end
     when Curses::KEY_HOME then :home
     when Curses::KEY_NPAGE then :page_down
