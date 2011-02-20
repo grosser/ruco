@@ -20,6 +20,10 @@ class String
     match(/^\s*/)[0]
   end
 
+  def leading_whitespace=(whitespace)
+    sub!(/^\s*/, whitespace)
+  end
+
   # stub for 1.8
   unless method_defined?(:force_encoding)
     def force_encoding(encoding)

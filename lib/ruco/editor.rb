@@ -7,7 +7,7 @@ module Ruco
       :insert, :indent, :unindent, :delete, :delete_line,
       :redo, :undo,
       :selecting, :selection, :text_in_selection, :reset,
-      :move, :resize,
+      :move, :resize, :move_line,
       :to => :text_area
 
     def initialize(file, options)

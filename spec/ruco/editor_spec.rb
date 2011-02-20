@@ -323,6 +323,48 @@ describe Ruco::Editor do
     end
   end
 
+  describe :move_line do
+    before do
+      write("0\n1\n2\n")
+    end
+
+    it "moves the line" do
+      editor.move_line(1)
+      editor.view.should == "1\n0\n2\n"
+    end
+
+    it "keeps the cursor at the moved line" do
+      editor.move_line(1)
+      editor.cursor.should == [1,0]
+    end
+
+    it "keeps the cursor at current column" do
+      editor.move(:to, 0,1)
+      editor.move_line(1)
+      editor.cursor.should == [1,1]
+    end
+
+    it "uses indentation of moved-to-line" do
+      write("  0\n    1\n 2\n")
+      editor.move_line(1)
+      editor.view.should == "    1\n    0\n 2\n"
+    end
+
+    it "cannot move past start of file" do
+      editor.move_line(-1)
+      editor.view.should == "0\n1\n2\n"
+    end
+
+    it "cannot move past end of file" do
+      write("0\n1\n")
+      editor.move_line(1)
+      editor.move_line(1)
+      editor.move_line(1)
+      editor.move_line(1)
+      editor.view.should == "1\n\n0\n"
+    end
+  end
+
   describe :selecting do
     before do
       write('012345678')

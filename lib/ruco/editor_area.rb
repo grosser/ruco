@@ -27,6 +27,16 @@ module Ruco
       sanitize_position
     end
 
+    def move_line(direction)
+      old = line
+      new = line + direction
+      return if new < 0
+      return if new >= lines.size
+      lines[old].leading_whitespace = lines[new].leading_whitespace
+      lines[old], lines[new] = lines[new], lines[old]
+      @line += direction
+    end
+
     def indent
       selected_lines.each do |line|
         lines[line].insert(0, ' ' * Ruco::TAB_SIZE)

@@ -209,6 +209,8 @@ module Ruco
 
       action(:undo){ @editor.undo if @focused == @editor }
       action(:redo){ @editor.redo if @focused == @editor }
+      action(:move_line_up){ @editor.move_line(-1) if @focused == @editor }
+      action(:move_line_down){ @editor.move_line(1) if @focused == @editor }
     end
 
     def setup_keys
@@ -226,6 +228,8 @@ module Ruco
       bind :"Ctrl+v", :paste
       bind :"Ctrl+z", :undo
       bind :"Ctrl+y", :redo
+      bind :"Alt+Ctrl+down", :move_line_down
+      bind :"Alt+Ctrl+up", :move_line_up
     end
 
     def load_user_config

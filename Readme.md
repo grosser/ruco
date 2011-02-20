@@ -4,6 +4,7 @@ Features:
 
  - **Intuitive interface**
  - selecting via Shift+left/right/up/down (only on Linux) and Ctrl+a(all)
+ - move line up/down (Alt+Ctrl+up/down)
  - Tab -> indent / Shift+Tab -> unindent
  - keeps indentation (+ paste-detection e.g. via Cmd+v)
  - change (*) + writable (!) indicators
