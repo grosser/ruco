@@ -29,6 +29,10 @@ module Ruco
     end
 
     def key(key)
+      # deactivate select_mode if its not re-enabled in this action
+      @select_mode_was_on = @select_mode
+      @select_mode = false
+
       if bound = @bindings[key]
         result = if bound.is_a?(Symbol)
           @actions[bound].call
@@ -41,14 +45,14 @@ module Ruco
       case key
 
       # move
-      when :down then @focused.move(:relative, 1,0)
-      when :right then @focused.move(:relative, 0,1)
-      when :up then @focused.move(:relative, -1,0)
-      when :left then @focused.move(:relative, 0,-1)
-      when :end then @focused.move :to_eol
-      when :home then @focused.move :to_bol
-      when :page_up then @focused.move :page_up
-      when :page_down then @focused.move :page_down
+      when :down then move_with_select_mode :relative, 1,0
+      when :right then move_with_select_mode :relative, 0,1
+      when :up then move_with_select_mode :relative, -1,0
+      when :left then move_with_select_mode :relative, 0,-1
+      when :end then move_with_select_mode :to_eol
+      when :home then move_with_select_mode :to_bol
+      when :page_up then move_with_select_mode :page_up
+      when :page_down then move_with_select_mode :page_down
 
       # select
       when :"Shift+down" then
@@ -172,6 +176,10 @@ module Ruco
         editor.delete_line
       end
 
+      action :select_mode do
+        @select_mode = !@select_mode_was_on
+      end
+
       action :select_all do
         @focused.move(:to, 0, 0)
         @focused.selecting do
@@ -221,6 +229,7 @@ module Ruco
       bind :"Ctrl+g", :go_to_line
       bind :"Ctrl+f", :find
       bind :"Ctrl+r", :find_and_replace
+      bind :"Ctrl+b", :select_mode
       bind :"Ctrl+a", :select_all
       bind :"Ctrl+d", :delete_line
       bind :"Ctrl+x", :cut
@@ -271,6 +280,17 @@ module Ruco
         end
       end
       [file, go_to_line]
+    end
+
+    def move_with_select_mode(*args)
+      @select_mode = true if @select_mode_was_on
+      if @select_mode
+        @focused.selecting do
+          move(*args)
+        end
+      else
+        @focused.send(:move, *args)
+      end
     end
   end
 end

@@ -325,6 +325,26 @@ describe Ruco::Application do
     end
   end
 
+  describe 'select mode' do
+    it "turns move commands into select commands" do
+      write('abc')
+      type :'Ctrl+b', :right, :right, 'a'
+      editor_part(app.view).should == "ac\n\n"
+    end
+
+    it "stops after first non-move command" do
+      write('abc')
+      type :'Ctrl+b', :right, 'd', :right, 'e'
+      editor_part(app.view).should == "dbec\n\n"
+    end
+
+    it "stops after hitting twice" do
+      write('abc')
+      type :'Ctrl+b', :'Ctrl+b', :right, 'd'
+      editor_part(app.view).should == "adbc\n\n"
+    end
+  end
+
   describe :save do
     it "just saves" do
       write('')
