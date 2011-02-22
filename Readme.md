@@ -3,7 +3,7 @@ Simple, extendable, test-driven commandline editor written in ruby.
 Features:
 
  - **Intuitive interface**
- - selecting via Shift + arrow-keys (Linux only) or 'select mode' Ctrl+b + arrow-keys
+ - selecting via Shift + arrow-keys (only Linux or iTerm) or 'select mode' Ctrl+b + arrow-keys
  - move line up/down (Alt+Ctrl+up/down)
  - Tab -> indent / Shift+Tab -> unindent
  - keeps indentation (+ paste-detection e.g. via Cmd+v)
@@ -69,6 +69,7 @@ Customize
 
 TIPS
 ====
+ - [Mac] arow-keys + Shift/Alt does not work in default terminal (use iTerm)
  - [Tabs] Ruco does not like tabs. Existing tabs are displayed as ' ' and pressing tab inserts 2*' '
  - [RVM] `alias r="rvm ree exec ruco"` and you only have to install ruco once
  - [Ruby1.9] Unicode support -> install libncursesw5-dev before installing ruby (does not work for 1.8)
@@ -78,7 +79,6 @@ TIPS
 TODO
 =====
  - align soft-tabs
- - handle \\r and \\r\\n nicely <-> breaks curses output
  - highlight tabs (e.g. strange character or reverse/underline/color)
  - big warning when editing a not-writable file
  - find next (Alt+n)
@@ -90,8 +90,6 @@ TODO
  - search options regex + case-sensitive
  - add auto-confirm to 'replace?' dialog -> type s == skip, no enter needed
  - 1.8: unicode support <-> already finished but unusable due to Curses (see encoding branch)
- - support Alt+Fx keys
- - (later) extract keyboard and html-style components into separate project
 
 Author
 ======
