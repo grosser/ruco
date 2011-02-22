@@ -9,7 +9,8 @@ module Ruco
       '^F Find',
       '^R Replace',
       '^D Delete line',
-      '^G Go to line'
+      '^G Go to line',
+      '^B Select mode'
     ]
 
     def initialize(options)
