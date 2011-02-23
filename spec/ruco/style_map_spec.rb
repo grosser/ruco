@@ -28,6 +28,26 @@ describe Ruco::StyleMap do
         nil
       ]
     end
+
+    it "combines reverse/normal" do
+      map.add(:reverse, 0, 0..1)
+      map.add(:normal, 0, 0..1)
+      map.flatten.should == [
+        [[:normal], nil, []],
+        nil,
+        nil
+      ]
+    end
+
+    it "combines normal/reverse" do
+      map.add(:normal, 0, 0..1)
+      map.add(:reverse, 0, 0..1)
+      map.flatten.should == [
+        [[:reverse], nil, []],
+        nil,
+        nil
+      ]
+    end
   end
 
   describe 'array style operations' do
@@ -60,12 +80,39 @@ describe Ruco::StyleMap do
     end
   end
 
+  describe :left_pad! do
+    it "adds whitespace to left side" do
+      s = Ruco::StyleMap.new(2)
+      s.add(:reverse, 0, 0..1)
+      s.add(:reverse, 1, 1..2)
+      s.left_pad!(3)
+      s.flatten.should == [
+        [nil, nil, nil, [:reverse],nil,[]],
+        [nil, nil, nil, nil, [:reverse],nil,[]]
+      ]
+    end
+  end
+
+  describe :invert! do
+    it "inverts styles" do
+      s = Ruco::StyleMap.new(2)
+      s.add(:reverse, 0, 0..1)
+      s.add(:normal, 1, 1..2)
+      s.add(:red, 1, 4..5)
+      s.invert!
+      s.flatten.should == [
+        [[:normal],nil,[]],
+        [nil, [:reverse],nil, nil, [:red], nil, []]
+      ]
+    end
+  end
+
   describe :styled do
     it "can style an unstyled line" do
       Ruco::StyleMap.styled("a", nil).should == [[[], "a"]]
     end
 
-    it "can style an styled line" do
+    it "can style a styled line" do
       Ruco::StyleMap.styled("a", [[:reverse],nil]).should == [[[], ""], [[:reverse], "a"]]
     end
 

@@ -13,6 +13,12 @@ module Ruco
       @label + @text_field.view
     end
 
+    def style_map
+      map = @text_field.style_map
+      map.left_pad!(@label.size)
+      map
+    end
+
     def insert(text)
       @text_field.insert(text.gsub("\n",''))
       @submit.call(@text_field.value) if text.include?("\n")

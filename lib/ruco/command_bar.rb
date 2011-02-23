@@ -27,6 +27,17 @@ module Ruco
       end
     end
 
+    def style_map
+      if @form
+        map = @form.style_map
+        map.invert!
+        map.add(:reverse, 0, 0..@options[:columns])
+        map
+      else
+        StyleMap.single_line_reversed(@options[:columns])
+      end
+    end
+
     def ask(question, options={}, &block)
       @form = cached_form_if(options[:cache], question) do
         Form.new(question, :columns => @options[:columns]) do |result|

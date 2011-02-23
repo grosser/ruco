@@ -16,21 +16,44 @@ module Ruco
         next unless styles
 
         # start and one after end of every column-range changes styles
-        points_of_change = styles.map{|s,c| [c.first, c.last+1] }.flatten
+        points_of_change = styles.map{|s,c| [c.first, c.last+1] }.flatten.uniq
 
         flat = []
 
         styles.each do |style, columns|
           points_of_change.each do |point|
             next unless columns.include?(point)
-            flat[point] ||= []
-            flat[point].unshift style
+            array = (flat[point] ||= [])
+            if style == :normal
+              array.delete :reverse
+            elsif style == :reverse
+              array.delete :normal
+            end
+            array.unshift style
           end
         end
 
         max = styles.map{|s,c|c.last}.max
         flat[max+1] = []
         flat
+      end
+    end
+
+    def left_pad!(offset)
+      @lines.compact.each do |styles|
+        next unless styles
+        styles.map! do |style, columns|
+          [style, (columns.first + offset)..(columns.last + offset)]
+        end
+      end
+    end
+
+    def invert!
+      map = {:reverse => :normal, :normal => :reverse}
+      @lines.compact.each do |styles|
+        styles.map! do |style, columns|
+          [map[style] || style, columns]
+        end
       end
     end
 
@@ -55,7 +78,7 @@ module Ruco
     def pop
       slice!(-1, 1)
     end
-    
+
     STYLES = {
       :normal => 0,
       :reverse => Curses::A_REVERSE
@@ -83,8 +106,16 @@ module Ruco
       build
     end
 
+    # TODO support multiple styles
     def self.curses_style(styles)
+      return 0 if styles.empty?
       styles.sum{|style| STYLES[style] or raise("Unknown style #{style}") }
+    end
+
+    def self.single_line_reversed(columns)
+      map = StyleMap.new(1)
+      map.add(:reverse, 0, 0...columns)
+      map
     end
   end
 end

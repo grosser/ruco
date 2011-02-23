@@ -82,7 +82,6 @@ TODO
  - highlight tabs (e.g. strange character or reverse/underline/color)
  - big warning when editing a not-writable file
  - find next (Alt+n)
- - add selection colors to forms in command_bar
  - smart staying at column when changing line
  - syntax highlighting
  - raise when binding to a unsupported key

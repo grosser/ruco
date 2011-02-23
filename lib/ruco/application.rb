@@ -19,9 +19,8 @@ module Ruco
     end
 
     def style_map
-      reverse = StyleMap.new(1)
-      reverse.add(:reverse, 0, 0...@options[:columns])
-      reverse + editor.style_map + reverse
+      reverse = StyleMap.single_line_reversed(@options[:columns])
+      reverse + editor.style_map + @command.style_map
     end
 
     def cursor
