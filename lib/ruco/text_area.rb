@@ -13,7 +13,7 @@ module Ruco
 
     def view
       adjust_window
-      @window.crop(lines) * "\n" + "\n"
+      @window.crop(lines) * "\n"
     end
 
     def cursor

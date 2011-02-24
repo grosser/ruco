@@ -15,7 +15,7 @@ module Ruco
     end
 
     def view
-      status.view + "\n" + editor.view + command.view
+      status.view + "\n" + editor.view + "\n" + command.view
     end
 
     def style_map

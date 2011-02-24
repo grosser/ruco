@@ -31,12 +31,12 @@ describe Ruco::Editor do
   describe "strange newline formats" do
     it 'views \r normally' do
       write("a\rb\rc\r")
-      editor.view.should == "a\nb\nc\n"
+      editor.view.should == "a\nb\nc"
     end
 
     it 'views \r\n normally' do
       write("a\r\nb\r\nc\r\n")
-      editor.view.should == "a\nb\nc\n"
+      editor.view.should == "a\nb\nc"
     end
 
     it 'saves \r as \r' do
@@ -129,12 +129,12 @@ describe Ruco::Editor do
 
     it "reads tab as spaces when option is set" do
       editor = Ruco::Editor.new(@file, :lines => 3, :columns => 5, :convert_tabs => true)
-      editor.view.should == "    a\n\n\n"
+      editor.view.should == "    a\n\n"
     end
 
     it "reads them normally when option is not set" do
       editor = Ruco::Editor.new(@file, :lines => 3, :columns => 5)
-      editor.view.should == "\t\ta\n\n\n"
+      editor.view.should == "\t\ta\n\n"
     end
   end
 
@@ -197,11 +197,11 @@ describe Ruco::Editor do
       it "can scroll columns" do
         write("123456789\n123")
         editor.move(:relative, 0,4)
-        editor.view.should == "12345\n123\n\n"
+        editor.view.should == "12345\n123\n"
         editor.cursor.column.should == 4
 
         editor.move(:relative, 0,1)
-        editor.view.should == "34567\n3\n\n"
+        editor.view.should == "34567\n3\n"
         editor.cursor.column.should == 3
       end
 
@@ -209,17 +209,17 @@ describe Ruco::Editor do
         write('123456789')
         editor.move(:relative, 0,4)
         6.times{ editor.move(:relative, 0,1) }
-        editor.view.should == "789\n\n\n"
+        editor.view.should == "789\n\n"
         editor.cursor.column.should == 3
       end
 
       it "can scroll columns backwards" do
         write('0123456789')
         editor.move(:relative, 0,5)
-        editor.view.should == "23456\n\n\n"
+        editor.view.should == "23456\n\n"
 
         editor.move(:relative, 0,-4)
-        editor.view.should == "01234\n\n\n"
+        editor.view.should == "01234\n\n"
         editor.cursor.column.should == 1
       end
     end
@@ -231,16 +231,16 @@ describe Ruco::Editor do
 
       it "can scroll lines down" do
         editor.move(:relative, 2,0)
-        editor.view.should == "1\n2\n3\n"
+        editor.view.should == "1\n2\n3"
 
         editor.move(:relative, 1,0)
-        editor.view.should == "3\n4\n5\n"
+        editor.view.should == "3\n4\n5"
         editor.cursor.line.should == 1
       end
 
       it "can scroll till end of file" do
         editor.move(:relative, 15,0)
-        editor.view.should == "8\n9\n\n"
+        editor.view.should == "8\n9\n"
         editor.cursor.line.should == 1
       end
     end
@@ -330,7 +330,7 @@ describe Ruco::Editor do
 
     it "moves the line" do
       editor.move_line(1)
-      editor.view.should == "1\n0\n2\n"
+      editor.view.should == "1\n0\n2"
     end
 
     it "keeps the cursor at the moved line" do
@@ -347,12 +347,12 @@ describe Ruco::Editor do
     it "uses indentation of moved-to-line" do
       write("  0\n    1\n 2\n")
       editor.move_line(1)
-      editor.view.should == "    1\n    0\n 2\n"
+      editor.view.should == "    1\n    0\n 2"
     end
 
     it "cannot move past start of file" do
       editor.move_line(-1)
-      editor.view.should == "0\n1\n2\n"
+      editor.view.should == "0\n1\n2"
     end
 
     it "cannot move past end of file" do
@@ -361,7 +361,7 @@ describe Ruco::Editor do
       editor.move_line(1)
       editor.move_line(1)
       editor.move_line(1)
-      editor.view.should == "1\n\n0\n"
+      editor.view.should == "1\n\n0"
     end
   end
 
@@ -434,7 +434,7 @@ describe Ruco::Editor do
       editor.selection.should == nil
       editor.cursor.should == [0,1]
       editor.move(:to, 0,0)
-      editor.view.should == "X4567\n\n\n"
+      editor.view.should == "X4567\n\n"
     end
 
     it "replaces the multi-line-selection with insert" do
@@ -447,7 +447,7 @@ describe Ruco::Editor do
       editor.selection.should == nil
       editor.cursor.should == [0,2]
       editor.move(:to, 0,0)
-      editor.view.should == "1X6\n789\n\n"
+      editor.view.should == "1X6\n789\n"
     end
 
     it "deletes selection delete" do
@@ -459,7 +459,7 @@ describe Ruco::Editor do
       editor.delete(1)
       editor.cursor.should == [0,1]
       editor.move(:to, 0,0)
-      editor.view.should == "16\n789\n\n"
+      editor.view.should == "16\n789\n"
     end
   end
 
@@ -544,7 +544,7 @@ describe Ruco::Editor do
       editor.selecting do
         move(:relative, 2, 1)
       end
-      editor.view.should == "789\n789\n789\n"
+      editor.view.should == "789\n789\n789"
       editor.cursor.should == [2,2]
       editor.style_map.flatten.should == [
         [nil, :reverse, nil, nil, nil, nil, :normal], # start to end of screen
@@ -560,22 +560,22 @@ describe Ruco::Editor do
     end
 
     it "displays an empty screen" do
-      editor.view.should == "\n\n\n"
+      editor.view.should == "\n\n"
     end
 
     it "displays short file content" do
       write('xxx')
-      editor.view.should == "xxx\n\n\n"
+      editor.view.should == "xxx\n\n"
     end
 
     it "displays long file content" do
       write('1234567')
-      editor.view.should == "12345\n\n\n"
+      editor.view.should == "12345\n\n"
     end
 
     it "displays multiline-file content" do
       write("xxx\nyyy\nzzz\niii")
-      editor.view.should == "xxx\nyyy\nzzz\n"
+      editor.view.should == "xxx\nyyy\nzzz"
     end
   end
 
@@ -588,13 +588,13 @@ describe Ruco::Editor do
       write('123')
       editor.move(:relative, 0,1)
       editor.insert('ab')
-      editor.view.should == "1ab23\n\n\n"
+      editor.view.should == "1ab23\n\n"
       editor.cursor.should == [0,3]
     end
 
     it "can insert new newlines" do
       editor.insert("ab\nc")
-      editor.view.should == "ab\nc\n\n"
+      editor.view.should == "ab\nc\n"
       editor.cursor.should == [1,1]
     end
 
@@ -602,7 +602,7 @@ describe Ruco::Editor do
       write("abc\ndefg")
       editor.move(:relative, 1,2)
       editor.insert("1\n23")
-      editor.view.should == "abc\nde1\n23fg\n"
+      editor.view.should == "abc\nde1\n23fg"
       editor.cursor.should == [2,2]
     end
 
@@ -610,7 +610,7 @@ describe Ruco::Editor do
       write("abc\ndefg")
       editor.move(:relative, 1,2)
       editor.insert("\n")
-      editor.view.should == "abc\nde\nfg\n"
+      editor.view.should == "abc\nde\nfg"
       editor.cursor.should == [2,0]
     end
 
@@ -631,7 +631,7 @@ describe Ruco::Editor do
 
     it "inserts tab as spaces" do
       editor.insert("\t")
-      editor.view.should == "  \n\n\n"
+      editor.view.should == "  \n\n"
       editor.cursor.should == [0,2]
     end
 
@@ -647,7 +647,7 @@ describe Ruco::Editor do
       write("a\nb\nc\n")
       editor.selecting{move(:to, 1,1)}
       editor.indent
-      editor.view.should == "  a\n  b\nc\n"
+      editor.view.should == "  a\n  b\nc"
     end
 
     it "moves the selection" do
@@ -683,19 +683,19 @@ describe Ruco::Editor do
     it "unindents single lines" do
       write("   a\n\n")
       editor.unindent
-      editor.view.should == " a\n\n\n"
+      editor.view.should == " a\n\n"
     end
 
     it "unindents single lines by one" do
       write(" a\n\n")
       editor.unindent
-      editor.view.should == "a\n\n\n"
+      editor.view.should == "a\n\n"
     end
 
     it "does not unindents single lines when not unindentable" do
       write("a\n\n")
       editor.unindent
-      editor.view.should == "a\n\n\n"
+      editor.view.should == "a\n\n"
     end
 
     it "move the cursor when unindenting single line" do
@@ -709,7 +709,7 @@ describe Ruco::Editor do
       write("a\n b\n   c")
       editor.selecting{ move(:to, 2,1) }
       editor.unindent
-      editor.view.should == "a\nb\n c\n"
+      editor.view.should == "a\nb\n c"
     end
 
     it "moves the selection" do
@@ -762,7 +762,7 @@ describe Ruco::Editor do
       editor.insert("c")
       editor.view # trigger save point
       editor.undo
-      editor.view.should == "ba\n\n\n"
+      editor.view.should == "ba\n\n"
       editor.cursor.should == [0,1]
     end
 
@@ -815,7 +815,7 @@ describe Ruco::Editor do
         editor.move(:to, 0,2)
         editor.instance_eval{@options[:remove_trailing_whitespace_on_save] = true}
         editor.save
-        editor.view.should == "a\n\nb\n"
+        editor.view.should == "a\n\nb"
         editor.cursor.should == [0,1]
       end
 
@@ -824,14 +824,14 @@ describe Ruco::Editor do
         editor.move(:to, 2,0)
         editor.instance_eval{@options[:remove_trailing_whitespace_on_save] = true}
         editor.save
-        editor.view.should == "\n\n\n"
+        editor.view.should == "\n\n"
         editor.cursor.should == [2,0]
       end
 
       it "does not remove trailing whitespace by default" do
         write("a  \n  \nb\n\n")
         editor.save
-        editor.view.should == "a  \n  \nb\n"
+        editor.view.should == "a  \n  \nb"
         editor.cursor.should == [0,0]
       end
     end
@@ -841,7 +841,7 @@ describe Ruco::Editor do
     it 'removes a char' do
       write('123')
       editor.delete(1)
-      editor.view.should == "23\n\n\n"
+      editor.view.should == "23\n\n"
       editor.cursor.should == [0,0]
     end
 
@@ -849,7 +849,7 @@ describe Ruco::Editor do
       write("123\n45")
       editor.move(:relative, 0,3)
       editor.delete(1)
-      editor.view.should == "12345\n\n\n"
+      editor.view.should == "12345\n\n"
       editor.cursor.should == [0,3]
     end
 
@@ -857,7 +857,7 @@ describe Ruco::Editor do
       write("aa")
       editor.move(:relative, 0,1)
       editor.delete(-3)
-      editor.view.should == "a\n\n\n"
+      editor.view.should == "a\n\n"
       editor.cursor.should == [0,0]
     end
 
@@ -865,7 +865,7 @@ describe Ruco::Editor do
       write('123')
       editor.move(:relative, 0,3)
       editor.delete(-1)
-      editor.view.should == "12\n\n\n"
+      editor.view.should == "12\n\n"
       editor.cursor.should == [0,2]
     end
 
@@ -873,7 +873,7 @@ describe Ruco::Editor do
       write("1\n234")
       editor.move(:relative, 1,0)
       editor.delete(-1)
-      editor.view.should == "1234\n\n\n"
+      editor.view.should == "1234\n\n"
       editor.cursor.should == [0,1]
     end
   end
@@ -946,27 +946,27 @@ describe Ruco::Editor do
     it "removes the current line from first char" do
       editor.move(:to, 1, 0)
       editor.delete_line
-      editor.view.should == "1\n56789\n\n"
+      editor.view.should == "1\n56789\n"
       editor.cursor.should == [1, 0]
     end
 
     it "removes the current line from last char" do
       editor.move(:to, 1, 3)
       editor.delete_line
-      editor.view.should == "1\n56789\n\n"
+      editor.view.should == "1\n56789\n"
       editor.cursor.should == [1, 3]
     end
 
     it "can remove the first line" do
       editor.delete_line
-      editor.view.should == "longe\n56789\n\n"
+      editor.view.should == "longe\n56789\n"
       editor.cursor.should == [0, 0]
     end
 
     it "can remove the last line" do
       write("aaa")
       editor.delete_line
-      editor.view.should == "\n\n\n"
+      editor.view.should == "\n\n"
       editor.cursor.should == [0, 0]
     end
 
@@ -974,7 +974,7 @@ describe Ruco::Editor do
       write("aaa\nbbb")
       editor.move(:to, 1,1)
       editor.delete_line
-      editor.view.should == "aaa\n\n\n"
+      editor.view.should == "aaa\n\n"
       editor.cursor.should == [0, 1]
     end
 
@@ -990,7 +990,7 @@ describe Ruco::Editor do
       editor.move(:to, 5, 0)
       editor.move(:to, 6, 1)
       editor.delete_line
-      editor.view.should == "5\n7\n8\n"
+      editor.view.should == "5\n7\n8"
       editor.cursor.should == [1, 1]
     end
 
@@ -998,7 +998,7 @@ describe Ruco::Editor do
       write('xxx')
       editor.delete_line
       editor.insert('yyy')
-      editor.view.should == "yyy\n\n\n"
+      editor.view.should == "yyy\n\n"
     end
   end
 end
