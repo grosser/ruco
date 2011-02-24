@@ -16,6 +16,8 @@ require 'ruco/window'
 require 'ruco/style_map'
 
 require 'ruco/editor'
+require 'ruco/editor/line_numbers'
+require 'ruco/editor/history'
 require 'ruco/status_bar'
 require 'ruco/command_bar'
 require 'ruco/application'
