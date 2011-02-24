@@ -2,9 +2,12 @@ module Ruco
   # everything that does not belong to a text-area
   # but is needed for Ruco::Editor
   class EditorArea < TextArea
-    def initialize(*args)
-      super(*args)
-      @history = History.new((args.last[:history]||{}).reverse_merge(:state => state, :track => [:content], :entries => 100, :timeout => 2))
+    LINE_NUMBERS_SPACE = 5
+
+    def initialize(content, options)
+      options[:columns] -= LINE_NUMBERS_SPACE if options[:line_numbers]
+      super(content, options)
+      @history = History.new((options[:history]||{}).reverse_merge(:state => state, :track => [:content], :entries => 100, :timeout => 2))
     end
 
     def undo
@@ -19,7 +22,41 @@ module Ruco
 
     def view
       @history.add(state)
-      super
+      if @options[:line_numbers]
+        number_room = LINE_NUMBERS_SPACE - 1
+
+        super.naive_split("\n").map_with_index do |line,i|
+          number = @window.top + i
+          number = if lines[number]
+            (number + 1).to_s
+                   else
+                     ''
+                   end.rjust(number_room).slice(0,number_room)
+          "#{number} #{line}"
+        end * "\n"
+      else
+        super
+      end
+    end
+
+    def style_map
+      if @options[:line_numbers]
+        map = super
+        map.left_pad!(LINE_NUMBERS_SPACE)
+        map
+      else
+        super
+      end
+    end
+
+    def cursor
+      if @options[:line_numbers]
+        cursor = super
+        cursor[1] += LINE_NUMBERS_SPACE
+        cursor
+      else
+        super
+      end
     end
 
     def delete_line

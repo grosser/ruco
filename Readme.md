@@ -17,6 +17,7 @@ Features:
  - keeps whatever newline format you use (\r \n \r\n)
  - (optional) remove trailing whitespace on save
  - (optional) blank line before eof on save
+ - (optional) line numbers
 
 Install
 =======
@@ -36,6 +37,7 @@ Customize
       options.history_entries = 10          # default 100
       options.editor_remove_trailing_whitespace_on_save = true  # default false
       options.editor_blank_line_before_eof_on_save = true       # default false
+      options.editor_line_numbers = true                        # default false
       ...
 
       # bind a key

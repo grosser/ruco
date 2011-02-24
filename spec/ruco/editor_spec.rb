@@ -1001,4 +1001,33 @@ describe Ruco::Editor do
       editor.view.should == "yyy\n\n"
     end
   end
+
+  describe 'with line_numbers' do
+    let(:editor){ Ruco::Editor.new(@file, :lines => 5, :columns => 10, :line_numbers => true) }
+
+    before do
+      write("0\n1\n2\n3\n4\n5\n6\n7\n")
+    end
+
+    it "adds numbers to view" do
+      editor.view.should == "   1 0\n   2 1\n   3 2\n   4 3\n   5 4"
+    end
+
+    it "does not show numbers for empty lines" do
+      editor.move(:to, 10,0)
+      editor.view.should == "   6 5\n   7 6\n   8 7\n   9 \n     "
+    end
+
+    it "adjusts the cursor" do
+      editor.cursor.should == [0,5]
+    end
+
+    it "adjusts the style map" do
+      editor.selecting{ move(:to, 0,1) }
+      editor.style_map.flatten.should == [
+        [nil, nil, nil, nil, nil, :reverse, nil, :normal],
+        nil, nil, nil, nil
+      ]
+    end
+  end
 end
