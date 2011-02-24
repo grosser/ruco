@@ -13,37 +13,27 @@ describe Ruco::StyleMap do
       # red from 3 to 5
       map.flatten.should == [
         nil,
-        [nil, nil, nil, [:red], nil, nil, []],
+        [nil, nil, nil, :red, nil, nil, :normal],
         nil
       ]
     end
 
     it "reproduces merged styles" do
-      map.add(:red, 1, 3..5)
       map.add(:reverse, 1, 2..4)
+      map.add(:red, 1, 3..5)
       # reverse at 2 -- reverse and red at 3,4 -- red at 5
       map.flatten.should == [
         nil,
-        [nil, nil, [:reverse], [:reverse, :red], nil, [:red], []],
+        [nil, nil, :reverse, :red, nil, :red, :normal],
         nil
       ]
     end
 
-    it "combines reverse/normal" do
+    it "overwrites styles" do
       map.add(:reverse, 0, 0..1)
       map.add(:normal, 0, 0..1)
       map.flatten.should == [
-        [[:normal], nil, []],
-        nil,
-        nil
-      ]
-    end
-
-    it "combines normal/reverse" do
-      map.add(:normal, 0, 0..1)
-      map.add(:reverse, 0, 0..1)
-      map.flatten.should == [
-        [[:reverse], nil, []],
+        [:normal, nil, :normal],
         nil,
         nil
       ]
@@ -57,8 +47,8 @@ describe Ruco::StyleMap do
       s2 = Ruco::StyleMap.new(2)
       s2.add(:reverse, 0, 2..3)
       (s1 + s2).flatten.should == [
-        [[:reverse], nil, []],
-        [nil, nil, [:reverse], nil, []],
+        [:reverse, nil, :normal],
+        [nil, nil, :reverse, nil, :normal],
         nil
       ]
     end
@@ -67,16 +57,16 @@ describe Ruco::StyleMap do
       s = Ruco::StyleMap.new(2)
       s.add(:reverse, 0, 0..1)
       s.add(:reverse, 1, 1..2)
-      s.shift.flatten.should == [[[:reverse],nil,[]]]
-      s.flatten.should == [[nil, [:reverse],nil,[]]]
+      s.shift.flatten.should == [[:reverse, nil, :normal]]
+      s.flatten.should == [[nil, :reverse, nil, :normal]]
     end
 
     it "can pop" do
       s = Ruco::StyleMap.new(2)
       s.add(:reverse, 0, 0..1)
       s.add(:reverse, 1, 1..2)
-      s.pop.flatten.should == [[nil, [:reverse],nil,[]]]
-      s.flatten.should == [[[:reverse],nil,[]]]
+      s.pop.flatten.should == [[nil, :reverse, nil, :normal]]
+      s.flatten.should == [[:reverse, nil, :normal]]
     end
   end
 
@@ -87,8 +77,8 @@ describe Ruco::StyleMap do
       s.add(:reverse, 1, 1..2)
       s.left_pad!(3)
       s.flatten.should == [
-        [nil, nil, nil, [:reverse],nil,[]],
-        [nil, nil, nil, nil, [:reverse],nil,[]]
+        [nil, nil, nil, :reverse, nil, :normal],
+        [nil, nil, nil, nil, :reverse, nil, :normal]
       ]
     end
   end
@@ -101,43 +91,43 @@ describe Ruco::StyleMap do
       s.add(:red, 1, 4..5)
       s.invert!
       s.flatten.should == [
-        [[:normal],nil,[]],
-        [nil, [:reverse],nil, nil, [:red], nil, []]
+        [:normal, nil, :normal],
+        [nil, :reverse, nil, nil, :red, nil, :normal]
       ]
     end
   end
 
   describe :styled do
     it "can style an unstyled line" do
-      Ruco::StyleMap.styled("a", nil).should == [[[], "a"]]
+      Ruco::StyleMap.styled("a", nil).should == [[:normal, "a"]]
     end
 
     it "can style a styled line" do
-      Ruco::StyleMap.styled("a", [[:reverse],nil]).should == [[[], ""], [[:reverse], "a"]]
+      Ruco::StyleMap.styled("a", [:reverse ,nil]).should == [[:normal, ""], [:reverse, "a"]]
     end
 
     it "keeps unstyled parts" do
-      Ruco::StyleMap.styled("abc", [[:reverse],[]]).should == [[[], ""], [[:reverse], "a"],[[],'bc']]
+      Ruco::StyleMap.styled("abc", [:reverse, :normal]).should == [[:normal, ""], [:reverse, "a"],[:normal,'bc']]
     end
   end
 
   describe :curses_style do
     it "is 'normal' for nothing" do
-      Ruco::StyleMap.curses_style([]).should == Curses::A_NORMAL
+      Ruco::StyleMap.curses_style(:normal).should == Curses::A_NORMAL
     end
 
     it "is red for red" do
       pending
-      Ruco::StyleMap.curses_style([:red]).should == Curses::color_pair( Curses::COLOR_RED )
+      Ruco::StyleMap.curses_style(:red).should == Curses::color_pair( Curses::COLOR_RED )
     end
 
     it "is reverse for reverse" do
-      Ruco::StyleMap.curses_style([:reverse]).should == Curses::A_REVERSE
+      Ruco::StyleMap.curses_style(:reverse).should == Curses::A_REVERSE
     end
 
     it "raises on unknown style" do
       lambda{
-        Ruco::StyleMap.curses_style([:foo])
+        Ruco::StyleMap.curses_style(:foo)
       }.should raise_error
     end
   end

@@ -121,7 +121,7 @@ describe Ruco::Editor do
       read.should == "aaa\n\n"
     end
   end
-  
+
   describe 'convert tabs' do
     before do
       write("\t\ta")
@@ -491,7 +491,7 @@ describe Ruco::Editor do
         move(:to, 0, 4)
       end
       editor.style_map.flatten.should == [
-        [[:reverse], nil, nil, nil, nil, []],
+        [:reverse, nil, nil, nil, nil, :normal],
         nil,
         nil
       ]
@@ -504,8 +504,8 @@ describe Ruco::Editor do
         move(:to, 1, 1)
       end
       editor.style_map.flatten.should == [
-        [nil, [:reverse], nil, nil, nil, nil, []],
-        [[:reverse], nil, []],
+        [nil, :reverse, nil, nil, nil, nil, :normal],
+        [:reverse, nil, :normal],
         nil
       ]
     end
@@ -517,7 +517,7 @@ describe Ruco::Editor do
         move(:to, 0, 4)
       end
       editor.style_map.flatten.should == [
-        [nil, nil, [:reverse], nil, nil, []],
+        [nil, nil, :reverse, nil, nil, :normal],
         nil,
         nil
       ]
@@ -531,7 +531,7 @@ describe Ruco::Editor do
       end
       editor.style_map.flatten.should == [
         nil,
-        [nil, nil, [:reverse], nil, nil, []],
+        [nil, nil, :reverse, nil, nil, :normal],
         nil
       ]
     end
@@ -547,9 +547,9 @@ describe Ruco::Editor do
       editor.view.should == "789\n789\n789\n"
       editor.cursor.should == [2,2]
       editor.style_map.flatten.should == [
-        [nil, [:reverse], nil, nil, nil, nil, []], # start to end of screen
-        [[:reverse], nil, nil, nil, nil, nil, []], # 0 to end of screen
-        [[:reverse], nil, nil, []] # 0 to end of selection
+        [nil, :reverse, nil, nil, nil, nil, :normal], # start to end of screen
+        [:reverse, nil, nil, nil, nil, nil, :normal], # 0 to end of screen
+        [:reverse, nil, nil, :normal] # 0 to end of selection
       ]
     end
   end

@@ -11,6 +11,11 @@ module Ruco
       @lines[line] << [style, columns]
     end
 
+    def prepend(style, line, columns)
+      @lines[line] ||= []
+      @lines[line].unshift [style, columns]
+    end
+
     def flatten
       @lines.map do |styles|
         next unless styles
@@ -23,18 +28,12 @@ module Ruco
         styles.each do |style, columns|
           points_of_change.each do |point|
             next unless columns.include?(point)
-            array = (flat[point] ||= [])
-            if style == :normal
-              array.delete :reverse
-            elsif style == :reverse
-              array.delete :normal
-            end
-            array.unshift style
+            flat[point] = style
           end
         end
 
-        max = styles.map{|s,c|c.last}.max
-        flat[max+1] = []
+        max = styles.map{|_,columns| columns.last }.max
+        flat[max+1] = :normal
         flat
       end
     end
@@ -79,17 +78,12 @@ module Ruco
       slice!(-1, 1)
     end
 
-    STYLES = {
-      :normal => 0,
-      :reverse => Curses::A_REVERSE
-    }
-
     def self.styled(content, styles)
       styles ||= []
       content = content.dup
 
       build = []
-      build << [[]]
+      build << [:normal]
 
       buffered = ''
       styles.each do |style|
@@ -106,10 +100,14 @@ module Ruco
       build
     end
 
-    # TODO support multiple styles
-    def self.curses_style(styles)
-      return 0 if styles.empty?
-      styles.sum{|style| STYLES[style] or raise("Unknown style #{style}") }
+    STYLES = {
+      :normal => 0,
+      :reverse => Curses::A_REVERSE
+    }
+
+    def self.curses_style(style)
+      return 0 unless style
+      STYLES[style] or raise("Unknown style #{style.inspect}")
     end
 
     def self.single_line_reversed(columns)

@@ -31,7 +31,7 @@ module Ruco
       if @form
         map = @form.style_map
         map.invert!
-        map.add(:reverse, 0, 0..@options[:columns])
+        map.prepend(:reverse, 0, 0..@options[:columns])
         map
       else
         StyleMap.single_line_reversed(@options[:columns])

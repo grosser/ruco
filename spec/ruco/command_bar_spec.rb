@@ -94,7 +94,7 @@ describe Ruco::CommandBar do
     let(:bar){ Ruco::CommandBar.new(:columns => 10) }
 
     it "is reverse" do
-      bar.style_map.flatten.should == [[[:reverse], nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, []]]
+      bar.style_map.flatten.should == [[:reverse, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, :normal]]
     end
 
     it "has normal style for selected input field" do
@@ -102,7 +102,7 @@ describe Ruco::CommandBar do
       bar.insert('abc')
       bar.selecting{ move(:to, 0,0) }
       bar.view.should == 'Q abc'
-      bar.style_map.flatten.should == [[[:reverse], nil, [:reverse, :normal], nil, nil, nil, [:reverse], nil, nil, nil, nil, []]]
+      bar.style_map.flatten.should == [[:reverse, nil, :normal, nil, nil, nil, :reverse, nil, nil, nil, nil, :normal]]
     end
   end
 end
