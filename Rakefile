@@ -50,6 +50,11 @@ begin
     gem.email = "michael@grosser.it"
     gem.homepage = "http://github.com/grosser/#{gem.name}"
     gem.authors = ["Michael Grosser"]
+    gem.post_install_message = <<-TEXT
+
+      Ubuntu: sudo apt-get install xclip
+
+    TEXT
   end
 
   Jeweler::GemcutterTasks.new
