@@ -81,7 +81,7 @@ class Keyboard
     when 353 then :"Shift+tab"
     when ENTER then :enter # shadows Ctrl+m
     when 263, 127 then :backspace # ubuntu / mac
-    when Curses::KEY_DC then :delete
+    when Curses::KEY_DC, '^[3~' then :delete # ubuntu / mac
 
     # misc
     when 0 then :"Ctrl+space"
