@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{ruco}
-  s.version = "0.0.52"
+  s.version = "0.0.53"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Michael Grosser"]
-  s.date = %q{2011-02-24}
+  s.date = %q{2011-05-06}
   s.default_executable = %q{ruco}
   s.email = %q{michael@grosser.it}
   s.executables = ["ruco"]
@@ -64,8 +64,12 @@ Gem::Specification.new do |s|
     "spec/spec_helper.rb"
   ]
   s.homepage = %q{http://github.com/grosser/ruco}
+  s.post_install_message = %q{
+      Ubuntu: sudo apt-get install xclip
+
+}
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.4.2}
+  s.rubygems_version = %q{1.6.2}
   s.summary = %q{Commandline editor written in ruby}
   s.test_files = [
     "spec/ruco/application_spec.rb",
