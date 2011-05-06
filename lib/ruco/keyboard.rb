@@ -1,6 +1,7 @@
 require 'curses'
 
 class Keyboard
+  SWAP_DELETE = (ENV['TERM'] == 'xterm-color')
   MAX_CHAR = 255
   ENTER = 13
   ESCAPE = 27
@@ -80,8 +81,8 @@ class Keyboard
     when 9 then :tab
     when 353 then :"Shift+tab"
     when ENTER then :enter # shadows Ctrl+m
-    when 263, 127 then :backspace # ubuntu / mac
-    when Curses::KEY_DC, '^[3~' then :delete # ubuntu / mac
+    when 263, (SWAP_DELETE ? Curses::KEY_DC : 127) then :backspace
+    when '^[3~', (SWAP_DELETE ? 127 : Curses::KEY_DC) then :delete
 
     # misc
     when 0 then :"Ctrl+space"
