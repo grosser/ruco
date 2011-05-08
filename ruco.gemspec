@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{ruco}
-  s.version = "0.0.54"
+  s.version = "0.0.55"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Michael Grosser"]
@@ -65,7 +65,8 @@ Gem::Specification.new do |s|
   ]
   s.homepage = %q{http://github.com/grosser/ruco}
   s.post_install_message = %q{
-      Ubuntu: sudo apt-get install xclip
+      Mac: shift/ctrl + arrow-keys only work in iterm (not Terminal.app)
+      Ubuntu: sudo apt-get install xclip # to use the clipboard
 
 }
   s.require_paths = ["lib"]
