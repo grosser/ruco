@@ -52,7 +52,8 @@ begin
     gem.authors = ["Michael Grosser"]
     gem.post_install_message = <<-TEXT
 
-      Ubuntu: sudo apt-get install xclip
+      Mac: shift/ctrl + arrow-keys only work in iterm (not Terminal.app)
+      Ubuntu: sudo apt-get install xclip # to use the clipboard
 
     TEXT
   end
