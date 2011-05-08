@@ -81,9 +81,9 @@ TIPS
 
 TODO
 =====
- - check writeable status every x seconds (e.g. in background) -> faster while typing
+ - check writable status every x seconds (e.g. in background) -> faster while typing
  - search help e.g. 'Nothing found' '#4 of 6 hits' 'no more hits, start from beginning ?'
- - hightlight current work when reopening search (so typing replaces it)
+ - highlight current work when reopening search (so typing replaces it)
  - align soft-tabs
  - highlight tabs (e.g. strange character or reverse/underline/color)
  - big warning when editing a not-writable file

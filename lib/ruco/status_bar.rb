@@ -9,16 +9,12 @@ module Ruco
       "Ruco #{Ruco::VERSION} -- #{@editor.file}#{change_indicator}#{writable_indicator}"
     end
 
-    def format
-      Curses::A_REVERSE
-    end
-
     def change_indicator
       @editor.modified? ? '*' : ' '
     end
 
     def writable_indicator
-      @writeable ||= begin
+      @writable ||= begin
         writable = (not File.exist?(@editor.file) or system("test -w #{@editor.file}"))
         writable ? ' ' : '!'
       end
