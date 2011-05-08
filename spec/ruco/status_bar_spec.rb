@@ -32,4 +32,8 @@ describe Ruco::StatusBar do
     editor.stub!(:file).and_return '/etc/sudoers'
     bar.view.should include('!')
   end
+
+  it "shows line and column and right side" do
+    bar.view.should =~ /1:1$/
+  end
 end

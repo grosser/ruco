@@ -6,7 +6,8 @@ module Ruco
     end
 
     def view
-      "Ruco #{Ruco::VERSION} -- #{@editor.file}#{change_indicator}#{writable_indicator}"
+      position = @editor.position
+      spread "Ruco #{Ruco::VERSION} -- #{@editor.file}#{change_indicator}#{writable_indicator}", "#{position.line + 1}:#{position.column + 1}"
     end
 
     def change_indicator
@@ -18,6 +19,13 @@ module Ruco
         writable = (not File.exist?(@editor.file) or system("test -w #{@editor.file}"))
         writable ? ' ' : '!'
       end
+    end
+
+    private
+
+    def spread(left, right)
+      empty = [@options[:columns] - left.size - right.size, 0].max
+      "#{left}#{' ' * empty}#{right}"
     end
   end
 end

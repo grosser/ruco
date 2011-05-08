@@ -123,11 +123,11 @@ module Ruco
       @window.columns = columns
     end
 
-    protected
-
     def position
       Position.new(line, column)
     end
+
+    protected
 
     def position_for_index(index)
       jump = content.slice(0, index).to_s.naive_split("\n")

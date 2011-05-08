@@ -30,9 +30,12 @@ describe Ruco::Application do
     keys.each{|k| app.key k }
   end
 
+  def status(line=1)
+    "Ruco #{Ruco::VERSION} -- spec/temp.txt  #{line}:1\n"
+  end
+
   let(:rucorc){ 'spec/.ruco.rb' }
   let(:app){ Ruco::Application.new(@file, :lines => 5, :columns => 10, :rc => rucorc) }
-  let(:status){ "Ruco #{Ruco::VERSION} -- spec/temp.txt  \n" }
   let(:command){ "^W Exit" }
 
   it "renders status + editor + command" do
@@ -46,7 +49,7 @@ describe Ruco::Application do
     app.key(:enter)
     app.key('2')
     app.key(:enter)
-    app.view.should == "#{status.sub('.txt ','.txt*')}2\n\n\n#{command}"
+    app.view.should == "#{status(3).sub('.txt ','.txt*')}2\n\n\n#{command}"
   end
 
   it "does not enter key-codes" do
@@ -59,7 +62,7 @@ describe Ruco::Application do
     app.key(:"Ctrl+g") # go to line
     app.key('2') # 2
     app.key(:enter)
-    app.view.should == "#{status}123\n456\n789\n#{command}"
+    app.view.should == "#{status(2)}123\n456\n789\n#{command}"
     app.cursor.should == [2,0] # 0 offset + 1 for statusbar
   end
 
