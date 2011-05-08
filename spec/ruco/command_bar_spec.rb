@@ -75,6 +75,15 @@ describe Ruco::CommandBar do
       bar.view.should == "Find: abc"
     end
 
+    it "selects last value on cache-hit so I can type for new value" do
+      bar.ask('Find: ', :cache => true){}
+      bar.insert('abc')
+      bar.insert("\n")
+      bar.ask('Find: ', :cache => true){}
+      bar.cursor.column.should == 9
+      bar.text_in_selection.should == 'abc'
+    end
+
     it "gets reset when starting a new question" do
       bar.ask('Find: '){}
       bar.insert('123')

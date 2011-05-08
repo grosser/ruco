@@ -65,7 +65,11 @@ module Ruco
     def cached_form_if(cache, question)
       if cache
         new_form = yield
-        new_form.insert(@forms_cache[question].value) if @forms_cache[question]
+        if @forms_cache[question]
+          new_form.insert(@forms_cache[question].value)
+          new_form.move(:to, 0,0)
+          new_form.selecting{ move(:to_eol) }
+        end
         @forms_cache[question] = new_form
       else
         yield
