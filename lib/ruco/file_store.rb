@@ -1,5 +1,5 @@
 require "digest/md5"
-require "fileutils.rb"
+require "fileutils"
 
 module Ruco
   class FileStore
