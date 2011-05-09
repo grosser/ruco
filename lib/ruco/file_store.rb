@@ -1,4 +1,5 @@
 require "digest/md5"
+require "fileutils.rb"
 
 module Ruco
   class FileStore
@@ -8,7 +9,7 @@ module Ruco
     end
 
     def set(key, value)
-      `mkdir -p #{@folder}` unless File.exist? @folder
+      FileUtils.mkdir_p @folder unless File.exist? @folder
       File.write(file(key), serialize(value))
       cleanup
     end
