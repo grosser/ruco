@@ -15,11 +15,11 @@ describe Ruco::Application do
   end
 
   def write(content)
-    File.open(@file,'w'){|f| f.write(content) }
+    File.open(@file,'wb'){|f| f.write(content) }
   end
 
   def read
-    File.read(@file)
+    File.binary_read(@file)
   end
 
   def editor_part(view)

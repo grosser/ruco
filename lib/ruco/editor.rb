@@ -19,7 +19,7 @@ module Ruco
         raise "#{@file} is larger than 1MB, did you really want to open that with Ruco?"
       end
 
-      content = (File.exist?(@file) ? File.read(@file) : '')
+      content = (File.exist?(@file) ? File.binary_read(@file) : '')
       content.tabs_to_spaces! if @options[:convert_tabs]
 
       # cleanup newline formats
@@ -51,7 +51,7 @@ module Ruco
       lines << '' if @options[:blank_line_before_eof_on_save] and lines.last.to_s !~ /^\s*$/
       content = lines * @newline
 
-      File.open(@file,'w'){|f| f.write(content) }
+      File.open(@file,'wb'){|f| f.write(content) }
       @saved_content = content.gsub(/\r?\n/, "\n")
 
       true

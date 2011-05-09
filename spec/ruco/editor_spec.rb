@@ -2,11 +2,11 @@ require File.expand_path('spec/spec_helper')
 
 describe Ruco::Editor do
   def write(content)
-    File.open(@file,'w'){|f| f.write(content) }
+    File.open(@file,'wb'){|f| f.write(content) }
   end
 
   def read
-    File.read(@file)
+    File.binary_read(@file)
   end
 
   let(:editor){
@@ -790,14 +790,14 @@ describe Ruco::Editor do
       write('xxx')
       editor.insert('a')
       editor.save.should == true
-      File.read(@file).should == 'axxx'
+      File.binary_read(@file).should == 'axxx'
     end
 
     it 'creates the file' do
       `rm #{@file}`
       editor.insert('a')
       editor.save.should == true
-      File.read(@file).should == 'a'
+      File.binary_read(@file).should == 'a'
     end
 
     it 'does not crash when it cannot save a file' do

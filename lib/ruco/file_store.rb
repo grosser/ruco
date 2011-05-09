@@ -16,7 +16,7 @@ module Ruco
 
     def get(key)
       file = file(key)
-      deserialize File.read(file) if File.exist?(file)
+      deserialize File.binary_read(file) if File.exist?(file)
     end
 
     private

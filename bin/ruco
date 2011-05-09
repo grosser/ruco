@@ -107,7 +107,7 @@ def debug_key(key)
 end
 
 def log(stuff)
-  File.open('ruco.log','a'){|f| f.puts stuff }
+  File.open('ruco.log','ab'){|f| f.puts stuff }
 end
 
 @options = parse_options
