@@ -6,7 +6,7 @@ module Ruco
       @options = options
       @stack = [@options.delete(:state)]
       @timeout = options.delete(:timeout) || 0
-      timeout!
+      clear_timeout
       @position = 0
     end
 
@@ -19,23 +19,26 @@ module Ruco
       remove_undone_states
       if merge_timeout?
         @position += 1
-        @last_merge = Time.now.to_f
+        timeout!
       end
       @stack[@position] = state
       limit_stack
     end
 
     def undo
-      timeout!
+      clear_timeout
       @position = [@position - 1, 0].max
     end
 
     def redo
-      timeout!
+      clear_timeout
       @position = [@position + 1, @stack.size - 1].min
     end
 
     private
+    def clear_timeout
+      @last_merge = 0
+    end
 
     def remove_undone_states
       @stack.slice!(@position + 1, 9999999)
@@ -55,11 +58,11 @@ module Ruco
     end
 
     def timeout!
-      @last_merge = Time.now.to_f - @timeout
+      @last_merge = Time.now.to_f
     end
 
     def merge_timeout?
-      (Time.now.to_f - @last_merge) > @timeout
+      (Time.now.to_f - @last_merge) >= @timeout # if timeout is 0, then it should always create a new state
     end
   end
 end
