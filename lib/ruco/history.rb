@@ -55,7 +55,7 @@ module Ruco
     end
 
     def timeout!
-      @last_merge = Time.now.to_f - @timeout
+      @last_merge = 0
     end
 
     def merge_timeout?
