@@ -20,7 +20,7 @@ module Ruco
     end
 
     def insert(text)
-      @text_field.insert(text.gsub("\n",''))
+      @text_field.insert(text.gsub("\n",'')) unless text == "\n"
       @submit.call(@text_field.value) if text.include?("\n")
     end
 

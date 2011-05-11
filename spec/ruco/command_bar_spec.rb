@@ -84,6 +84,16 @@ describe Ruco::CommandBar do
       bar.text_in_selection.should == 'abc'
     end
 
+    it "can re-find when reopening the find bar" do
+      @results = []
+      bar.ask('Find: ', :cache => true){|r| @results << r }
+      bar.insert('abc')
+      bar.insert("\n")
+      bar.ask('Find: ', :cache => true){|r| @results << r }
+      bar.insert("\n")
+      @results.should == ["abc","abc"]
+    end
+
     it "gets reset when starting a new question" do
       bar.ask('Find: '){}
       bar.insert('123')
