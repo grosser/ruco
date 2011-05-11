@@ -218,6 +218,8 @@ module Ruco
       action(:redo){ @editor.redo if @focused == @editor }
       action(:move_line_up){ @editor.move_line(-1) if @focused == @editor }
       action(:move_line_down){ @editor.move_line(1) if @focused == @editor }
+
+      action(:insert_hash_rocket){ @editor.insert(' => ') }
     end
 
     def setup_keys
@@ -231,6 +233,7 @@ module Ruco
       bind :"Ctrl+b", :select_mode
       bind :"Ctrl+a", :select_all
       bind :"Ctrl+d", :delete_line
+      bind :"Ctrl+l", :insert_hash_rocket
       bind :"Ctrl+x", :cut
       bind :"Ctrl+c", :copy
       bind :"Ctrl+v", :paste

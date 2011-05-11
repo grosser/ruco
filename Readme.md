@@ -73,8 +73,8 @@ Customize
 TIPS
 ====
  - [Mac] arow-keys + Shift/Alt does not work in default terminal (use iTerm)
- - [Tabs] Ruco does not like tabs. Existing tabs are displayed as ' ' and pressing tab inserts 2*' '
- - [RVM] `alias r="rvm ree exec ruco"` and you only have to install ruco once
+ - [Tabs] Ruco does not like tabs. Existing tabs are displayed as ' ' and pressing tab inserts 2*space
+ - [RVM] `alias r="rvm 1.9.2 exec ruco"` and you only have to install ruco once
  - [Ruby1.9] Unicode support -> install libncursesw5-dev before installing ruby (does not work for 1.8)
  - [ssh vs clipboard] access your desktops clipboard by installing `xauth` on the server and then using `ssh -X`
  - [Alt key] if Alt does not work try your Meta/Win/Cmd key

@@ -165,6 +165,14 @@ describe Ruco::Application do
     end
   end
 
+  describe 'insert hash rocket' do
+    it "inserts an amazing hash rocket" do
+      write("")
+      app.key(:"Ctrl+l")
+      editor_part(app.view).should == " => \n\n"
+    end
+  end
+
   describe 'Find and replace' do
     it "stops when nothing is found" do
       write 'abc'
