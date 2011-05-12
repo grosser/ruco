@@ -20,6 +20,7 @@ Usage:
 Options:
 BANNER
     opts.on("-c", "--convert-tabs","Convert tabs to spaces") { options[:convert_tabs] = true }
+    opts.on("-u", "--undo-stack-size SIZE","Maximum size of the undo stack.  0 allows for a complete undo stack.") {|size| options[:undo_stack_size] = size.to_i }
     opts.on("--debug-cache","Show caching in action") { options[:debug_cache] = true }
     opts.on("--debug-keys", "Show pressed keys") { options[:debug_keys] = true }
     opts.on("-v", "--version","Show Version"){
@@ -116,6 +117,7 @@ require 'ruco'
 
 app = Ruco::Application.new(ARGV[0],
   :convert_tabs => @options[:convert_tabs],
+  :undo_stack_size => @options[:undo_stack_size],
   :lines => Curses.stdscr.maxy, :columns => Curses.stdscr.maxx
 )
 

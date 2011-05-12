@@ -114,4 +114,15 @@ describe Ruco::History do
       history.state.should == {:x => 3}
     end
   end
+  
+  describe 'with no entry limit' do
+    let(:history){ Ruco::History.new(:state => {:x => 1}, :track => [:x], :entries => 0, :timeout => 0.1) }
+    
+    it "should track unlimited states" do
+      200.times do |i|
+        history.add(:test, :x => i+5)
+      end
+      history.stack.length.should == 201
+    end
+  end
 end

@@ -5,6 +5,7 @@ module Ruco
 
     def initialize(options)
       @options = options
+      @options[:entries] ||= 100
       @timeout = options.delete(:timeout) || 0
       
       @stack = [{:mutable => false, :created_at => 0, :type => :initial, :state => @options.delete(:state)}]
@@ -61,6 +62,7 @@ module Ruco
     end
 
     def limit_stack
+      return if @options[:entries] == 0
       to_remove = @stack.size - @options[:entries]
       return if to_remove < 1
       @stack.slice!(0, to_remove)
