@@ -1,6 +1,8 @@
 module Ruco
   class Editor
     module History
+      attr_reader :history
+      
       def initialize(content, options)
         super(content, options)
         @history = Ruco::History.new((options[:history]||{}).reverse_merge(:state => state, :track => [:content], :entries => 100, :timeout => 2))
@@ -15,10 +17,9 @@ module Ruco
         @history.redo
         self.state = @history.state
       end
-
-      def view
-        @history.add(state)
-        super
+      
+      def save_state(type)
+        @history.add(type, state)
       end
     end
   end

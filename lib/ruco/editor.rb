@@ -2,10 +2,11 @@ module Ruco
   class Editor
     attr_reader :file
     attr_reader :text_area
+    attr_reader :history
     private :text_area
     delegate :view, :style_map, :cursor, :position,
       :insert, :indent, :unindent, :delete, :delete_line,
-      :redo, :undo,
+      :redo, :undo, :save_state,
       :selecting, :selection, :text_in_selection, :reset,
       :move, :resize, :move_line,
       :to => :text_area
@@ -29,6 +30,7 @@ module Ruco
 
       @saved_content = content
       @text_area = EditorArea.new(content, @options)
+      @history = @text_area.history
       restore_session
     end
 
