@@ -22,8 +22,13 @@ module Ruco
     private
 
     def cleanup
-      delete = `ls -t #{@folder}`.split("\n")[@options[:keep]..-1] || []
-      delete.each{|f| File.delete("#{@folder}/#{f}") }
+      entries = Dir.entries(@folder).map do |entry|
+        file = File.join(@folder, entry)
+        {:file => file, :mtime => File.mtime(file)}
+      end
+      entries = entries.sort{|a, b| b[:mtime] <=> a[:mtime]}.map{|entry| entry[:file]}
+      delete = entries[@options[:keep]..-1] || []
+      delete.each{|f| File.delete(f) }
     end
 
     def file(key)
