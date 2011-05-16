@@ -56,9 +56,6 @@ module Ruco
     
     def merge?(state)
       top = @stack[@position]
-      #puts
-      #puts @stack.inspect
-      #puts [state, type(state), top, top[:mutable] && top[:type] == type(state) && top[:created_at]+@timeout > Time.now.to_f].inspect
       top[:mutable] &&
         top[:type] == type(state) &&
         top[:created_at]+@timeout > Time.now.to_f
