@@ -26,7 +26,7 @@ module Ruco
         file = File.join(@folder, entry)
         {:file => file, :mtime => File.mtime(file)}
       end
-      entries = entries.sort{|a, b| b[:mtime] <=> a[:mtime]}.map{|entry| entry[:file]}
+      entries = entries.reject{|entry| File.directory? entry[:file]}.sort{|a, b| a[:mtime] <=> b[:mtime]}.map{|entry| entry[:file]}
       delete = entries[@options[:keep]..-1] || []
       delete.each{|f| File.delete(f) }
     end
