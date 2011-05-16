@@ -18,8 +18,9 @@ module Ruco
         self.state = @history.state
       end
       
-      def save_state(type)
-        @history.add(type, state)
+      def view
+        @history.add(state)
+        super
       end
     end
   end

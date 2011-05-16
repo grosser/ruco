@@ -16,19 +16,16 @@ module Ruco
       @stack[@position][:state]
     end
 
-    # type should be a symbol denoting the type of event that triggered the modification
-    # types of :insert and :delete will be merged with subsequent edits until either:
-    #   @timeout seconds pass  or
-    #   add is called with a different value for type
-    def add(type, state)
+    def add(state)
       return unless tracked_field_changes?(state)
       remove_undone_states
-      unless merge? type
+      unless merge? state
         # can no longer modify previous states
         @stack[@position][:mutable] = false
         
+        state_type = type(state)
         @position += 1
-        @stack[@position] = {:mutable => (type == :insert || type == :delete), :created_at => Time.now.to_f, :type => type}
+        @stack[@position] = {:mutable => true, :type => state_type, :created_at => Time.now.to_f}
       end
       @stack[@position][:state] = state
       limit_stack
@@ -43,11 +40,27 @@ module Ruco
     end
 
     private
-    def merge?(type)
+    def type(state)
+      @options[:track].each do |field|
+        if state[field].is_a?(String) && @stack[@position][:state][field].is_a?(String)
+          diff = state[field].length - @stack[@position][:state][field].length
+          if diff > 0
+            return :insert
+          elsif diff < 0
+            return :delete
+          end
+        end
+      end
+      nil
+    end
+    
+    def merge?(state)
       top = @stack[@position]
+      #puts
+      #puts @stack.inspect
+      #puts [state, type(state), top, top[:mutable] && top[:type] == type(state) && top[:created_at]+@timeout > Time.now.to_f].inspect
       top[:mutable] &&
-        (type == :insert || type == :delete) &&
-        type == top[:type] &&
+        top[:type] == type(state) &&
         top[:created_at]+@timeout > Time.now.to_f
     end
 

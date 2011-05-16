@@ -756,6 +756,7 @@ describe Ruco::Editor do
     it "does not overwrite the initial state" do
       write("a")
       editor.insert("b")
+      editor.view # trigger save point
       stack = editor.history.stack
       stack.length.should == 2
       stack[0][:state][:content].should == "a"
@@ -765,6 +766,7 @@ describe Ruco::Editor do
       editor.history.position.should == 0
       
       editor.insert("c")
+      editor.view # trigger save point
       stack.length.should == 2
       stack[0][:state][:content].should == "a"
       stack[1][:state][:content].should == "ca"
@@ -773,9 +775,11 @@ describe Ruco::Editor do
     it "can undo an action" do
       write("a")
       editor.insert("b")
+      editor.view # trigger save point
       future = Time.now + 10
       Time.stub!(:now).and_return future
       editor.insert("c")
+      editor.view # trigger save point
       editor.undo
       editor.view.should == "ba\n\n"
       editor.cursor.should == [0,1]
@@ -783,8 +787,10 @@ describe Ruco::Editor do
 
     it "removes selection on undo" do
       editor.insert('a')
+      editor.view # trigger save point
       editor.selecting{move(:to, 1,1)}
       editor.selection.should_not == nil
+      editor.view # trigger save point
       editor.undo
       editor.selection.should == nil
     end

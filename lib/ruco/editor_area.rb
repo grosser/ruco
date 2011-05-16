@@ -5,20 +5,9 @@ module Ruco
     include Ruco::Editor::LineNumbers
     include Ruco::Editor::History
 
-    def insert(text)
-      super
-      save_state :insert
-    end
-
-    def delete(count)
-      super
-      save_state :delete
-    end
-
     def delete_line
       lines.slice!(line, 1)
       sanitize_position
-      save_state :delete
     end
 
     def move_line(direction)
@@ -29,7 +18,6 @@ module Ruco
       lines[old].leading_whitespace = lines[new].leading_whitespace
       lines[old], lines[new] = lines[new], lines[old]
       @line += direction
-      save_state :both
     end
 
     def indent
@@ -37,7 +25,6 @@ module Ruco
         lines[line].insert(0, ' ' * Ruco::TAB_SIZE)
       end
       adjust_to_indentation Ruco::TAB_SIZE
-      save_state :insert
     end
 
     def unindent
@@ -49,7 +36,6 @@ module Ruco
       end
 
       adjust_to_indentation -removed.first, -removed.last
-      save_state :insert
     end
 
     def state
