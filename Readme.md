@@ -1,4 +1,4 @@
-Simple, extendable, test-driven commandline editor written in ruby.
+Simple, extendable, test-driven commandline editor written in ruby, for Linux/Mac/Windows.
 
 Features:
 
@@ -97,8 +97,13 @@ TODO
  - add auto-confirm to 'replace?' dialog -> type s == skip, no enter needed
  - 1.8: unicode support <-> already finished but unusable due to Curses (see encoding branch)
 
-Author
-======
+Authors
+=======
+
+### [Contributors](http://github.com/grosser/ruco/contributors)
+ - [AJ Palkovic](https://github.com/ajpalkovic)
+
+
 [Michael Grosser](http://grosser.it)<br/>
 grosser.michael@gmail.com<br/>
 Hereby placed under public domain, do what you want, just do not hold me accountable...
