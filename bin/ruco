@@ -20,6 +20,7 @@ Usage:
 Options:
 BANNER
     opts.on("-c", "--convert-tabs","Convert tabs to spaces") { options[:convert_tabs] = true }
+    opts.on("-u", "--undo-stack-size SIZE","Maximum size of the undo stack.  0 allows for a complete undo stack.") {|size| options[:undo_stack_size] = size.to_i }
     opts.on("--debug-cache","Show caching in action") { options[:debug_cache] = true }
     opts.on("--debug-keys", "Show pressed keys") { options[:debug_keys] = true }
     opts.on("-v", "--version","Show Version"){
@@ -55,6 +56,7 @@ def init_screen
   begin
     yield
   ensure
+    Curses.clear # needed to clear the menu/status bar on windows
     Curses.close_screen
   end
 end
@@ -107,7 +109,7 @@ def debug_key(key)
 end
 
 def log(stuff)
-  File.open('ruco.log','a'){|f| f.puts stuff }
+  File.open('ruco.log','ab'){|f| f.puts stuff }
 end
 
 @options = parse_options
@@ -116,6 +118,7 @@ require 'ruco'
 
 app = Ruco::Application.new(ARGV[0],
   :convert_tabs => @options[:convert_tabs],
+  :undo_stack_size => @options[:undo_stack_size],
   :lines => Curses.stdscr.maxy, :columns => Curses.stdscr.maxx
 )
 

@@ -15,11 +15,11 @@ describe Ruco::Application do
   end
 
   def write(content)
-    File.open(@file,'w'){|f| f.write(content) }
+    File.open(@file,'wb'){|f| f.write(content) }
   end
 
   def read
-    File.read(@file)
+    File.binary_read(@file)
   end
 
   def editor_part(view)
@@ -110,7 +110,7 @@ describe Ruco::Application do
     it "asks before closing changed file -- escape == no" do
       app.key('a')
       app.key(:"Ctrl+w")
-      app.view.split("\n").last.should include("Loose changes")
+      app.view.split("\n").last.should include("Lose changes")
       app.key(:escape).should_not == :quit
       app.key("\n").should_not == :quit
     end
@@ -118,7 +118,7 @@ describe Ruco::Application do
     it "asks before closing changed file -- enter == yes" do
       app.key('a')
       app.key(:"Ctrl+w")
-      app.view.split("\n").last.should include("Loose changes")
+      app.view.split("\n").last.should include("Lose changes")
       app.key(:enter).should == :quit
     end
   end

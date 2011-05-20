@@ -8,7 +8,7 @@ end
 
 task :run do
   file = 'spec/temp.txt'
-  File.open(file, 'w'){|f|f.write("12345\n1234\n#{'abcdefg'*20}\n123")}
+  File.open(file, 'wb'){|f|f.write("12345\n1234\n#{'abcdefg'*20}\n123")}
   exec "./bin/ruco #{file}"
 end
 

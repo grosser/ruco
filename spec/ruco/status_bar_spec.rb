@@ -29,8 +29,11 @@ describe Ruco::StatusBar do
   end
 
   it "indicates not writable" do
-    editor.stub!(:file).and_return '/etc/sudoers'
-    bar.view.should include('!')
+    # this test will always fail on Windows with cygwin because of how cygwin sets up permissions
+    unless RUBY_PLATFORM =~ /mingw/
+      editor.stub!(:file).and_return '/etc/sudoers'
+      bar.view.should include('!')
+    end
   end
 
   it "shows line and column and right side" do

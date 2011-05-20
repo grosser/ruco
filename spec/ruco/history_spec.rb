@@ -74,6 +74,20 @@ describe Ruco::History do
     history.undo
     history.state.should == {:x => 3}
   end
+  
+  describe 'with strings' do
+    let(:history){ Ruco::History.new(:state => {:x => 'a'}, :track => [:x], :timeout => 0.1) }
+    
+    it "triggers a new state on insertion and deletion" do
+      %w{ab abc ab a a}.each{|state| history.add(:x => state)}
+      
+      history.undo
+      history.state.should == {:x => "abc"}
+      
+      history.undo
+      history.state.should == {:x => "a"}
+    end
+  end
 
   describe 'with timeout' do
     let(:history){ Ruco::History.new(:state => {:x => 1}, :track => [:x], :entries => 3, :timeout => 0.1) }
@@ -114,4 +128,16 @@ describe Ruco::History do
       history.state.should == {:x => 3}
     end
   end
+  
+  describe 'with no entry limit' do
+    let(:history){ Ruco::History.new(:state => {:x => 1}, :track => [:x], :entries => 0, :timeout => 0) }
+    
+    it "should track unlimited states" do
+      200.times do |i|
+        history.add(:x => i+5)
+      end
+      history.stack.length.should == 201
+    end
+  end
+
 end

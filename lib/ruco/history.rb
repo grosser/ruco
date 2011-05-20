@@ -1,41 +1,65 @@
 module Ruco
   class History
     attr_accessor :timeout
+    attr_reader :stack, :position
 
     def initialize(options)
       @options = options
-      @stack = [@options.delete(:state)]
+      @options[:entries] ||= 100
       @timeout = options.delete(:timeout) || 0
-      timeout!
+
+      @stack = [{:mutable => false, :created_at => 0, :type => :initial, :state => @options.delete(:state)}]
       @position = 0
     end
 
     def state
-      @stack[@position]
+      @stack[@position][:state]
     end
 
     def add(state)
       return unless tracked_field_changes?(state)
       remove_undone_states
-      if merge_timeout?
+      unless merge? state
+        # can no longer modify previous states
+        @stack[@position][:mutable] = false
+
+        state_type = type(state)
         @position += 1
-        @last_merge = Time.now.to_f
+        @stack[@position] = {:mutable => true, :type => state_type, :created_at => Time.now.to_f}
       end
-      @stack[@position] = state
+      @stack[@position][:state] = state
       limit_stack
     end
 
     def undo
-      timeout!
       @position = [@position - 1, 0].max
     end
 
     def redo
-      timeout!
       @position = [@position + 1, @stack.size - 1].min
     end
 
     private
+    def type(state)
+      @options[:track].each do |field|
+        if state[field].is_a?(String) && @stack[@position][:state][field].is_a?(String)
+          diff = state[field].length - @stack[@position][:state][field].length
+          if diff > 0
+            return :insert
+          elsif diff < 0
+            return :delete
+          end
+        end
+      end
+      nil
+    end
+
+    def merge?(state)
+      top = @stack[@position]
+      top[:mutable] &&
+        top[:type] == type(state) &&
+        top[:created_at]+@timeout > Time.now.to_f
+    end
 
     def remove_undone_states
       @stack.slice!(@position + 1, 9999999)
@@ -48,18 +72,11 @@ module Ruco
     end
 
     def limit_stack
+      return if @options[:entries] == 0
       to_remove = @stack.size - @options[:entries]
       return if to_remove < 1
       @stack.slice!(0, to_remove)
       @position -= to_remove
-    end
-
-    def timeout!
-      @last_merge = 0
-    end
-
-    def merge_timeout?
-      (Time.now.to_f - @last_merge) > @timeout
     end
   end
 end

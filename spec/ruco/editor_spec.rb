@@ -2,11 +2,11 @@ require File.expand_path('spec/spec_helper')
 
 describe Ruco::Editor do
   def write(content)
-    File.open(@file,'w'){|f| f.write(content) }
+    File.open(@file,'wb'){|f| f.write(content) }
   end
 
   def read
-    File.read(@file)
+    File.binary_read(@file)
   end
 
   let(:editor){
@@ -753,6 +753,25 @@ describe Ruco::Editor do
   end
 
   describe 'history' do
+    it "does not overwrite the initial state" do
+      write("a")
+      editor.insert("b")
+      editor.view # trigger save point
+      stack = editor.history.stack
+      stack.length.should == 2
+      stack[0][:state][:content].should == "a"
+      stack[1][:state][:content].should == "ba"
+      
+      editor.undo
+      editor.history.position.should == 0
+      
+      editor.insert("c")
+      editor.view # trigger save point
+      stack.length.should == 2
+      stack[0][:state][:content].should == "a"
+      stack[1][:state][:content].should == "ca"
+    end
+    
     it "can undo an action" do
       write("a")
       editor.insert("b")
@@ -768,6 +787,7 @@ describe Ruco::Editor do
 
     it "removes selection on undo" do
       editor.insert('a')
+      editor.view # trigger save point
       editor.selecting{move(:to, 1,1)}
       editor.selection.should_not == nil
       editor.view # trigger save point
@@ -777,7 +797,6 @@ describe Ruco::Editor do
 
     it "sets modified on undo" do
       editor.insert('a')
-      editor.view # trigger save point
       editor.save
       editor.modified?.should == false
       editor.undo
@@ -790,14 +809,14 @@ describe Ruco::Editor do
       write('xxx')
       editor.insert('a')
       editor.save.should == true
-      File.read(@file).should == 'axxx'
+      File.binary_read(@file).should == 'axxx'
     end
 
     it 'creates the file' do
       `rm #{@file}`
       editor.insert('a')
       editor.save.should == true
-      File.read(@file).should == 'a'
+      File.binary_read(@file).should == 'a'
     end
 
     it 'does not crash when it cannot save a file' do

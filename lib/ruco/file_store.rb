@@ -1,4 +1,5 @@
 require "digest/md5"
+require "fileutils"
 
 module Ruco
   class FileStore
@@ -8,21 +9,26 @@ module Ruco
     end
 
     def set(key, value)
-      `mkdir -p #{@folder}` unless File.exist? @folder
+      FileUtils.mkdir_p @folder unless File.exist? @folder
       File.write(file(key), serialize(value))
       cleanup
     end
 
     def get(key)
       file = file(key)
-      deserialize File.read(file) if File.exist?(file)
+      deserialize File.binary_read(file) if File.exist?(file)
     end
 
     private
 
     def cleanup
-      delete = `ls -t #{@folder}`.split("\n")[@options[:keep]..-1] || []
-      delete.each{|f| File.delete("#{@folder}/#{f}") }
+      entries = Dir.entries(@folder).map do |entry|
+        file = File.join(@folder, entry)
+        {:file => file, :mtime => File.mtime(file)}
+      end
+      entries = entries.reject{|entry| File.directory? entry[:file]}.sort{|a, b| a[:mtime] <=> b[:mtime]}.map{|entry| entry[:file]}
+      delete = entries[@options[:keep]..-1] || []
+      delete.each{|f| File.delete(f) }
     end
 
     def file(key)
