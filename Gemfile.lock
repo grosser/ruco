@@ -25,6 +25,7 @@ PLATFORMS
 
 DEPENDENCIES
   clipboard (>= 0.9.4)
+  ffi
   jeweler
   rake
   rspec (~> 2)
