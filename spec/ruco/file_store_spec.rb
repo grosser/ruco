@@ -1,6 +1,10 @@
 require File.expand_path('spec/spec_helper')
 
 describe Ruco::FileStore do
+  def mark_all_as_old
+    store.send(:entries).each{|e| File.utime(1,1,e) }
+  end
+
   before do
     @folder = 'spec/sessions'
     `rm -rf #{@folder}`
@@ -19,43 +23,22 @@ describe Ruco::FileStore do
 
   it "can store :keep keys" do
     store.set('xxx', 1)
-    sleep 1
-    store.set('yyy', 2)
-    sleep 1
-    store.set('zzz', 3)
-    sleep 1
-    store.set('aaa', 4)
-    store.get('xxx').should == nil
-  end
-
-  it "drops least recently used key" do
-    store.set('xxx', 1)
-    sleep(1)
     store.set('yyy', 1)
-    sleep(1)
-    store.set('xxx', 1)
-    sleep(1)
     store.set('zzz', 1)
-    sleep(1)
-    store.set('aaa', 1)
-    sleep(1)
-    store.get('xxx').should == 1
-    store.get('yyy').should == nil
+    mark_all_as_old
+    store.set('aaa', 2)
+    store.get('aaa').should == 2
+    ['xxx','yyy','zzz'].map{|f| store.get(f) }.should =~ [1,1,nil]
   end
 
   it "does not drop if used multiple times" do
     store.set('xxx', 1)
-    sleep(1)
     store.set('yyy', 1)
-    sleep(1)
     store.set('zzz', 1)
-    sleep(1)
     store.set('zzz', 1)
-    sleep(1)
+    mark_all_as_old
     store.set('zzz', 1)
-    sleep(1)
     store.set('zzz', 1)
-    sleep(1)
     store.get('xxx').should == 1
   end
 end

@@ -21,9 +21,13 @@ module Ruco
 
     private
 
+    def entries
+      (Dir.entries(@folder) - ['.','..']).
+        map{|entry| File.join(@folder, entry) }.
+        sort_by{|file| File.mtime(file) }
+    end
+
     def cleanup
-      entries = Dir.entries(@folder) - ['.','..']
-      entries = entries.map{|entry| File.join(@folder, entry) }.sort_by{|file| File.mtime(file) }
       delete = entries[0...-@options[:keep]] || []
       delete.each{|f| File.delete(f) }
     end
