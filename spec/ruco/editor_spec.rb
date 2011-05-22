@@ -182,8 +182,36 @@ describe Ruco::Editor do
       editor.cursor.should == [0,0]
     end
 
-    it "cannot move right of characters" do
-      editor.move(:relative, 2,6)
+    it "does not move lines when jumping right" do
+      editor.move(:relative, 1, 5)
+      editor.cursor.should == [1,4]
+    end
+
+    it "does not move lines when jumping left" do
+      editor.move(:to, 2, 2)
+      editor.move(:relative, -1, -5)
+      editor.cursor.should == [1,0]
+    end
+
+    it "moves to next line when moving right of characters" do
+      editor.move(:relative, 0, 5)
+      editor.cursor.should == [1,0]
+    end
+
+    it "moves to prev line when moving left of characters" do
+      editor.move(:relative, 1, 0)
+      editor.move(:relative, 0, -1)
+      editor.cursor.should == [0,4]
+    end
+
+    it "stays at origin when moving left" do
+      editor.move(:relative, 0, -1)
+      editor.cursor.should == [0,0]
+    end
+
+    it "stays at eof when moving right" do
+      editor.move(:to, 2, 4)
+      editor.move(:relative, 0, 1)
       editor.cursor.should == [2,4]
     end
 
