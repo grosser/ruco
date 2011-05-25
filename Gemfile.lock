@@ -24,7 +24,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  clipboard (>= 0.9.4)
+  clipboard (>= 0.9.8)
   ffi
   jeweler
   rake
