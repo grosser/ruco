@@ -378,4 +378,18 @@ describe Ruco::Application do
       end
     end
   end
+  describe "opening a file the user cannot write to" do
+    before do
+      `chmod -w #{@file}`
+       @app = Ruco::Application.new(@file, :lines => 5, :columns => 10, :rc => rucorc)
+    end
+
+    after do
+      `chmod +w #{@file}`
+    end
+
+    it "displays a warning" do
+      app.view.should include("WARNING: #{@file} is not writable!")
+    end
+  end
 end
