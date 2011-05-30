@@ -72,6 +72,16 @@ module Ruco
         @focused.selecting do
           move(:relative, 0, -1)
         end
+      when :"Ctrl+Shift+left" then
+        @focused.selecting do
+          move(:jump, :left)
+        end
+
+      when :"Ctrl+Shift+right" then
+        @focused.selecting do
+          move(:jump, :right)
+        end
+
 
       # modify
       when :tab then
