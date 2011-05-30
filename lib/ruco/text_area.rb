@@ -29,24 +29,7 @@ module Ruco
     def move(where, *args)
       case where
       when :relative
-        line_change, column_change = args
-        new_column = column + column_change
-
-        # user moves right on end of line -> next line
-        if line_change == 0 and line != lines.size - 1 and new_column > current_line.size
-          self.column = 0
-          self.line += 1
-
-        # user moves left on start of line -> prev line
-        elsif line_change == 0 and line != 0 and new_column <= 0
-          self.line -= 1
-          self.column = current_line.size
-
-        # normal movement
-        else
-          self.line += line_change
-          self.column += column_change
-        end
+        move_relative(*args)
       when :to then
         self.line, self.column = args
       when :to_bol then move_to_bol(*args)
@@ -178,6 +161,26 @@ module Ruco
         0
       end
       move :to_column, column
+    end
+
+    def move_relative(line_change, column_change)
+      new_column = column + column_change
+
+      # user moves right on end of line -> next line
+      if line_change == 0 and line != lines.size - 1 and new_column > current_line.size
+        self.column = 0
+        self.line += 1
+
+      # user moves left on start of line -> prev line
+      elsif line_change == 0 and line != 0 and new_column <= 0
+        self.line -= 1
+        self.column = current_line.size
+
+      # normal movement
+      else
+        self.line += line_change
+        self.column += column_change
+      end
     end
 
     def backspace(count)
