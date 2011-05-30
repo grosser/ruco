@@ -108,9 +108,7 @@ module Ruco
     end
 
     def index_for_position(position=self.position)
-      index = lines[0...position.line].join("\n").size + position.column
-      index += 1 if position.line > 0 # account for missing newline
-      index
+      lines[0...position.line].sum{|l| l.size + 1} + position.column
     end
 
     def content
