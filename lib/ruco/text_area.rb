@@ -166,18 +166,11 @@ module Ruco
     def move_relative(line_change, column_change)
       new_column = column + column_change
 
-      # user moves right on end of line -> next line
-      if line_change == 0 and line != lines.size - 1 and new_column > current_line.size
-        self.column = 0
-        self.line += 1
-
-      # user moves left on start of line -> prev line
-      elsif line_change == 0 and line != 0 and new_column <= 0
-        self.line -= 1
-        self.column = current_line.size
-
-      # normal movement
+      if line_change == 0
+        # let user wrap around start/end of line
+        move :to_index, index_for_position + column_change
       else
+        # normal movement
         self.line += line_change
         self.column += column_change
       end
