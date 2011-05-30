@@ -56,31 +56,12 @@ module Ruco
       when :"Ctrl+left" then move_with_select_mode :jump, :left
 
       # select
-      when :"Shift+down" then
-        @focused.selecting do
-          move(:relative, 1, 0)
-        end
-      when :"Shift+right"
-        @focused.selecting do
-          move(:relative, 0, 1)
-        end
-      when :"Shift+up"
-        @focused.selecting do
-          move(:relative, -1, 0)
-        end
-      when :"Shift+left" then
-        @focused.selecting do
-          move(:relative, 0, -1)
-        end
-      when :"Ctrl+Shift+left" then
-        @focused.selecting do
-          move(:jump, :left)
-        end
-
-      when :"Ctrl+Shift+right" then
-        @focused.selecting do
-          move(:jump, :right)
-        end
+      when :"Shift+down" then @focused.selecting { move(:relative, 1, 0) }
+      when :"Shift+right" then @focused.selecting { move(:relative, 0, 1) }
+      when :"Shift+up" then @focused.selecting { move(:relative, -1, 0) }
+      when :"Shift+left" then @focused.selecting { move(:relative, 0, -1) }
+      when :"Ctrl+Shift+left" then @focused.selecting{ move(:jump, :left) }
+      when :"Ctrl+Shift+right" then @focused.selecting{ move(:jump, :right) }
 
 
       # modify
