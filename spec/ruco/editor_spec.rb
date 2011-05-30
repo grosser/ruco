@@ -349,6 +349,62 @@ describe Ruco::Editor do
         editor.cursor.should == [1,2]
       end
     end
+
+    describe 'jumping' do
+      it "can jump right" do
+        write("abc def")
+        editor.move(:jump, :right)
+        editor.cursor.should == [0,3]
+      end
+
+      it "does not jump over braces" do
+        write("abc(def")
+        editor.move(:jump, :right)
+        editor.cursor.should == [0,3]
+      end
+
+      it "can jump over whitespace and newlines" do
+        write("abc\n 123")
+        editor.move(:jump, :right)
+        editor.cursor.should == [0,3]
+        editor.move(:jump, :right)
+        editor.cursor.should == [1,1]
+      end
+
+      it "can jump left" do
+        write("abc def")
+        editor.move(:relative, 0,3)
+        editor.move(:jump, :left)
+        editor.cursor.should == [0,0]
+      end
+
+      it "can jump to start" do
+        write("abc\ndef")
+        editor.move(:relative, 0,2)
+        editor.move(:jump, :left)
+        editor.cursor.should == [0,0]
+      end
+
+      it "stays at start" do
+        write("abc\ndef")
+        editor.move(:jump, :left)
+        editor.cursor.should == [0,0]
+      end
+
+      it "can jump to end" do
+        write("abc\ndef")
+        editor.move(:relative, 1,1)
+        editor.move(:jump, :right)
+        editor.cursor.should == [1,3]
+      end
+
+      it "stays at end" do
+        write("abc\ndef")
+        editor.move(:to, 1,3)
+        editor.move(:jump, :right)
+        editor.cursor.should == [1,3]
+      end
+    end
   end
 
   describe :move_line do

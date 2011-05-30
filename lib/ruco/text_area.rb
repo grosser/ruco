@@ -43,6 +43,17 @@ module Ruco
       when :page_up
         self.line -= @window.lines
         @window.set_top(@window.top - @window.lines, @lines.size)
+      when :jump
+        regex = /\b/m
+        text = content
+
+        next_index = if args.first == :right
+          text.index(regex, index_for_position + 1) || text.size
+        else
+          text.rindex(regex,[index_for_position - 1, 0].max) || 0
+        end
+
+        move :to_index, next_index
       else
         raise "Unknown move type #{where} with #{args.inspect}"
       end

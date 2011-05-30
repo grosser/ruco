@@ -52,6 +52,8 @@ module Ruco
       when :home then move_with_select_mode :to_bol
       when :page_up then move_with_select_mode :page_up
       when :page_down then move_with_select_mode :page_down
+      when :"Ctrl+right" then move_with_select_mode :jump, :right
+      when :"Ctrl+left" then move_with_select_mode :jump, :left
 
       # select
       when :"Shift+down" then
