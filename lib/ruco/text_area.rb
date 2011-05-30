@@ -30,17 +30,17 @@ module Ruco
       case where
       when :relative
         move_relative(*args)
-      when :to then
+      when :to
         self.line, self.column = args
       when :to_bol then move_to_bol(*args)
       when :to_eol then move_to_eol(*args)
       when :to_line then self.line = args.first
       when :to_column then self.column = args.first
       when :to_index then move(:to, *position_for_index(*args))
-      when :page_down then
+      when :page_down
         self.line += @window.lines
         @window.set_top(@window.top + @window.lines, @lines.size)
-      when :page_up then
+      when :page_up
         self.line -= @window.lines
         @window.set_top(@window.top - @window.lines, @lines.size)
       else
