@@ -63,11 +63,12 @@ Customize
       bind :"Ctrl+x", :quit
       bind :"Ctrl+o", :save
       bind :"Ctrl+k", :delete_line
+      bind :"Ctrl+e", :move_to_eol
+      bind :"Ctrl+a", :move_to_bol
 
       # create reusable actions
-      action(:first){ editor.move(:to_column, 0) }
-      bind(:"Ctrl+a", :first)
-      bind(:home, :first)
+      action(:first_line){ editor.move(:to_column, 0) }
+      bind :"Ctrl+u", :first_line
     end
 
 TIPS

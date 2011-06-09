@@ -48,8 +48,6 @@ module Ruco
       when :right then move_with_select_mode :relative, 0,1
       when :up then move_with_select_mode :relative, -1,0
       when :left then move_with_select_mode :relative, 0,-1
-      when :end then move_with_select_mode :to_eol
-      when :home then move_with_select_mode :to_bol
       when :page_up then move_with_select_mode :page_up
       when :page_down then move_with_select_mode :page_down
       when :"Ctrl+right" then move_with_select_mode :jump, :right
@@ -212,6 +210,9 @@ module Ruco
       action(:move_line_up){ @editor.move_line(-1) if @focused == @editor }
       action(:move_line_down){ @editor.move_line(1) if @focused == @editor }
 
+      action(:move_to_eol){ move_with_select_mode :to_eol }
+      action(:move_to_bol){ move_with_select_mode :to_bol }
+
       action(:insert_hash_rocket){ @editor.insert(' => ') }
     end
 
@@ -234,6 +235,8 @@ module Ruco
       bind :"Ctrl+y", :redo
       bind :"Alt+Ctrl+down", :move_line_down
       bind :"Alt+Ctrl+up", :move_line_up
+      bind :end, :move_to_eol
+      bind :home, :move_to_bol
     end
 
     def load_user_config
