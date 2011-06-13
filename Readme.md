@@ -97,6 +97,7 @@ TODO
  - search options regex + case-sensitive
  - add auto-confirm to 'replace?' dialog -> type s == skip, no enter needed
  - 1.8: unicode support <-> already finished but unusable due to Curses (see encoding branch)
+ - shorten long file names in the middle/start, not at the end
 
 Authors
 =======

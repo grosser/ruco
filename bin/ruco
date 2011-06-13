@@ -71,6 +71,7 @@ def display(lines, style_mask)
 
     # expand line with whitespace to overwrite previous content
     missing = columns - content.size
+    raise content if missing < 0
     content += " " * missing
 
     # display tabs as single-space -> nothing breaks

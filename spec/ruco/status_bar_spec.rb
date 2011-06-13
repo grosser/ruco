@@ -2,15 +2,22 @@ require File.expand_path('spec/spec_helper')
 
 describe Ruco::StatusBar do
   let(:file){ 'spec/temp.txt' }
-  let(:editor){ Ruco::Editor.new(file, :lines => 5, :columns => 10) }
-  let(:bar){ Ruco::StatusBar.new(editor, :columns => 10) }
+  let(:editor){ Ruco::Editor.new(file, :lines => 5, :columns => 35) }
+  let(:bar){ Ruco::StatusBar.new(editor, :columns => 35) }
 
   it "shows name and version" do
-    bar.view.should include("Ruco #{Ruco::VERSION}") 
+    bar.view.should include("Ruco #{Ruco::VERSION}")
   end
 
   it "shows the file" do
     bar.view.should include(file)
+  end
+
+  it "can show to long files" do
+    editor = Ruco::Editor.new('a'*20+'b', :lines => 5, :columns => 20)
+    bar = Ruco::StatusBar.new(editor, :columns => 20)
+    bar.view.should == "Ruco 0.1.4 -- aa 1:1"
+    bar.view.size.should == 20
   end
 
   it "indicates modified" do

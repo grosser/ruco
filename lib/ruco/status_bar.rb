@@ -23,9 +23,12 @@ module Ruco
 
     private
 
+    # fill the line with left column and then overwrite the right section
     def spread(left, right)
-      empty = [@options[:columns] - left.size - right.size, 0].max
-      "#{left}#{' ' * empty}#{right}"
+      empty = [@options[:columns] - left.size, 0].max
+      line = left + (" " * empty)
+      line[(@options[:columns] - right.size - 1)..-1] = ' ' + right
+      line
     end
   end
 end
