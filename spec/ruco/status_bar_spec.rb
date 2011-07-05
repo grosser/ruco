@@ -16,7 +16,7 @@ describe Ruco::StatusBar do
   it "can show to long files" do
     editor = Ruco::Editor.new('a'*20+'b', :lines => 5, :columns => 20)
     bar = Ruco::StatusBar.new(editor, :columns => 20)
-    bar.view.should == "Ruco 0.1.4 -- aa 1:1"
+    bar.view.should == "Ruco #{Ruco::VERSION} -- aa 1:1"
     bar.view.size.should == 20
   end
 

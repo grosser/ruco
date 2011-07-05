@@ -31,12 +31,12 @@ describe Ruco::Application do
   end
 
   def status(line=1)
-    "Ruco #{Ruco::VERSION} -- spec/temp.txt  #{line}:1\n"
+    "Ruco #{Ruco::VERSION} -- spec/temp.txt                    #{line}:1\n"
   end
 
   let(:rucorc){ 'spec/.ruco.rb' }
-  let(:app){ Ruco::Application.new(@file, :lines => 5, :columns => 10, :rc => rucorc) }
-  let(:command){ "^W Exit" }
+  let(:app){ Ruco::Application.new(@file, :lines => 5, :columns => 50, :rc => rucorc) }
+  let(:command){ "^W Exit    ^S Save    ^F Find    ^R Replace" }
 
   it "renders status + editor + command" do
     write("xxx\nyyy\nzzz")
@@ -69,7 +69,7 @@ describe Ruco::Application do
   it "can resize" do
     write("01234567\n1\n2\n3\n4\n5678910111213\n6\n7\n8")
     app.resize(8, 7)
-    app.view.should == "#{status}0123456\n1\n2\n3\n4\n5678910\n#{command}"
+    app.view.should == "Ruc 1:1\n0123456\n1\n2\n3\n4\n5678910\n^W Exit"
   end
 
   describe 'opening with line' do
@@ -185,11 +185,11 @@ describe Ruco::Application do
       type :"Ctrl+r", 'a', :enter
       app.view.should include("Replace with:")
       type 'd', :enter
-      app.view.should include("Replace")
+      app.view.should include("Replace=Enter")
       type :enter # replace first
-      app.view.should include("Replace")
+      app.view.should include("Replace=Enter")
       type :enter # replace second -> finished
-      app.view.should_not include("Replace")
+      app.view.should_not include("Replace=Enter")
       editor_part(app.view).should == "xdbdc\n\n"
     end
 
@@ -198,11 +198,11 @@ describe Ruco::Application do
       type :"Ctrl+r", 'a', :enter
       app.view.should include("Replace with:")
       type 'd', :enter
-      app.view.should include("Replace")
+      app.view.should include("Replace=Enter")
       type 's', :enter # skip
-      app.view.should include("Replace")
+      app.view.should include("Replace=Enter")
       type 's', :enter # skip
-      app.view.should_not include("Replace")
+      app.view.should_not include("Replace=Enter")
       editor_part(app.view).should == "xabac\n\n"
     end
 
@@ -211,11 +211,11 @@ describe Ruco::Application do
       type :"Ctrl+r", 'a', :enter
       app.view.should include("Replace with:")
       type 'd', :enter
-      app.view.should include("Replace")
+      app.view.should include("Replace=Enter")
       type 's', :enter # skip first
-      app.view.should include("Replace")
+      app.view.should include("Replace=Enter")
       type 'a', :enter # all
-      app.view.should_not include("Replace")
+      app.view.should_not include("Replace=Enter")
       editor_part(app.view).should == "_a_d_d_d\n\n"
     end
 
@@ -224,9 +224,9 @@ describe Ruco::Application do
       type :"Ctrl+r", 'a', :enter
       app.view.should include("Replace with:")
       type "d", :enter
-      app.view.should include("Replace")
+      app.view.should include("Replace=Enter")
       type 'x', :enter
-      app.view.should_not include("Replace")
+      app.view.should_not include("Replace=Enter")
       editor_part(app.view).should == "xabac\n\n"
     end
 
