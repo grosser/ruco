@@ -127,6 +127,7 @@ init_screen do
   show_app app
 
   Keyboard.input do
+    sleep 0.005 # otherwise its like a loop and uses 100% cpu
     Curses.getch
   end
 

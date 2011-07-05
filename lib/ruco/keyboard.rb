@@ -6,7 +6,7 @@ class Keyboard
   ENTER = 13
   ESCAPE = 27
   IS_18 = RUBY_VERSION =~ /^1\.8/
-  SEQUENCE_TIMEOUT = 0.01
+  SEQUENCE_TIMEOUT = 0.02
   NOTHING = (2**32 - 1) # getch returns this as 'nothing' on 1.8 but nil on 1.9.2
   A_TO_Z = ('a'..'z').to_a
 
