@@ -5,7 +5,7 @@ class Keyboard
   ENTER = 13
   ESCAPE = 27
   IS_18 = RUBY_VERSION =~ /^1\.8/
-  SEQUENCE_TIMEOUT = 0.02
+  SEQUENCE_TIMEOUT = 0.005
   NOTHING = (2**32 - 1) # getch returns this as 'nothing' on 1.8 but nil on 1.9.2
   A_TO_Z = ('a'..'z').to_a
 
@@ -102,7 +102,11 @@ class Keyboard
   def self.fetch_user_input
     key = @input.call or return
     key = key.ord if key.is_a?(String) # ruby 1.9 fix
-    return if key >= NOTHING
+    if key >= NOTHING
+      # nothing happening -> sleep a bit to save cpu
+      sleep SEQUENCE_TIMEOUT
+      return
+    end
     key
   end
 

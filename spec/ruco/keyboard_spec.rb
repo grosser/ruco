@@ -110,4 +110,10 @@ describe Keyboard do
     type [27]
     output.should == [:escape]
   end
+
+  it "can paste quickly" do
+    t = Time.now.to_f
+    type Array.new(999).map{ 27 }
+    (Time.now.to_f - t).should <= 0.01
+  end
 end
