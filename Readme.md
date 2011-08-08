@@ -15,7 +15,6 @@ Features:
  - stays at last position when reopening a file
  - opens file at line with `ruco foo/bar.rb:32` syntax
  - keeps whatever newline format you use (\r \n \r\n)
- - working backspace and delete key on Termial.app
  - (optional) remove trailing whitespace on save
  - (optional) blank line before eof on save
  - (optional) line numbers
