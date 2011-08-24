@@ -104,8 +104,17 @@ describe Ruco::TextArea do
         text.cursor.should == [0,1]
       end
 
-      it "replaces surrounding chars" do
+      it "replaces surrounding quotes" do
         text.insert('"bar"')
+        text.move(:to, 0,0)
+        text.selecting{ move(:to, 0,5) }
+        text.insert("'")
+        text.view.should == "'bar'\n\n"
+        text.cursor.should == [0,5]
+      end
+
+      it "replace surrounding braces" do
+        text.insert('(bar)')
         text.move(:to, 0,0)
         text.selecting{ move(:to, 0,5) }
         text.insert("'")

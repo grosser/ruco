@@ -292,7 +292,7 @@ module Ruco
       old_selection = @selection.deep_copy
       selected = text_in_selection
 
-      replace_surrounding_chars = SURROUNDING_CHARS.keys.any?{|c| selected.surrounded_in?(c) }
+      replace_surrounding_chars = SURROUNDING_CHARS.any?{|chars| selected.surrounded_in?(*chars) }
       if replace_surrounding_chars
         selected = selected[1..-2]
       else
