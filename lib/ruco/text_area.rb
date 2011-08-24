@@ -89,22 +89,8 @@ module Ruco
 
     def insert(text)
       if @selection
-        if close_char = SURROUNDING_CHARS[text]
-          open_char = text
-          old_selection = @selection.deep_copy
-          selected = text_in_selection
-
-          replace_surrounding_chars = SURROUNDING_CHARS.keys.any?{|c| selected.surrounded_in?(c) }
-          if replace_surrounding_chars
-            selected = selected[1..-2]
-          else
-            old_selection.last.column += 2
-          end
-
-          insert("#{open_char}#{selected}#{close_char}")
-          @selection = old_selection
-
-          return
+        if SURROUNDING_CHARS[text]
+          return surround_selection_with(text)
         else
           delete_content_in_selection
         end
@@ -298,6 +284,23 @@ module Ruco
     def adjust_window
       sanitize_position
       @window.set_position(position, :max_lines => @lines.size)
+    end
+
+    def surround_selection_with(text)
+      open_char = text
+      close_char = SURROUNDING_CHARS[text]
+      old_selection = @selection.deep_copy
+      selected = text_in_selection
+
+      replace_surrounding_chars = SURROUNDING_CHARS.keys.any?{|c| selected.surrounded_in?(c) }
+      if replace_surrounding_chars
+        selected = selected[1..-2]
+      else
+        old_selection.last.column += 2
+      end
+
+      insert("#{open_char}#{selected}#{close_char}")
+      @selection = old_selection
     end
   end
 end
