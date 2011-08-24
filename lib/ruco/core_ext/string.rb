@@ -37,8 +37,10 @@ class String
     end
   end
 
-  def surrounded_in?(text)
-    slice(0,text.size) == text and slice(-text.size,text.size) == text
+  def surrounded_in?(*words)
+    first = words.first
+    last = words.last
+    slice(0,first.size) == first and slice(-last.size,last.size) == last
   end
 end
 
