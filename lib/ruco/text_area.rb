@@ -1,5 +1,15 @@
 module Ruco
   class TextArea
+    SURROUNDING_CHARACTERS = {
+      '<' => '>',
+      '(' => ')',
+      '[' => ']',
+      '{' => '}',
+      '"' => '"',
+      "'" => "'",
+      '/' => '/'
+    }
+
     attr_reader :lines, :selection, :column, :line
 
     def initialize(content, options)
@@ -78,7 +88,13 @@ module Ruco
     end
 
     def insert(text)
-      delete_content_in_selection if @selection
+      if @selection
+        if closing = SURROUNDING_CHARACTERS[text]
+          return insert("#{text}#{text_in_selection}#{closing}")
+        else
+          delete_content_in_selection
+        end
+      end
 
       text.tabs_to_spaces!
       if text == "\n" and @column >= current_line.leading_whitespace.size

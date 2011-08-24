@@ -54,4 +54,55 @@ describe Ruco::TextArea do
       end
     end
   end
+
+  describe :insert do
+    let(:text){Ruco::TextArea.new("", :lines => 3, :columns => 10)}
+
+    describe "inserting surrounding characters" do
+      xit "does nothing special when pasting" do
+        text.insert("'bar'")
+        text.view.should == "'bar'\n\n"
+        text.cursor.should == [0,5]
+      end
+
+      xit "inserts a pair when just typing" do
+        text.insert("'")
+        text.view.should == "''\n\n"
+        text.cursor.should == [0,1]
+      end
+
+      xit "closes the surround if only char in surround" do
+        text.insert("'")
+        text.insert("'")
+        text.view.should == "''\n\n"
+        text.cursor.should == [0,2]
+      end
+
+      xit "overwrites next if its the same" do
+        text.insert("'bar'")
+        text.move(:relative, 0,-1)
+        text.insert("'")
+        text.view.should == "'bar'\n\n"
+        text.cursor.should == [0,5]
+      end
+
+      it "surrounds text when selecting" do
+        text.insert('bar')
+        text.move(:to, 0,0)
+        text.selecting{ move(:to, 0,2) }
+        text.insert("{")
+        text.view.should == "{ba}r\n\n"
+        text.cursor.should == [0,4]
+      end
+
+      it "does not surround text with closing char when selecting" do
+        text.insert('bar')
+        text.move(:to, 0,0)
+        text.selecting{ move(:to, 0,2) }
+        text.insert("}")
+        text.view.should == "}r\n\n"
+        text.cursor.should == [0,1]
+      end
+    end
+  end
 end
