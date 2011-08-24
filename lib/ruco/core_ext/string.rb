@@ -36,6 +36,10 @@ class String
       bytes.first
     end
   end
+
+  def surrounded_in?(text)
+    slice(0,text.size) == text and slice(-text.size,text.size) == text
+  end
 end
 
 # http://grosser.it/2010/12/31/ruby-string-indexes-indices-find-all-indexes-in-a-string
