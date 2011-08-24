@@ -90,7 +90,10 @@ module Ruco
     def insert(text)
       if @selection
         if closing = SURROUNDING_CHARACTERS[text]
-          return insert("#{text}#{text_in_selection}#{closing}")
+          middle = text_in_selection
+          SURROUNDING_CHARACTERS.keys.any?{|c| middle.surrounded_in?(c) }
+          middle = middle[1..-2] if SURROUNDING_CHARACTERS.keys.any?{|c| middle.surrounded_in?(c) }
+          insert("#{text}#{middle}#{closing}")
         else
           delete_content_in_selection
         end

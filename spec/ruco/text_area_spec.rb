@@ -103,6 +103,33 @@ describe Ruco::TextArea do
         text.view.should == "}r\n\n"
         text.cursor.should == [0,1]
       end
+
+      it "replaces surrounding chars" do
+        text.insert('"bar"')
+        text.move(:to, 0,0)
+        text.selecting{ move(:to, 0,5) }
+        text.insert("'")
+        text.view.should == "'bar'\n\n"
+        text.cursor.should == [0,5]
+      end
+
+      it "does not replace when only one side has surrounding char" do
+        text.insert("\"bar\"")
+        text.move(:to, 0,0)
+        text.selecting{ move(:to, 0,3) }
+        text.insert("'")
+        text.view.should == "'\"ba'r\"\n\n"
+        text.cursor.should == [0,5]
+      end
+
+      xit "expands selection when surrounding" do
+        text.insert('bar')
+        text.move(:to, 0,0)
+        text.selecting{ move(:to, 0,2) }
+        text.insert("{")
+        text.view.should == "{ba}r\n\n"
+        text.selection.should == 1
+      end
     end
   end
 end
