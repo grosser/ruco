@@ -1,6 +1,6 @@
 module Ruco
   class TextArea
-    SURROUNDING_CHARACTERS = {
+    SURROUNDING_CHARS = {
       '<' => '>',
       '(' => ')',
       '[' => ']',
@@ -89,11 +89,22 @@ module Ruco
 
     def insert(text)
       if @selection
-        if closing = SURROUNDING_CHARACTERS[text]
-          middle = text_in_selection
-          SURROUNDING_CHARACTERS.keys.any?{|c| middle.surrounded_in?(c) }
-          middle = middle[1..-2] if SURROUNDING_CHARACTERS.keys.any?{|c| middle.surrounded_in?(c) }
-          insert("#{text}#{middle}#{closing}")
+        if close_char = SURROUNDING_CHARS[text]
+          open_char = text
+          old_selection = @selection.deep_copy
+          selected = text_in_selection
+
+          replace_surrounding_chars = SURROUNDING_CHARS.keys.any?{|c| selected.surrounded_in?(c) }
+          if replace_surrounding_chars
+            selected = selected[1..-2]
+          else
+            old_selection.last.column += 2
+          end
+
+          insert("#{open_char}#{selected}#{close_char}")
+          @selection = old_selection
+
+          return
         else
           delete_content_in_selection
         end

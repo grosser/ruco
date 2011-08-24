@@ -13,7 +13,7 @@ def #{method}(*args, &block)
 end
 EOS
     end
-  end
+  end unless defined? delegate
 end
 
 class Object
@@ -43,4 +43,10 @@ class Object
       end
     end
   end
+end
+
+class Object
+  def deep_copy
+    Marshal.load(Marshal.dump(self))
+  end unless defined? deep_copy
 end

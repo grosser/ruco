@@ -122,13 +122,22 @@ describe Ruco::TextArea do
         text.cursor.should == [0,5]
       end
 
-      xit "expands selection when surrounding" do
+      it "expands selection when surrounding" do
         text.insert('bar')
         text.move(:to, 0,0)
         text.selecting{ move(:to, 0,2) }
         text.insert("{")
         text.view.should == "{ba}r\n\n"
-        text.selection.should == 1
+        text.selection.should == ([0,0]..[0,4])
+      end
+
+      it "keeps selection when replacing surround" do
+        text.insert('"bar"')
+        text.move(:to, 0,0)
+        text.selecting{ move(:to, 0,5) }
+        text.insert("'")
+        text.view.should == "'bar'\n\n"
+        text.selection.should == ([0,0]..[0,5])
       end
     end
   end
