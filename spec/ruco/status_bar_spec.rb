@@ -14,10 +14,10 @@ describe Ruco::StatusBar do
   end
 
   it "can show to long files" do
-    editor = Ruco::Editor.new('a'*20+'b', :lines => 5, :columns => 20)
-    bar = Ruco::StatusBar.new(editor, :columns => 20)
-    bar.view.should == "Ruco #{Ruco::VERSION} -- aa 1:1"
-    bar.view.size.should == 20
+    editor = Ruco::Editor.new('123456789abcdefghijklmnop', :lines => 5, :columns => 20)
+    bar = Ruco::StatusBar.new(editor, :columns => 30)
+    bar.view.should == "Ruco #{Ruco::VERSION} -- 1234...nop   1:1"
+    bar.view.size.should == 30
   end
 
   it "indicates modified" do

@@ -6,8 +6,20 @@ module Ruco
     end
 
     def view
-      position = @editor.position
-      spread "Ruco #{Ruco::VERSION} -- #{@editor.file}#{change_indicator}#{writable_indicator}", "#{position.line + 1}:#{position.column + 1}"
+      columns = @options[:columns]
+
+      version = "Ruco #{Ruco::VERSION} -- "
+      position = " #{@editor.position.line + 1}:#{@editor.position.column + 1}"
+      indicators = "#{change_indicator}#{writable_indicator}"
+      essential = version + position + indicators
+      space_left = [columns - essential.size, 0].max
+
+      # fit file name into remaining space
+      file = @editor.file
+      file = file.ellipsize(:max => space_left)
+      space_left -= file.size
+
+      "#{version}#{file}#{indicators}#{' ' * space_left}#{position}"[0, columns]
     end
 
     def change_indicator

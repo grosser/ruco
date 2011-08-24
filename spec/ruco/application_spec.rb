@@ -69,7 +69,7 @@ describe Ruco::Application do
   it "can resize" do
     write("01234567\n1\n2\n3\n4\n5678910111213\n6\n7\n8")
     app.resize(8, 7)
-    app.view.should == "Ruc 1:1\n0123456\n1\n2\n3\n4\n5678910\n^W Exit"
+    app.view.should == "Ruco 0.\n0123456\n1\n2\n3\n4\n5678910\n^W Exit"
   end
 
   describe 'opening with line' do
@@ -138,7 +138,7 @@ describe Ruco::Application do
       editor_part(reopened.view).should == "x\n\n"
     end
   end
-  
+
   it "can select all" do
     write("1\n2\n3\n4\n5\n")
     app.key(:down)

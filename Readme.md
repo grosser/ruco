@@ -16,6 +16,7 @@ Features:
  - opens file at line with `ruco foo/bar.rb:32` syntax
  - keeps whatever newline format you use (\r \n \r\n)
  - surrounds selection with quotes/braces (select abc + " --> "abc")
+ - shortens long file names in the middle
  - (optional) remove trailing whitespace on save
  - (optional) blank line before eof on save
  - (optional) line numbers
@@ -98,7 +99,6 @@ TODO
  - search options regex + case-sensitive
  - add auto-confirm to 'replace?' dialog -> type s == skip, no enter needed
  - 1.8: unicode support <-> already finished but unusable due to Curses (see encoding branch)
- - shorten long file names in the middle/start, not at the end
  - add double quotes/braces when typing one + skip over quote/brace when its already typed at current position
 
 Authors
