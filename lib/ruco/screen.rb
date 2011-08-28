@@ -2,6 +2,7 @@ module Ruco
   class Screen
     def initialize(options)
       @options = options
+      @cache = []
     end
 
     def open(&block)
@@ -39,7 +40,7 @@ module Ruco
         debug_key(key) if @options[:debug_keys]
         if key == :resize
           app.resize(lines, columns)
-          @display.clear # clear cache
+          @cache.clear # clear cache
         else
           result = app.key key
         end
@@ -66,35 +67,38 @@ module Ruco
 
     def display(view, style_mask)
       lines = view.naive_split("\n")
-      @display ||= [] # current screen is used as cache
       style_mask = style_mask.flatten
 
-      lines.each_with_index do |content, line|
-        styles = style_mask[line]
+      lines.each_with_index do |line, line_number|
+        styles = style_mask[line_number]
 
         # expand line with whitespace to overwrite previous content
-        missing = columns - content.size
-        raise content if missing < 0
-        content += " " * missing
+        missing = columns - line.size
+        raise line if missing < 0
+        line += " " * missing
 
         # display tabs as single-space -> nothing breaks
-        content.gsub!("\t",' ')
+        line.gsub!("\t",' ')
 
-        # cache !?
-        next if @display[line] == [content, styles]
-        @display[line] = [content, styles]
+        if_line_changes line_number, [line, styles] do
+          # position at start of line and draw
+          Curses.setpos(line_number,0)
+          Ruco::StyleMap.styled(line, styles).each do |style, part|
+            Curses.attrset self.class.curses_style(style)
+            Curses.addstr part
+          end
 
-        # position at start of line and draw
-        Curses.setpos(line,0)
-        Ruco::StyleMap.styled(content, styles).each do |style, part|
-          Curses.attrset self.class.curses_style(style)
-          Curses.addstr part
-        end
-
-        if @options[:debug_cache]
-          write(line, 0, (rand(899)+100).to_s)
+          if @options[:debug_cache]
+            write(line_number, 0, (rand(899)+100).to_s)
+          end
         end
       end
+    end
+
+    def if_line_changes(key, args)
+      return if @cache[key] == args # would not change the line -> nothing to do
+      @cache[key] = args # store current line
+      yield # render the line
     end
 
     STYLES = {
