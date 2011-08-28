@@ -48,29 +48,30 @@ end
 
 require 'ruco'
 
-Ruco::Screen.open(@options) do
+# draw app and redraw after each keystroke (or paste)
+Ruco::Screen.open(@options) do |screen|
   app = Ruco::Application.new(ARGV[0],
     :convert_tabs => @options[:convert_tabs],
     :undo_stack_size => @options[:undo_stack_size],
-    :lines => lines, :columns => columns
+    :lines => screen.lines, :columns => screen.columns
   )
 
-  draw *app.display_info
+  screen.draw *app.display_info
 
   Keyboard.input do
     Curses.getch
   end
 
   Keyboard.output do |key|
-    debug_key(key) if @options[:debug_keys]
+    screen.debug_key(key) if @options[:debug_keys]
     if key == :resize
       app.resize(lines, columns)
-      clear_cache
+      screen.clear_cache
     else
       result = app.key key
       break if result == :quit
     end
     
-    draw *app.display_info
+    screen.draw *app.display_info
   end
 end

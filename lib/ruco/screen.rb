@@ -16,8 +16,7 @@ module Ruco
       Curses.raw # give us all other keys
       Curses.stdscr.nodelay = 1 # do not block -> we can use timeouts
       Curses.init_screen
-      app = instance_exec(&block)
-      show app
+      yield self
     ensure
       Curses.clear # needed to clear the menu/status bar on windows
       Curses.close_screen
