@@ -5,6 +5,10 @@ module Ruco
       @cache = []
     end
 
+    def self.open(options, &block)
+      new(options).open(&block)
+    end
+
     def open(&block)
       Curses.noecho # do not show typed chars
       Curses.nonl # turn off newline translation
@@ -27,31 +31,13 @@ module Ruco
       Curses.stdscr.maxy
     end
 
-    private
-
-    def show(app)
-      show_app app
-
-      Keyboard.input do
-        Curses.getch
-      end
-
-      Keyboard.output do |key|
-        debug_key(key) if @options[:debug_keys]
-        if key == :resize
-          app.resize(lines, columns)
-          @cache.clear # clear cache
-        else
-          result = app.key key
-        end
-        break if result == :quit
-        show_app app
-      end
+    def clear_cache
+      @cache.clear
     end
 
-    def show_app(app)
-      display(app.view, app.style_map)
-      Curses.setpos(*app.cursor)
+    def draw(view, style_map, cursor)
+      draw_view(view, style_map)
+      Curses.setpos(*cursor)
     end
 
     def debug_key(key)
@@ -60,12 +46,14 @@ module Ruco
       write(@key_line, 0, "#{key.inspect}---")
     end
 
+    private
+
     def write(line,row,text)
       Curses.setpos(line,row)
       Curses.addstr(text);
     end
 
-    def display(view, style_mask)
+    def draw_view(view, style_mask)
       lines = view.naive_split("\n")
       style_mask = style_mask.flatten
 

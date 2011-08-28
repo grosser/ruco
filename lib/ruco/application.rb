@@ -14,6 +14,10 @@ module Ruco
       @editor.move(:to, go_to_line.to_i-1,0) if go_to_line
     end
 
+    def display_info
+      [view, style_map, cursor]
+    end
+
     def view
       status.view + "\n" + editor.view + "\n" + command.view
     end
