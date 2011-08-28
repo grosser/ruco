@@ -19,30 +19,25 @@ module Ruco
     end
 
     def view
-      status.view + "\n" + editor.view + "\n" + command.view
+      [status.view, editor.view, command.view].join("\n")
     end
 
     def style_map
-      reverse = StyleMap.single_line_reversed(@options[:columns])
-      reverse + editor.style_map + @command.style_map
+      status.style_map + editor.style_map + command.style_map
     end
 
     def cursor
       Position.new(@focused.cursor.line + @status_lines, @focused.cursor.column)
     end
 
+    # user typed a key
     def key(key)
       # deactivate select_mode if its not re-enabled in this action
       @select_mode_was_on = @select_mode
       @select_mode = false
 
       if bound = @bindings[key]
-        result = if bound.is_a?(Symbol)
-          @actions[bound].call
-        else
-          bound.call
-        end
-        return result
+        return execute_action(bound)
       end
 
       case key
@@ -74,8 +69,7 @@ module Ruco
           @focused.insert("\t")
         end
       when :"Shift+tab" then @editor.unindent
-      when :enter then
-        @focused.insert("\n")
+      when :enter then @focused.insert("\n")
       when :backspace then @focused.delete(-1)
       when :delete then @focused.delete(1)
 
@@ -89,7 +83,7 @@ module Ruco
 
     def bind(key, action=nil, &block)
       raise "Ctrl+m cannot be bound" if key == :"Ctrl+m" # would shadow enter -> bad
-      raise if action and block
+      raise "Cannot bind an action and a block" if action and block
       @bindings[key] = action || block
     end
 
@@ -292,6 +286,14 @@ module Ruco
         end
       else
         @focused.send(:move, *args)
+      end
+    end
+
+    def execute_action(action)
+      if action.is_a?(Symbol)
+        @actions[action].call
+      else
+        action.call
       end
     end
   end

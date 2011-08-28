@@ -22,6 +22,10 @@ module Ruco
       "#{version}#{file}#{indicators}#{' ' * space_left}#{position}"[0, columns]
     end
 
+    def style_map
+      StyleMap.single_line_reversed(@options[:columns])
+    end
+
     def change_indicator
       @editor.modified? ? '*' : ' '
     end
