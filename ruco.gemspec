@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{ruco}
-  s.version = "0.1.12"
+  s.version = "0.1.13"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Michael Grosser"]
@@ -39,6 +39,7 @@ Gem::Specification.new do |s|
     "lib/ruco/keyboard.rb",
     "lib/ruco/option_accessor.rb",
     "lib/ruco/position.rb",
+    "lib/ruco/screen.rb",
     "lib/ruco/status_bar.rb",
     "lib/ruco/style_map.rb",
     "lib/ruco/text_area.rb",
@@ -56,6 +57,7 @@ Gem::Specification.new do |s|
     "spec/ruco/history_spec.rb",
     "spec/ruco/keyboard_spec.rb",
     "spec/ruco/option_accessor_spec.rb",
+    "spec/ruco/screen_spec.rb",
     "spec/ruco/status_bar_spec.rb",
     "spec/ruco/style_map_spec.rb",
     "spec/ruco/text_area_spec.rb",
@@ -83,6 +85,7 @@ Gem::Specification.new do |s|
     "spec/ruco/history_spec.rb",
     "spec/ruco/keyboard_spec.rb",
     "spec/ruco/option_accessor_spec.rb",
+    "spec/ruco/screen_spec.rb",
     "spec/ruco/status_bar_spec.rb",
     "spec/ruco/style_map_spec.rb",
     "spec/ruco/text_area_spec.rb",
