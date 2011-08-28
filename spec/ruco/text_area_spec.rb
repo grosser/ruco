@@ -148,6 +148,15 @@ describe Ruco::TextArea do
         text.view.should == "'bar'\n\n"
         text.selection.should == ([0,0]..[0,5])
       end
+
+      it "surrounds across lines" do
+        text.insert("ab\ncd\nef")
+        text.move(:to, 0,0)
+        text.selecting{ move(:to, 1,0) }
+        text.insert("'")
+        text.view.should == "'ab\n'cd\nef"
+        text.selection.should == ([0,0]..[1,1])
+      end
     end
   end
 end

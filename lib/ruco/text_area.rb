@@ -296,7 +296,7 @@ module Ruco
       if replace_surrounding_chars
         selected = selected[1..-2]
       else
-        old_selection.last.column += 2
+        old_selection.last.column += (selected.include?("\n") ? 1 : 2)
       end
 
       insert("#{open_char}#{selected}#{close_char}")
