@@ -1,12 +1,12 @@
 class String
-  # fix strange string split behavior without cluttering the knowledge
-  # all over the codebase
+  # http://grosser.it/2011/08/28/ruby-string-naive-split-because-split-is-to-clever/
   # "    ".split(' ') == []
-  # "    ".split(/ /) == []
-  # "    ".split(' ',-1) == ['']
   # "    ".naive_split(' ') == ['','','','']
+  # "".split(' ') == []
+  # "".naive_split(' ') == ['']
   def naive_split(pattern)
-    result = split(/#{pattern}/, -1)
+    pattern = /#{pattern}/ unless pattern.is_a?(Regexp)
+    result = split(pattern, -1)
     result.empty? ? [''] : result
   end
 
