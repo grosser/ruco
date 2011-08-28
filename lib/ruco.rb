@@ -13,6 +13,7 @@ require 'ruco/history'
 require 'ruco/option_accessor'
 require 'ruco/file_store'
 require 'ruco/window'
+require 'ruco/screen'
 require 'ruco/style_map'
 
 require 'ruco/editor'
