@@ -39,7 +39,7 @@ module Ruco
         debug_key(key) if @options[:debug_keys]
         if key == :resize
           app.resize(lines, columns)
-          @screen.clear # clear cache
+          @display.clear # clear cache
         else
           result = app.key key
         end
@@ -49,19 +49,13 @@ module Ruco
     end
 
     def show_app(app)
-      log('xxx')
-      lines = app.view.naive_split("\n")
-      style_map = app.style_map
-
-      # TODO move this logic into application
-      display(lines, style_map)
-      Curses.setpos(app.cursor.line, app.cursor.column)
+      display(app.view, app.style_map)
+      Curses.setpos(*app.cursor)
     end
-
 
     def debug_key(key)
       @key_line ||= -1
-      @key_line = (@key_line + 1) % Curses.stdscr.maxy
+      @key_line = (@key_line + 1) % lines
       write(@key_line, 0, "#{key.inspect}---")
     end
 
@@ -70,9 +64,9 @@ module Ruco
       Curses.addstr(text);
     end
 
-    def display(lines, style_mask)
-      columns = Curses.stdscr.maxx
-      @screen ||= [] # current screen is used as cache
+    def display(view, style_mask)
+      lines = view.naive_split("\n")
+      @display ||= [] # current screen is used as cache
       style_mask = style_mask.flatten
 
       lines.each_with_index do |content, line|
@@ -87,8 +81,8 @@ module Ruco
         content.gsub!("\t",' ')
 
         # cache !?
-        next if @screen[line] == [content, styles]
-        @screen[line] = [content, styles]
+        next if @display[line] == [content, styles]
+        @display[line] = [content, styles]
 
         # position at start of line and draw
         Curses.setpos(line,0)
