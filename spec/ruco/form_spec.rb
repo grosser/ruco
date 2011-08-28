@@ -23,6 +23,12 @@ describe Ruco::Form do
       form.insert("d\n")
       @result.should == "abcd"
     end
+
+    it "returns result on normal insert when auto_enter is given" do
+      form.instance_eval{ @options[:auto_enter] = true }
+      form.insert('a')
+      @result.should == 'a'
+    end
   end
 
   describe :move do

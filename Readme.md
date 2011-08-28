@@ -95,7 +95,6 @@ TODO
  - raise when binding to a unsupported key
  - search history via up/down arrow
  - search options regex + case-sensitive
- - add auto-confirm to 'replace?' dialog -> type s == skip, no enter needed
  - 1.8: unicode support <-> already finished but unusable due to Curses (see encoding branch)
  - add double quotes/braces when typing one + skip over quote/brace when its already typed at current position
 

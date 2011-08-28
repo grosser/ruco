@@ -183,7 +183,7 @@ module Ruco
         ask("Find: ", :cache => true) do |term|
           if editor.find(term)
             ask("Replace with: ", :cache => true) do |replace|
-              loop_ask("Replace=Enter Skip=s All=a Cancel=Esc") do |ok|
+              loop_ask("Replace=Enter Skip=s All=a Cancel=Esc", :auto_enter => true) do |ok|
                 case ok
                 when '' # enter
                   editor.insert(replace)

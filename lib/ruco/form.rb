@@ -21,7 +21,7 @@ module Ruco
 
     def insert(text)
       @text_field.insert(text.gsub("\n",'')) unless text == "\n"
-      @submit.call(@text_field.value) if text.include?("\n")
+      @submit.call(@text_field.value) if text.include?("\n") or @options[:auto_enter]
     end
 
     def cursor

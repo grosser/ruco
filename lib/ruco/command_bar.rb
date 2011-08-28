@@ -40,7 +40,7 @@ module Ruco
 
     def ask(question, options={}, &block)
       @form = cached_form_if(options[:cache], question) do
-        Form.new(question, :columns => @options[:columns]) do |result|
+        Form.new(question, :columns => @options[:columns], :auto_enter => options[:auto_enter]) do |result|
           @form = nil
           block.call(result)
         end

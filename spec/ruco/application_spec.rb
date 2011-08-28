@@ -199,9 +199,9 @@ describe Ruco::Application do
       app.view.should include("Replace with:")
       type 'd', :enter
       app.view.should include("Replace=Enter")
-      type 's', :enter # skip
+      type 's' # skip
       app.view.should include("Replace=Enter")
-      type 's', :enter # skip
+      type 's' # skip
       app.view.should_not include("Replace=Enter")
       editor_part(app.view).should == "xabac\n\n"
     end
@@ -212,9 +212,9 @@ describe Ruco::Application do
       app.view.should include("Replace with:")
       type 'd', :enter
       app.view.should include("Replace=Enter")
-      type 's', :enter # skip first
+      type 's' # skip first
       app.view.should include("Replace=Enter")
-      type 'a', :enter # all
+      type 'a' # all
       app.view.should_not include("Replace=Enter")
       editor_part(app.view).should == "_a_d_d_d\n\n"
     end
@@ -225,7 +225,7 @@ describe Ruco::Application do
       app.view.should include("Replace with:")
       type "d", :enter
       app.view.should include("Replace=Enter")
-      type 'x', :enter
+      type 'x' # stupid user
       app.view.should_not include("Replace=Enter")
       editor_part(app.view).should == "xabac\n\n"
     end
