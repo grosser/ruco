@@ -100,16 +100,6 @@ module Ruco
       build
     end
 
-    STYLES = {
-      :normal => 0,
-      :reverse => Curses::A_REVERSE
-    }
-
-    def self.curses_style(style)
-      return 0 unless style
-      STYLES[style] or raise("Unknown style #{style.inspect}")
-    end
-
     def self.single_line_reversed(columns)
       map = StyleMap.new(1)
       map.add(:reverse, 0, 0...columns)

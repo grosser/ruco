@@ -87,7 +87,7 @@ module Ruco
         # position at start of line and draw
         Curses.setpos(line,0)
         Ruco::StyleMap.styled(content, styles).each do |style, part|
-          Curses.attrset Ruco::StyleMap.curses_style(style)
+          Curses.attrset self.class.curses_style(style)
           Curses.addstr part
         end
 
@@ -95,6 +95,16 @@ module Ruco
           write(line, 0, (rand(899)+100).to_s)
         end
       end
+    end
+
+    STYLES = {
+      :normal => 0,
+      :reverse => Curses::A_REVERSE
+    }
+
+    def self.curses_style(style)
+      return 0 unless style
+      STYLES[style] or raise("Unknown style #{style.inspect}")
     end
   end
 end

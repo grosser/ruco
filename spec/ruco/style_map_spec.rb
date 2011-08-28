@@ -110,25 +110,4 @@ describe Ruco::StyleMap do
       Ruco::StyleMap.styled("abc", [:reverse, :normal]).should == [[:normal, ""], [:reverse, "a"],[:normal,'bc']]
     end
   end
-
-  describe :curses_style do
-    it "is 'normal' for nothing" do
-      Ruco::StyleMap.curses_style(:normal).should == Curses::A_NORMAL
-    end
-
-    it "is red for red" do
-      pending
-      Ruco::StyleMap.curses_style(:red).should == Curses::color_pair( Curses::COLOR_RED )
-    end
-
-    it "is reverse for reverse" do
-      Ruco::StyleMap.curses_style(:reverse).should == Curses::A_REVERSE
-    end
-
-    it "raises on unknown style" do
-      lambda{
-        Ruco::StyleMap.curses_style(:foo)
-      }.should raise_error
-    end
-  end
 end
