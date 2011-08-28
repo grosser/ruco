@@ -1,15 +1,13 @@
 class String
+  # fix strange string split behavior without cluttering the knowledge
+  # all over the codebase
+  # "    ".split(' ') == []
+  # "    ".split(/ /) == []
+  # "    ".split(' ',-1) == ['']
+  # "    ".naive_split(' ') == ['','','','']
   def naive_split(pattern)
-    string = self.dup
-    found = []
-
-    while position = string.index(pattern)
-      found << string.slice!(0, position)
-      string.slice!(0,[pattern.size,1].max)
-    end
-
-    found << string
-    found
+    result = split(/#{pattern}/, -1)
+    result.empty? ? [''] : result
   end
 
   def tabs_to_spaces!

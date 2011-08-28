@@ -84,7 +84,6 @@ TIPS
 TODO
 =====
  - do not fall back to 0:0 after undoing the first change
- - slow when opening file with 10,000+ short lines -> investigate
  - check writable status every x seconds (e.g. in background) -> faster while typing
  - search help e.g. 'Nothing found' '#4 of 6 hits' 'no more hits, start from beginning ?'
  - highlight current work when reopening search (so typing replaces it)
