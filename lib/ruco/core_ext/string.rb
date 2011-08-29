@@ -5,7 +5,7 @@ class String
   # "".split(' ') == []
   # "".naive_split(' ') == ['']
   def naive_split(pattern)
-    pattern = /#{pattern}/ unless pattern.is_a?(Regexp)
+    pattern = /#{Regexp.escape(pattern)}/ unless pattern.is_a?(Regexp)
     result = split(pattern, -1)
     result.empty? ? [''] : result
   end
