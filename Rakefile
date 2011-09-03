@@ -21,14 +21,14 @@ end
 
 task :try_color do
   require 'curses'
-  if Curses::has_colors?
+  #if Curses::has_colors?
     Curses::start_color
     # initialize every color we want to use
     # id, foreground, background
     Curses::init_pair( Curses::COLOR_BLACK, Curses::COLOR_BLACK, Curses::COLOR_BLACK )
     Curses::init_pair( Curses::COLOR_RED, Curses::COLOR_RED, Curses::COLOR_BLACK )
     Curses::init_pair( Curses::COLOR_GREEN, Curses::COLOR_GREEN, Curses::COLOR_BLACK )
-  end
+  #end
 
   Curses.setpos(0,0)
   Curses.attrset(Curses.color_pair(Curses::COLOR_RED)) # fetch color pair with the id xxx
