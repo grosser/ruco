@@ -159,23 +159,4 @@ describe Ruco::TextArea do
       end
     end
   end
-
-  describe :syntax_positions do
-    let(:text){Ruco::TextArea.new(@content, :lines => 3, :columns => 10)}
-
-    it "shows positions for simple lines" do
-      @content = "class Foo\nend"
-      text.send(:syntax_positions).should == [
-        [[:keyword, 0...5]],
-        [[:keyword, 0...3]]
-      ]
-    end
-
-    it "shows positions for complicated lines" do
-      @content = "class foo end blob else Foo"
-      text.send(:syntax_positions).should == [
-        [[[:keyword, 0...5], [:keyword, 10...13], [:keyword, 19...23]]]
-      ]
-    end
-  end
 end

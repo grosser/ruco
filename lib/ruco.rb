@@ -15,6 +15,7 @@ require 'ruco/file_store'
 require 'ruco/window'
 require 'ruco/screen'
 require 'ruco/style_map'
+require 'ruco/syntax_parser'
 
 require 'ruco/editor'
 require 'ruco/editor/line_numbers'
