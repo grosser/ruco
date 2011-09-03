@@ -25,8 +25,9 @@ module Ruco
 
         flat = []
 
-        styles.each do |style, columns|
-          points_of_change.each do |point|
+        points_of_change.each do |point|
+          flat[point] = :normal # set default
+          styles.each do |style, columns|
             next unless columns.include?(point)
             flat[point] = style
           end

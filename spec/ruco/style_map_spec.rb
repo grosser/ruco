@@ -29,6 +29,17 @@ describe Ruco::StyleMap do
       ]
     end
 
+    it "reproduces styles with same style repeated" do
+      map.add(:red, 1, 2..4)
+      map.add(:red, 1, 6..7)
+      # red 2,3,4 normal on 5 red on 6,7
+      map.flatten.should == [
+        nil,
+        [nil, nil, :red, nil, nil, :normal, :red, nil, :normal],
+        nil
+      ]
+    end
+
     it "overwrites styles" do
       map.add(:reverse, 0, 0..1)
       map.add(:normal, 0, 0..1)
@@ -92,7 +103,7 @@ describe Ruco::StyleMap do
       s.invert!
       s.flatten.should == [
         [:normal, nil, :normal],
-        [nil, :reverse, nil, nil, :red, nil, :normal]
+        [nil, :reverse, nil, :normal, :red, nil, :normal]
       ]
     end
   end
