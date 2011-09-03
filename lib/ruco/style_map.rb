@@ -20,8 +20,8 @@ module Ruco
       @lines.map do |styles|
         next unless styles
 
-        # start and one after end of every column-range changes styles
-        points_of_change = styles.map{|s,c| [c.first, c.last+1] }.flatten.uniq
+        # change to style at start and revert to normal one after the end
+        points_of_change = styles.map{|s,c| [c.first, c.last_element+1] }.flatten.uniq
 
         flat = []
 
@@ -33,8 +33,6 @@ module Ruco
           end
         end
 
-        max = styles.map{|_,columns| columns.last }.max
-        flat[max+1] = :normal
         flat
       end
     end
