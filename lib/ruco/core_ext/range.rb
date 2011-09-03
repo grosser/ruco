@@ -3,4 +3,10 @@ class Range
   def overlap?(other)
     (first <= other.last) and (other.first <= last)
   end
+
+  # (1..2).last_element == 2
+  # (1...3).last_element == 2
+  def last_element
+    exclude_end? ? last.pred : last
+  end unless defined? last_element
 end
