@@ -101,7 +101,8 @@ module Ruco
 
         {
           :normal => color_id(foreground, background),
-          :reverse => color_id(background, foreground)
+          :reverse => color_id(background, foreground),
+          :keyword => color_id(Curses::COLOR_BLUE, background)
         }
       end
     end

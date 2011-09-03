@@ -636,6 +636,11 @@ describe Ruco::Editor do
         [:reverse, nil, :normal] # 0 to end of selection
       ]
     end
+
+    it "shows keywords" do
+      write("class")
+      editor.style_map.flatten.should == [[:keyword, nil, nil, nil],nil,nil]
+    end
   end
 
   describe :view do

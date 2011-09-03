@@ -34,7 +34,8 @@ module Ruco
 
     def style_map
       adjust_window
-      @window.style_map(@selection)
+      map = @window.style_map(@selection)
+      map
     end
 
     def move(where, *args)
@@ -144,6 +145,36 @@ module Ruco
     end
 
     protected
+
+    def syntax_positions
+      lines.map do |line|
+        syntax_positions_in_line(line)
+      end
+    end
+
+    def syntax_positions_in_line(line)
+      keywords = /(BEGIN|END|alias|and|begin|break|case|class|def|defined\?|do|else|elsif|end|ensure|false|for|if|in|module|next|nil|not|or|redo|rescue|retry|return|self|super|then|true|undef|unless|until|when|while|yield)/
+      matches = []
+      remainder = line
+      position = 0
+
+      # find all syntax elements in the line
+      loop do
+        head, match, tail = remainder.partition(keywords)
+        puts [head, match, tail].inspect
+        break if match.empty?
+
+        # something found, add it to matches and continue on the remainder
+        position += head.size
+        matches << [:keyword, position...(position + match.size)]
+
+        break if tail.empty?
+        remainder = tail
+        position += match.size
+      end
+
+      matches
+    end
 
     def position_for_index(index)
       jump = content.slice(0, index).to_s.naive_split("\n")
