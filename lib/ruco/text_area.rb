@@ -35,6 +35,11 @@ module Ruco
     def style_map
       adjust_window
       map = @window.style_map(@selection)
+      syntax_positions.each_with_index do |positions, line|
+        positions.each do |style, columns|
+          map.add(style, line, columns)
+        end
+      end
       map
     end
 
@@ -153,7 +158,7 @@ module Ruco
     end
 
     def syntax_positions_in_line(line)
-      keywords = /(BEGIN|END|alias|and|begin|break|case|class|def|defined\?|do|else|elsif|end|ensure|false|for|if|in|module|next|nil|not|or|redo|rescue|retry|return|self|super|then|true|undef|unless|until|when|while|yield)/
+      keywords = /\b(BEGIN|END|alias|and|begin|break|case|class|def|defined\?|do|else|elsif|end|ensure|false|for|if|in|module|next|nil|not|or|redo|rescue|retry|return|self|super|then|true|undef|unless|until|when|while|yield)\b/
       matches = []
       remainder = line
       position = 0
@@ -161,7 +166,6 @@ module Ruco
       # find all syntax elements in the line
       loop do
         head, match, tail = remainder.partition(keywords)
-        puts [head, match, tail].inspect
         break if match.empty?
 
         # something found, add it to matches and continue on the remainder
@@ -172,7 +176,6 @@ module Ruco
         remainder = tail
         position += match.size
       end
-
       matches
     end
 

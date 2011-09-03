@@ -639,7 +639,11 @@ describe Ruco::Editor do
 
     it "shows keywords" do
       write("class")
-      editor.style_map.flatten.should == [[:keyword, nil, nil, nil],nil,nil]
+      editor.style_map.flatten.should == [
+        [:keyword, nil, nil, nil, nil, nil, :normal],
+        nil,
+        nil
+      ]
     end
   end
 
