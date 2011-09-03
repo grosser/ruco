@@ -3,7 +3,7 @@ require File.expand_path('spec/spec_helper')
 describe Ruco::Screen do
   describe :curses_style do
     it "is 'normal' for nothing" do
-      Ruco::Screen.curses_style(:normal).should == Curses::A_NORMAL
+      Ruco::Screen.curses_style(:normal).should == 256
     end
 
     it "is red for red" do
@@ -12,7 +12,7 @@ describe Ruco::Screen do
     end
 
     it "is reverse for reverse" do
-      Ruco::Screen.curses_style(:reverse).should == Curses::A_REVERSE
+      Ruco::Screen.curses_style(:reverse).should == 512
     end
 
     it "raises on unknown style" do

@@ -115,7 +115,9 @@ module Ruco
         # make a new pair with a unique id
         @@max_color_id ||= 0
         id = (@@max_color_id += 1)
-        Curses::init_pair(id, foreground, background)
+        unless defined? RSpec # stops normal text-output, do not use in tests
+          Curses::init_pair(id, foreground, background)
+        end
         Curses.color_pair(id)
       end
     end
