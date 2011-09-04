@@ -657,6 +657,15 @@ describe Ruco::Editor do
         nil
       ]
     end
+
+    it "shows multiple syntax elements" do
+      write("if @x")
+      editor.style_map.flatten.should == [
+        [:keyword, nil, :normal, :instance_variable, nil, :normal],
+        nil,
+        nil
+      ]
+    end
   end
 
   describe :view do

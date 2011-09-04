@@ -102,7 +102,14 @@ module Ruco
         {
           :normal => color_id(foreground, background),
           :reverse => color_id(background, foreground),
-          :keyword => color_id(Curses::COLOR_BLUE, background)
+          :keyword => color_id(Curses::COLOR_BLUE, background),
+          :comment => color_id(Curses::COLOR_YELLOW, background),
+          :constant => color_id(Curses::COLOR_RED, background),
+          :string => color_id(Curses::COLOR_GREEN, background),
+          :symbol => color_id(Curses::COLOR_RED, background),
+          :regex => color_id(Curses::COLOR_MAGENTA, background),
+          :instance_variable => color_id(Curses::COLOR_CYAN, background),
+          :class_instance_variable => color_id(Curses::COLOR_CYAN, background),
         }
       end
     end
