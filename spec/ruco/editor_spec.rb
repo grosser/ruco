@@ -640,7 +640,7 @@ describe Ruco::Editor do
     it "shows keywords" do
       write("class")
       editor.style_map.flatten.should == [
-        [:keyword, nil, nil, nil, nil, nil, :normal],
+        [:keyword, nil, nil, nil, nil, :normal],
         nil,
         nil
       ]
@@ -854,17 +854,17 @@ describe Ruco::Editor do
       stack.length.should == 2
       stack[0][:state][:content].should == "a"
       stack[1][:state][:content].should == "ba"
-      
+
       editor.undo
       editor.history.position.should == 0
-      
+
       editor.insert("c")
       editor.view # trigger save point
       stack.length.should == 2
       stack[0][:state][:content].should == "a"
       stack[1][:state][:content].should == "ca"
     end
-    
+
     it "can undo an action" do
       write("a")
       editor.insert("b")
