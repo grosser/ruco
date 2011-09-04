@@ -55,9 +55,11 @@ module Ruco
 
     def style_map
       map = super
-      SyntaxParser.parse_lines(lines, :ruby).each_with_index do |positions, line|
-        positions.each do |style, columns|
-          map.add(style, line, columns)
+      styled_lines = SyntaxParser.parse_lines(lines[@window.visible_lines], :ruby)
+      styled_lines.each_with_index do |style_positions, line|
+        style_positions.each do |style, columns|
+          columns = columns.move(-@window.left)
+          map.add(style, line, columns) if columns.first >= 0
         end
       end
       map

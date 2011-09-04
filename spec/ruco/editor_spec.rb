@@ -645,6 +645,18 @@ describe Ruco::Editor do
         nil
       ]
     end
+
+    it "shows keywords for moved window" do
+      write("\n\n\n\n\n     if  ")
+      editor.move(:to, 5, 6)
+      editor.cursor.should == [1,3]
+      editor.view.should == "\n  if \n"
+      editor.style_map.flatten.should == [
+        nil,
+        [nil, nil, :keyword, nil, :normal],
+        nil
+      ]
+    end
   end
 
   describe :view do

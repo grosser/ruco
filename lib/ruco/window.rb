@@ -77,6 +77,14 @@ module Ruco
       @top = [[line, max_top].min, 0].max
     end
 
+    def visible_lines
+      @top..(@top+@lines-1)
+    end
+
+    def visible_columns
+      @left..(@left+@columns-1)
+    end
+
     private
 
     def adjustment(current, allowed, threshold, offset)
@@ -94,14 +102,6 @@ module Ruco
       last_visible_column = @left + @columns
       end_of_line = [line, last_visible_column]
       start_of_line..end_of_line
-    end
-
-    def visible_lines
-      @top..(@top+@lines-1)
-    end
-
-    def visible_columns
-      @left..(@left+@columns-1)
     end
   end
 end
