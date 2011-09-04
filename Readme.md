@@ -1,25 +1,41 @@
 Simple, extendable, test-driven commandline editor written in ruby, for Linux/Mac/Windows.
 
-Features:
+### Features
 
- - **Intuitive interface**
+ - **Desktop-like / intuitive interface**
  - selecting via Shift + arrow-keys (only Linux or iTerm) or 'select mode' Ctrl+b + arrow-keys
  - move line up/down (Alt+Ctrl+up/down)
  - Tab -> indent / Shift+Tab -> unindent
  - keeps indentation (+ paste-detection e.g. via Cmd+v)
  - change (*) + writable (!) indicators
  - find / go to line / delete line / search & replace
- - configuration via `~/.ruco.rb`
- - cut, copy and paste -> Ctrl+x/c/v
- - undo / redo
+ - configuration via `~/.ruco.rb` in Ruby
+ - Full clipboard support -> Ctrl+x/c/v
+ - undo / redo -> Ctrl+z/y
  - stays at last position when reopening a file
- - opens file at line with `ruco foo/bar.rb:32` syntax
- - keeps whatever newline format you use (\r \n \r\n)
+ - opens file at line e.g. `ruco foo/bar.rb:32`
+ - supports all newline formats
  - surrounds selection with quotes/braces (select abc + " --> "abc")
  - shortens long file names in the middle
  - (optional) remove trailing whitespace on save
  - (optional) blank line before eof on save
  - (optional) line numbers
+
+### Architecture
+Ruco is basically a lot of String manipulation separated in HTML style elements.
+The only component dealing with the commandline interface are Screen and Keyboard. Therefore
+everything is very simple to build and test since it returns a string or a e.g. cursor position.
+
+Writing/reading is done in a TextArea or a TextField (a TextArea with 1 line)
+which are placed in Form`s.
+
+The Application consists of a StatusBar, Editor, CommandBar and delegates actions to the currently active element.
+
+To build the commandline output Editor/CommandBar return:
+
+ - view -- text that should be displayed on the screen (complete content cropped via Window)
+ - style_map -- a big Array with style infos, e.g. 'on line 1 chars 5 to 7 are red'
+ - cursor -- where to draw the cursor
 
 Install
 =======
@@ -75,11 +91,13 @@ Customize
 TIPS
 ====
  - [Mac] arow-keys + Shift/Alt does not work in default terminal (use iTerm)
- - [Tabs] Ruco does not like tabs. Existing tabs are displayed as ' ' and pressing tab inserts 2*space
+ - [Tabs] Ruco does not like tabs. Existing tabs are displayed as single space and pressing tab inserts 2*space
  - [RVM] `alias r="rvm 1.9.2 exec ruco"` and you only have to install ruco once
- - [Ruby1.9] Unicode support -> install libncursesw5-dev before installing ruby (does not work for 1.8)
+ - [Ruby1.9] Unicode support -> install libncursesw5-dev before installing ruby
  - [ssh vs clipboard] access your desktops clipboard by installing `xauth` on the server and then using `ssh -X`
  - [Alt key] if Alt does not work try your Meta/Win/Cmd key
+
+
 
 TODO
 =====
