@@ -53,6 +53,16 @@ module Ruco
       self.screen_position = data[:screen_position]
     end
 
+    def style_map
+      map = super
+      SyntaxParser.parse_lines(lines, :ruby).each_with_index do |positions, line|
+        positions.each do |style, columns|
+          map.add(style, line, columns)
+        end
+      end
+      map
+    end
+
     private
 
     # TODO use this instead of instance variables

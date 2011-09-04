@@ -34,13 +34,7 @@ module Ruco
 
     def style_map
       adjust_window
-      map = @window.style_map(@selection)
-      SyntaxParser.parse_lines(lines, :ruby).each_with_index do |positions, line|
-        positions.each do |style, columns|
-          map.add(style, line, columns)
-        end
-      end
-      map
+      @window.style_map(@selection)
     end
 
     def move(where, *args)
