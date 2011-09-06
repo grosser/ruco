@@ -1,5 +1,18 @@
 module Ruco
   class Screen
+    @@styles = {}
+
+    COLORS = {
+      :black => Curses::COLOR_BLACK,
+      :white => Curses::COLOR_WHITE,
+      :blue => Curses::COLOR_BLUE,
+      :yellow => Curses::COLOR_YELLOW,
+      :red => Curses::COLOR_RED,
+      :green => Curses::COLOR_GREEN,
+      :magenta => Curses::COLOR_MAGENTA,
+      :cyan => Curses::COLOR_CYAN,
+    }
+
     def initialize(options)
       @options = options
       @cache = []
@@ -90,28 +103,30 @@ module Ruco
     end
 
     def self.curses_style(style)
-      return 0 unless style
-      styles[style] or raise("Unknown style #{style.inspect}")
+      @@styles[style] ||= begin
+        foreground = :white
+        background = :black # background white does not work well since is is more like pink
+
+        foreground, background = if style == :normal
+          [foreground, background]
+        elsif style == :reverse
+          [background, foreground]
+        else
+          # :red or [:red, :blue]
+          f,b = style
+          b ||= background
+          [f,b]
+        end
+
+        foreground = translate_style_to_curses(foreground)
+        background = translate_style_to_curses(background)
+
+        color_id(foreground, background)
+      end
     end
 
-    def self.styles
-      @@styles ||= begin
-        foreground = Curses::COLOR_WHITE
-        background = Curses::COLOR_BLACK # background white does not work well since is is more like pink
-
-        {
-          :normal => color_id(foreground, background),
-          :reverse => color_id(background, foreground),
-          :keyword => color_id(Curses::COLOR_BLUE, background),
-          :comment => color_id(Curses::COLOR_YELLOW, background),
-          :constant => color_id(Curses::COLOR_RED, background),
-          :string => color_id(Curses::COLOR_GREEN, background),
-          :symbol => color_id(Curses::COLOR_RED, background),
-          :regex => color_id(Curses::COLOR_MAGENTA, background),
-          :instance_variable => color_id(Curses::COLOR_CYAN, background),
-          :class_instance_variable => color_id(Curses::COLOR_CYAN, background),
-        }
-      end
+    def self.translate_style_to_curses(color)
+      COLORS[color] || raise("Unknown color #{color.inspect}")
     end
 
     # create a new color from foreground+background or reuse old

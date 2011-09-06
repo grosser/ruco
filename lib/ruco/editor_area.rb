@@ -55,11 +55,17 @@ module Ruco
 
     def style_map
       map = super
-      styled_lines = SyntaxParser.parse_lines(lines[@window.visible_lines], :ruby)
+
+      styles = (@options[:styles] || {})[@options[:language]] || {}
+
+      styled_lines = SyntaxParser.parse_lines(lines[@window.visible_lines], @options[:language])
       styled_lines.each_with_index do |style_positions, line|
-        style_positions.each do |style, columns|
+        style_positions.each do |syntax_element, columns|
           columns = columns.move(-@window.left)
-          map.add(style, line, columns) if columns.first >= 0
+          style = styles[syntax_element]
+          if style and columns.first >= 0
+            map.add(style, line, columns)
+          end
         end
       end
       map

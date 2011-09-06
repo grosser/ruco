@@ -1,6 +1,20 @@
 module Ruco
   class Application
-    attr_reader :editor, :status, :command, :options
+    attr_reader :editor, :status, :command, :options, :styles
+    DEFAULT_STYLES = {
+      :ruby => {
+        :normal => nil,
+        :reverse => :reverse,
+        :keyword => :blue,
+        :comment => :yellow,
+        :constant => :red,
+        :string => :green,
+        :symbol => :red,
+        :regex => :magenta,
+        :instance_variable => :cyan,
+        :class_instance_variable => :cyan,
+      }
+    }
 
     def initialize(file, options)
       @file, go_to_line = parse_file_and_line(file)
@@ -8,6 +22,7 @@ module Ruco
 
       setup_actions
       setup_keys
+      @styles = DEFAULT_STYLES
       load_user_config
       create_components
 
@@ -251,6 +266,7 @@ module Ruco
       ).merge(
         :window => @options.nested(:window),
         :history => @options.nested(:history),
+        :styles => styles,
         :lines => editor_lines
       ).merge(@options.nested(:editor))
 
