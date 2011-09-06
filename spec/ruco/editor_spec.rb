@@ -9,8 +9,12 @@ describe Ruco::Editor do
     File.binary_read(@file)
   end
 
+  def color(c)
+    Ruco::Application::DEFAULT_STYLES[:ruby][c]
+  end
+
   let(:editor){
-    editor = Ruco::Editor.new(@file, :lines => 3, :columns => 5)
+    editor = Ruco::Editor.new(@file, :lines => 3, :columns => 5, :styles => Ruco::Application::DEFAULT_STYLES)
     # only scroll when we reach end of lines/columns <-> able to test with smaller area
     editor.send(:text_area).instance_eval{
       @window.instance_eval{
@@ -640,7 +644,7 @@ describe Ruco::Editor do
     it "shows keywords" do
       write("class")
       editor.style_map.flatten.should == [
-        [:keyword, nil, nil, nil, nil, :normal],
+        [color(:keyword), nil, nil, nil, nil, :normal],
         nil,
         nil
       ]
@@ -653,7 +657,7 @@ describe Ruco::Editor do
       editor.view.should == "\n  if \n"
       editor.style_map.flatten.should == [
         nil,
-        [nil, nil, :keyword, nil, :normal],
+        [nil, nil, color(:keyword), nil, :normal],
         nil
       ]
     end
@@ -661,7 +665,7 @@ describe Ruco::Editor do
     it "shows multiple syntax elements" do
       write("if @x")
       editor.style_map.flatten.should == [
-        [:keyword, nil, :normal, :instance_variable, nil, :normal],
+        [color(:keyword), nil, :normal, color(:instance_variable), nil, :normal],
         nil,
         nil
       ]
