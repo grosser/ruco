@@ -670,6 +670,15 @@ describe Ruco::Editor do
         nil
       ]
     end
+
+    it "does not show keywords inside strings" do
+      write("'Foo'")
+      editor.style_map.flatten.should == [
+        [color(:string), nil, nil, nil, nil, :normal],
+        nil,
+        nil
+      ]
+    end
   end
 
   describe :view do
