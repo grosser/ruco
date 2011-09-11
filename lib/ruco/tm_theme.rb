@@ -23,12 +23,29 @@ module Ruco
       # set scope styles
       rules.each do |rules|
         style = [
-          rules['settings']['foreground'],
-          rules['settings']['background'],
+          simple_color(rules['settings']['foreground']),
+          simple_color(rules['settings']['background']),
         ]
         rules['scope'].split(/, ?/).each do |scope|
           @styles[scope] = style
         end
+      end
+    end
+
+    def simple_color(html_color)
+      return unless html_color
+      return :white if html_color == '#ffffff'
+      return :black if html_color == '#000000'
+
+      red = html_color[1..2]
+      green = html_color[3..4]
+      blue = html_color[5..6]
+      if red > green and red > blue
+        :red
+      elsif green > red and green > blue
+        :green
+      else
+        :blue
       end
     end
   end

@@ -70,7 +70,7 @@ module Ruco
           columns = columns.move(-@window.left)
           _, style = @@theme.styles.detect{|name,style| syntax_element.to_s.start_with?(name) }
           if style and columns.first >= 0
-            map.add([:red, :blue], line, columns)
+            map.add(style, line, columns)
           end
         end
       end
