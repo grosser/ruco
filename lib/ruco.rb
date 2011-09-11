@@ -29,6 +29,8 @@ require 'ruco/text_area'
 require 'ruco/editor_area'
 require 'ruco/text_field'
 
+require 'ruco/array_processor'
+
 module Ruco
   autoload :Clipboard, 'clipboard' # can crash when loaded -> load if needed
 
