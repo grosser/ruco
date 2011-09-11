@@ -17,6 +17,7 @@ GEM
     rspec-expectations (2.6.0)
       diff-lcs (~> 1.1.2)
     rspec-mocks (2.6.0)
+    ultra_pow_list (0.1.0)
 
 PLATFORMS
   ruby
@@ -27,3 +28,4 @@ DEPENDENCIES
   jeweler
   rake
   rspec (~> 2)
+  ultra_pow_list
