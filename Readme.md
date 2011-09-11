@@ -70,10 +70,6 @@ Customize
       # create reusable actions
       action(:first_line){ editor.move(:to_column, 0) }
       bind :"Ctrl+u", :first_line
-
-      # change colors
-      styles[:ruby][:string] = :red # red on black
-      styles[:ruby][:instance_variable] = [:red, :blue] # red on blue
     end
 
 TIPS

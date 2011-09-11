@@ -27,7 +27,7 @@ module Ruco
           rules['settings']['background'],
         ]
         rules['scope'].split(/, ?/).each do |scope|
-          @styles[scope.to_sym] = style
+          @styles[scope] = style
         end
       end
     end
