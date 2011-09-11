@@ -61,7 +61,7 @@ task :key do
   end
 end
 
-task :parse do
+task :parse_syntax do
   require 'ruco/array_processor'
   require 'ultra_pow_list'
   UltraPowList.make_loadable
@@ -72,6 +72,14 @@ task :parse do
   processor = Ruco::ArrayProcessor.new
   result = syntax.parse( "class Foo\n  def xxx;end\nend",  processor )
   puts result.inspect
+end
+
+task :parse_theme do
+  require 'ultra_pow_list'
+  UltraPowList.make_loadable 'plist'
+  require 'plist'
+  syntax = Plist.parse_xml('spec/fixtures/test.tmTheme')
+  puts syntax.inspect
 end
 
 begin

@@ -29,7 +29,15 @@ require 'ruco/text_area'
 require 'ruco/editor_area'
 require 'ruco/text_field'
 
+
+# TODO refactor <-> maybe not available in ruby 1.8 without omnigugfu
+require 'ultra_pow_list'
+UltraPowList.make_loadable
+require 'plist'
+require 'textpow'
+require 'uv'
 require 'ruco/array_processor'
+require 'ruco/tm_theme'
 
 module Ruco
   autoload :Clipboard, 'clipboard' # can crash when loaded -> load if needed
