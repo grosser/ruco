@@ -9,6 +9,6 @@ describe Ruco::TMTheme do
   end
 
   it "parses rules" do
-    theme.styles["keyword.operator.class"].should == ["#666969", nil]
+    theme.styles["keyword.operator.class"].should == [:black, nil]
   end
 end
