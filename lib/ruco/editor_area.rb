@@ -68,7 +68,7 @@ module Ruco
       styled_lines.each_with_index do |style_positions, line|
         style_positions.each do |syntax_element, columns|
           columns = columns.move(-@window.left)
-          _, style = @@theme.styles.detect{|name,style| syntax_element.to_s.start_with?(name) }
+          _, style = @@theme.styles.detect{|name,style| syntax_element.start_with?(name) }
           if style and columns.first >= 0
             map.add(style, line, columns)
           end

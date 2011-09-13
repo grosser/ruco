@@ -13,7 +13,7 @@ module Ruco
     end
 
     def close_tag(name, position)
-      @lines[@line_number] << [name.to_sym, @open_positions.pop...position]
+      @lines[@line_number] << [name, @open_positions.pop...position]
     end
 
     def new_line(line)
