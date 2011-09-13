@@ -10,11 +10,11 @@ describe Ruco::Editor do
   end
 
   def color(c)
-    Ruco::Application::DEFAULT_STYLES[:ruby][c]
+    c
   end
 
   let(:editor){
-    editor = Ruco::Editor.new(@file, :lines => 3, :columns => 5, :styles => Ruco::Application::DEFAULT_STYLES)
+    editor = Ruco::Editor.new(@file, :lines => 3, :columns => 5)
     # only scroll when we reach end of lines/columns <-> able to test with smaller area
     editor.send(:text_area).instance_eval{
       @window.instance_eval{
