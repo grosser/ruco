@@ -127,14 +127,14 @@ describe Ruco::Application do
     it "stores the session so I can reopen at the same position" do
       write("0\n1\n2\n")
       type :right, :down, :"Ctrl+q"
-      reopened = Ruco::Application.new(@file, :lines => 5, :columns => 10)
+      reopened = Ruco::Application.new(@file, :lines => 5, :columns => 10, :rc => rucorc)
       reopened.cursor.should == [2,1]
     end
 
     it "does not store or restore content" do
       write('')
       type 'x', :"Ctrl+s", :enter, :enter, 'a', :"Ctrl+q"
-      reopened = Ruco::Application.new(@file, :lines => 5, :columns => 10)
+      reopened = Ruco::Application.new(@file, :lines => 5, :columns => 10, :rc => rucorc)
       editor_part(reopened.view).should == "x\n\n"
     end
   end
