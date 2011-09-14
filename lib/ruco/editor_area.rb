@@ -2,6 +2,7 @@ module Ruco
   # everything that does not belong to a text-area
   # but is needed for Ruco::Editor
   class EditorArea < TextArea
+    include Ruco::Editor::Colors
     include Ruco::Editor::LineNumbers
     include Ruco::Editor::History
 
@@ -53,28 +54,7 @@ module Ruco
       self.screen_position = data[:screen_position]
     end
 
-    def style_map
-      map = super
-      styled_lines = SyntaxParser.parse_lines(lines[@window.visible_lines], @options[:language])
-      colorize(map, styled_lines)
-      map
-    end
-
     private
-
-    def colorize(map, styled_lines)
-      @@theme ||= Ruco::TMTheme.new('spec/fixtures/test.tmTheme')
-
-      styled_lines.each_with_index do |style_positions, line|
-        style_positions.each do |syntax_element, columns|
-          columns = columns.move(-@window.left)
-          _, style = @@theme.styles.detect{|name,style| syntax_element.start_with?(name) }
-          if style and columns.first >= 0
-            map.add(style, line, columns)
-          end
-        end
-      end
-    end
 
     # TODO use this instead of instance variables
     def screen_position
