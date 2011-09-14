@@ -12,17 +12,15 @@ module Ruco
     end
 
     def open(&block)
+      ENV['TERM'] += '-256color' if ENV['TERM'] == 'xterm' # activate 256 colors
       Curses.noecho # do not show typed chars
       Curses.nonl # turn off newline translation
       Curses.stdscr.keypad(true) # enable arrow keys
       Curses.raw # give us all other keys
       Curses.stdscr.nodelay = 1 # do not block -> we can use timeouts
       Curses.init_screen
-      if Curses.has_colors?
-        ENV['TERM'] += '-256color' if ENV['TERM'] == 'xterm' # activate 256 colors
-        Curses.start_color
-      end
-      Curses.use_default_colors # if defined? Curses.use_default_colors
+      Curses.start_color if Curses.has_colors?
+      Curses.use_default_colors if defined? Curses.use_default_colors
       yield self
     ensure
       Curses.clear # needed to clear the menu/status bar on windows
@@ -111,8 +109,8 @@ module Ruco
           [f,b]
         end
 
-        foreground = html_to_curses_color(foreground)
-        background = html_to_curses_color(background)
+        foreground = html_to_terminal_color(foreground)
+        background = html_to_terminal_color(background)
 
         color_id(foreground, background)
       end
@@ -133,14 +131,17 @@ module Ruco
       end
     end
 
-    HALF_COLOR = '7f'
+    COLOR_SOURCE_VALUES = 256
+    COLOR_TARGET_VALUES = 5
+    COLOR_DIVIDE = COLOR_SOURCE_VALUES / COLOR_TARGET_VALUES
+    TERM_COLOR_BASE = 16
 
-    def self.html_to_curses_color(html_color)
+    def self.html_to_terminal_color(html_color)
       return unless html_color
-      r = (html_color[1..2] > HALF_COLOR ? 1 : 0)
-      g = (html_color[3..4] > HALF_COLOR ? 2 : 0)
-      b = (html_color[5..6] > HALF_COLOR ? 4 : 0)
-      r + g + b
+      r = (html_color[1..2].to_i(16) / COLOR_DIVIDE) * 36
+      g = (html_color[3..4].to_i(16) / COLOR_DIVIDE) * 6
+      b = (html_color[5..6].to_i(16) / COLOR_DIVIDE) * 1
+      TERM_COLOR_BASE + r + g + b
     end
   end
 end

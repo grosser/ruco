@@ -21,4 +21,18 @@ describe Ruco::Screen do
       }.should raise_error
     end
   end
+
+  describe :html_to_terminal_color do
+    # http://www.mudpedia.org/wiki/Xterm_256_colors
+    [
+      ['#ff0000', 196],
+      ['#00ff00', 46],
+      ['#0000ff', 21],
+      ['#ffffff', 231]
+    ].each do |html,term|
+      it "converts #{html} to #{term}" do
+        Ruco::Screen.html_to_terminal_color(html).should == term
+      end
+    end
+  end
 end
