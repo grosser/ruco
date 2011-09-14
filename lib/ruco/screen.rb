@@ -2,17 +2,6 @@ module Ruco
   class Screen
     @@styles = {}
 
-    COLORS = {
-      :black => Curses::COLOR_BLACK,
-      :white => Curses::COLOR_WHITE,
-      :blue => Curses::COLOR_BLUE,
-      :yellow => Curses::COLOR_YELLOW,
-      :red => Curses::COLOR_RED,
-      :green => Curses::COLOR_GREEN,
-      :magenta => Curses::COLOR_MAGENTA,
-      :cyan => Curses::COLOR_CYAN,
-    }
-
     def initialize(options)
       @options = options
       @cache = []
@@ -104,8 +93,8 @@ module Ruco
 
     def self.curses_style(style)
       @@styles[style] ||= begin
-        foreground = :white
-        background = :black # background white does not work well since is is more like pink
+        foreground = '#ffffff'
+        background = '#000000' # background white does not work well since is is more like pink
 
         foreground, background = if style == :normal
           [foreground, background]
@@ -118,15 +107,11 @@ module Ruco
           [f,b]
         end
 
-        foreground = translate_style_to_curses(foreground)
-        background = translate_style_to_curses(background)
+        foreground = html_to_curses_color(foreground)
+        background = html_to_curses_color(background)
 
         color_id(foreground, background)
       end
-    end
-
-    def self.translate_style_to_curses(color)
-      COLORS[color] || raise("Unknown color #{color.inspect}")
     end
 
     # create a new color from foreground+background or reuse old
@@ -142,6 +127,16 @@ module Ruco
         end
         Curses.color_pair(id)
       end
+    end
+
+    HALF_COLOR = '7f'
+
+    def self.html_to_curses_color(html_color)
+      return unless html_color
+      r = (html_color[1..2] > HALF_COLOR ? 1 : 0)
+      g = (html_color[3..4] > HALF_COLOR ? 2 : 0)
+      b = (html_color[5..6] > HALF_COLOR ? 4 : 0)
+      r + g + b
     end
   end
 end
