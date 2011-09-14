@@ -10,7 +10,11 @@ describe Ruco::Editor do
   end
 
   def color(c)
-    c
+    {
+      :string => ["#718C00", nil],
+      :keyword => ["#8959A8", nil],
+      :instance_variable => ["#C82829", nil],
+    }[c]
   end
 
   let(:editor){
@@ -30,6 +34,7 @@ describe Ruco::Editor do
   before do
     `rm -rf ~/.ruco/sessions`
     @file = 'spec/temp.txt'
+    write('')
   end
 
   describe "strange newline formats" do
@@ -574,7 +579,7 @@ describe Ruco::Editor do
     end
 
     it "shows one-line selection" do
-      write('12345678')
+      write('abcdefghi')
       editor.selecting do
         move(:to, 0, 4)
       end
@@ -586,7 +591,7 @@ describe Ruco::Editor do
     end
 
     it "shows multi-line selection" do
-      write("012\n345\n678")
+      write("abc\nabc\nabc")
       editor.move(:to, 0,1)
       editor.selecting do
         move(:to, 1, 1)
@@ -599,7 +604,7 @@ describe Ruco::Editor do
     end
 
     it "shows the selection from offset" do
-      write('12345678')
+      write('abcdefghi')
       editor.move(:to, 0, 2)
       editor.selecting do
         move(:to, 0, 4)
@@ -612,7 +617,7 @@ describe Ruco::Editor do
     end
 
     it "shows the selection in nth line" do
-      write("\n12345678")
+      write("\nabcdefghi")
       editor.move(:to, 1, 2)
       editor.selecting do
         move(:to, 1, 4)
@@ -1035,6 +1040,7 @@ describe Ruco::Editor do
     end
 
     it "is changed after delete" do
+      write("abc")
       editor.delete(1)
       editor.modified?.should == true
     end
@@ -1051,6 +1057,7 @@ describe Ruco::Editor do
     end
 
     it "is changed after delete_line" do
+      write("\n\n\n")
       editor.delete_line
       editor.modified?.should == true
     end
@@ -1152,16 +1159,16 @@ describe Ruco::Editor do
     let(:editor){ Ruco::Editor.new(@file, :lines => 5, :columns => 10, :line_numbers => true) }
 
     before do
-      write("0\n1\n2\n3\n4\n5\n6\n7\n")
+      write("a\nb\nc\nd\ne\nf\ng\nh\n")
     end
 
     it "adds numbers to view" do
-      editor.view.should == "   1 0\n   2 1\n   3 2\n   4 3\n   5 4"
+      editor.view.should == "   1 a\n   2 b\n   3 c\n   4 d\n   5 e"
     end
 
     it "does not show numbers for empty lines" do
       editor.move(:to, 10,0)
-      editor.view.should == "   6 5\n   7 6\n   8 7\n   9 \n     "
+      editor.view.should == "   6 f\n   7 g\n   8 h\n   9 \n     "
     end
 
     it "adjusts the cursor" do
