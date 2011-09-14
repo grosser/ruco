@@ -18,7 +18,11 @@ module Ruco
       Curses.raw # give us all other keys
       Curses.stdscr.nodelay = 1 # do not block -> we can use timeouts
       Curses.init_screen
-      Curses.start_color if Curses.has_colors?
+      if Curses.has_colors?
+        ENV['TERM'] += '-256color' if ENV['TERM'] == 'xterm' # activate 256 colors
+        Curses.start_color
+      end
+      Curses.use_default_colors # if defined? Curses.use_default_colors
       yield self
     ensure
       Curses.clear # needed to clear the menu/status bar on windows

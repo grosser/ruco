@@ -31,7 +31,7 @@ require 'ruco/editor_area'
 require 'ruco/text_field'
 
 begin
-  require 'oniguruma'
+  require 'oniguruma' if RUBY_VERSION < '1.9.0'
   require 'plist'
   require 'textpow'
   require 'uv'
