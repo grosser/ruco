@@ -20,7 +20,7 @@ module Ruco
       @lines.map do |styles|
         next unless styles
 
-        # change to style at start and revert to normal one after the end
+        # change to style at start and recalculate one after the end
         points_of_change = styles.map{|s,c| [c.first, c.last_element+1] }.flatten.uniq
 
         flat = []

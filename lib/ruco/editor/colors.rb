@@ -3,8 +3,8 @@ module Ruco
     module Colors
       def style_map
         map = super
-        styled_lines = SyntaxParser.parse_lines(lines, @options[:language])[@window.visible_lines]
-        colorize(map, styled_lines)
+        styled_lines = SyntaxParser.parse_lines(lines, @options[:language])
+        colorize(map, styled_lines[@window.visible_lines])
         map
       end
 
@@ -16,11 +16,19 @@ module Ruco
         styled_lines.each_with_index do |style_positions, line|
           style_positions.each do |syntax_element, columns|
             columns = columns.move(-@window.left)
-            _, style = @@theme.styles.detect{|name,style| syntax_element.start_with?(name) }
+            style = style_for_element(syntax_element)
             if style and columns.first >= 0
               map.add(style, line, columns)
             end
           end
+        end
+      end
+
+      def style_for_element(syntax_element)
+        @@style_for_element ||= {}
+        @@style_for_element[syntax_element] ||= begin
+          _, style = @@theme.styles.detect{|name,style| syntax_element.start_with?(name) }
+          style
         end
       end
     end
