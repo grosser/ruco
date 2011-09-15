@@ -2,11 +2,7 @@ require File.expand_path('spec/spec_helper')
 
 describe Ruco::SyntaxParser do
   def parse(text)
-    sorted Ruco::SyntaxParser.parse_lines(text, :ruby)
-  end
-
-  def sorted(x)
-    x.sort_by{|y| y.first.to_s }
+    Ruco::SyntaxParser.parse_lines(text, :ruby)
   end
 
   describe :parse_lines do
@@ -47,6 +43,22 @@ describe Ruco::SyntaxParser do
         ["punctuation.definition.comment.ruby", 6...7],
         ["comment.line.number-sign.ruby", 6...13]
       ]]
+    end
+
+    it "shows multiline comments" do
+      parse(["=begin","1 : 2","=end"]).should == [
+        [["punctuation.definition.comment.ruby", 0...6], ["comment.block.documentation.ruby", 0...7]],
+        [["comment.block.documentation.ruby", 0...6]],
+        [["punctuation.definition.comment.ruby", 0...4], ["comment.block.documentation.ruby", 0...4]]
+      ]
+    end
+
+    it "continues multiline on last line before closing it" do
+      parse(["%Q{\n\na  }"]).should == [
+        [["punctuation.definition.string.begin.ruby", 0...3], ["string.quoted.double.ruby.mod", 0...4]],
+        [["string.quoted.double.ruby.mod", 0...1]],
+        [["punctuation.definition.string.end.ruby", 3...4], ["string.quoted.double.ruby.mod", 0...4]]
+      ]
     end
   end
 end

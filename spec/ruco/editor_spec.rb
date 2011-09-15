@@ -684,6 +684,17 @@ describe Ruco::Editor do
         nil
       ]
     end
+
+    it "shows multiline comments" do
+      write("=begin\na\nb\n=end")
+      editor.move(:to, 3,0)
+      editor.view.should == "b\n=end\n"
+      editor.style_map.flatten.should == [
+        [["#8E908C", nil], nil, :normal],
+        [["#8E908C", nil], nil, nil, nil, :normal],
+        nil
+      ]
+    end
   end
 
   describe :view do

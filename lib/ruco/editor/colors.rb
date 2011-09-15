@@ -3,7 +3,7 @@ module Ruco
     module Colors
       def style_map
         map = super
-        styled_lines = SyntaxParser.parse_lines(lines[@window.visible_lines], @options[:language])
+        styled_lines = SyntaxParser.parse_lines(lines, @options[:language])[@window.visible_lines]
         colorize(map, styled_lines)
         map
       end
