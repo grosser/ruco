@@ -31,10 +31,18 @@ require 'ruco/editor_area'
 require 'ruco/text_field'
 
 begin
+  # this can fail on ruby 1.8 <-> oniguruma is complicated to install
   require 'oniguruma' if RUBY_VERSION < '1.9.0'
+
+  # there are some other gems out there like spox-textpow etc, so be picky
+  gem 'plist'
   require 'plist'
+  gem 'textpow1x'
   require 'textpow'
+  gem 'ultraviolet1x'
   require 'uv'
+
+  # we do not need there if any other color li failed
   require 'ruco/array_processor'
   require 'ruco/tm_theme'
 rescue LoadError
