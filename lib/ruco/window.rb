@@ -50,9 +50,15 @@ module Ruco
     end
 
     def style_map(selection)
-      mask = StyleMap.new(lines)
-      return mask unless selection
+      map = StyleMap.new(lines)
+      if selection
+        add_selection_styles(map, selection)
+      else
+        map
+      end
+    end
 
+    def add_selection_styles(map, selection)
       lines.times do |line|
         visible = visible_area(line)
         next unless selection.overlap?(visible)
@@ -62,10 +68,9 @@ module Ruco
         last = [selection.last, visible.last].min
         last = last[1] - left
 
-        mask.add(:reverse, line, first...last)
+        map.add(:reverse, line, first...last)
       end
-
-      mask
+      map
     end
 
     def left=(x)

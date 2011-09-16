@@ -695,6 +695,18 @@ describe Ruco::Editor do
         nil
       ]
     end
+
+    it "shows selection on top" do
+      write("class")
+      editor.selecting do
+        move(:relative, 0, 3)
+      end
+      editor.style_map.flatten.should == [
+        [:reverse, nil, nil, ["#8959A8", nil], nil, :normal],
+        nil,
+        nil
+      ]
+    end
   end
 
   describe :view do

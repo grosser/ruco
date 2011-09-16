@@ -5,6 +5,10 @@ module Ruco
         map = super
         styled_lines = SyntaxParser.parse_lines(lines, @options[:language])
         colorize(map, styled_lines[@window.visible_lines])
+        if @selection
+          # add selection a second time so it stays on top
+          @window.add_selection_styles(map, @selection)
+        end
         map
       end
 
