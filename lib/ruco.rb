@@ -25,11 +25,6 @@ require 'ruco/status_bar'
 require 'ruco/command_bar'
 require 'ruco/application'
 
-require 'ruco/form'
-require 'ruco/text_area'
-require 'ruco/editor_area'
-require 'ruco/text_field'
-
 begin
   # this can fail on ruby 1.8 <-> oniguruma is complicated to install
   require 'oniguruma' if RUBY_VERSION < '1.9.0'
@@ -48,6 +43,11 @@ begin
 rescue LoadError
   warn "Could not load color libs -- #{$!}"
 end
+
+require 'ruco/form'
+require 'ruco/text_area'
+require 'ruco/editor_area'
+require 'ruco/text_field'
 
 module Ruco
   autoload :Clipboard, 'clipboard' # can crash when loaded -> load if needed
