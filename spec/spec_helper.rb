@@ -1,6 +1,7 @@
 $LOAD_PATH.unshift 'lib'
 require 'ruco'
 require 'timeout'
+Ruco::Editor::Colors::RECOLORING_TIMEOUT = 0
 
 require 'tempfile'
 class Tempfile
