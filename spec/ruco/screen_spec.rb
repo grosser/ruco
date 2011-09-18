@@ -20,6 +20,29 @@ describe Ruco::Screen do
         Ruco::Screen.curses_style(:foo)
       }.should raise_error
     end
+
+    describe 'without colors' do
+      before do
+        Ruco::Screen.class_eval '@@styles = {}' # clear cache
+        $ruco_colors = false
+      end
+
+      after do
+        $ruco_colors = true
+      end
+
+      it "is 'normal' for normal" do
+        Ruco::Screen.curses_style(:normal).should == Curses::A_NORMAL
+      end
+
+      it "is reverse for reverse" do
+        Ruco::Screen.curses_style(:reverse).should == Curses::A_REVERSE
+      end
+
+      it "is normal for unknown style" do
+        Ruco::Screen.curses_style(:foo).should == Curses::A_NORMAL
+      end
+    end
   end
 
   describe :html_to_terminal_color do

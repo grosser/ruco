@@ -12,15 +12,16 @@ module Ruco
     end
 
     def open(&block)
-      ENV['TERM'] += '-256color' if ENV['TERM'] == 'xterm' # activate 256 colors
+      if $ruco_colors and ENV['TERM'] == 'xterm'
+        ENV['TERM'] += '-256color' # activate 256 colors
+      end
       Curses.noecho # do not show typed chars
       Curses.nonl # turn off newline translation
       Curses.stdscr.keypad(true) # enable arrow keys
       Curses.raw # give us all other keys
       Curses.stdscr.nodelay = 1 # do not block -> we can use timeouts
       Curses.init_screen
-      Curses.start_color if Curses.has_colors?
-      Curses.use_default_colors if defined? Curses.use_default_colors
+      Curses.start_color if $ruco_colors and Curses.has_colors?
       yield self
     ensure
       Curses.clear # needed to clear the menu/status bar on windows
@@ -95,24 +96,31 @@ module Ruco
 
     def self.curses_style(style)
       @@styles[style] ||= begin
-        foreground = '#ffffff'
-        background = '#000000' # background white does not work well since is is more like pink
+        if $ruco_colors
+          foreground = '#ffffff'
+          background = '#000000' # background white does not work well since is is more like pink
 
-        foreground, background = if style == :normal
-          [foreground, background]
-        elsif style == :reverse
-          [background, foreground]
-        else
-          # :red or [:red, :blue]
-          f,b = style
-          b ||= background
-          [f,b]
+          foreground, background = if style == :normal
+            [foreground, background]
+          elsif style == :reverse
+            [background, foreground]
+          else
+            # :red or [:red, :blue]
+            f,b = style
+            b ||= background
+            [f,b]
+          end
+
+          foreground = html_to_terminal_color(foreground)
+          background = html_to_terminal_color(background)
+          color_id(foreground, background)
+        else # no colors
+          if style == :reverse
+            Curses::A_REVERSE
+          else
+            Curses::A_NORMAL
+          end
         end
-
-        foreground = html_to_terminal_color(foreground)
-        background = html_to_terminal_color(background)
-
-        color_id(foreground, background)
       end
     end
 
