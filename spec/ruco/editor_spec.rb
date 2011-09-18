@@ -17,8 +17,9 @@ describe Ruco::Editor do
     }[c]
   end
 
+  let(:language){ LanguageSniffer::Language.new(:name => 'ruby', :lexer => 'ruby') }
   let(:editor){
-    editor = Ruco::Editor.new(@file, :lines => 3, :columns => 5, :language => LanguageSniffer::Language.new(:name => 'ruby', :lexer => 'ruby'))
+    editor = Ruco::Editor.new(@file, :lines => 3, :columns => 5, :language => language)
     # only scroll when we reach end of lines/columns <-> able to test with smaller area
     editor.send(:text_area).instance_eval{
       @window.instance_eval{
@@ -706,6 +707,38 @@ describe Ruco::Editor do
         nil,
         nil
       ]
+    end
+
+    describe 'with theme' do
+      before do
+        write("class")
+        `rm -rf ~/.ruco/themes`
+      end
+
+      it "can download a theme" do
+        editor = Ruco::Editor.new(@file,
+          :lines => 3, :columns => 5, :language => language,
+          :color_theme => 'https://raw.github.com/ChrisKempson/Tomorrow-Theme/master/TextMate/Tomorrow-Night-Bright.tmTheme'
+        )
+        editor.style_map.flatten.should == [
+          [["#C397D8", nil], nil, nil, nil, nil, :normal],
+          nil,
+          nil
+        ]
+      end
+
+      it "does not fail with invalid theme url" do
+        STDERR.should_receive(:puts)
+        editor = Ruco::Editor.new(@file,
+          :lines => 3, :columns => 5, :language => language,
+          :color_theme => 'foooooo'
+        )
+        editor.style_map.flatten.should == [
+          [["#8959A8", nil], nil, nil, nil, nil, :normal],
+          nil,
+          nil
+        ]
+      end
     end
   end
 

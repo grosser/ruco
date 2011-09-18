@@ -3,6 +3,7 @@ module Ruco
     module Colors
       RECOLORING_TIMEOUT = 2 # seconds
       INSTANT_RECOLORING_RANGE = 1 # recolor x lines around the current one
+      DEFAULT_THEME = 'spec/fixtures/test.tmTheme'
 
       def style_map
         map = super
@@ -50,7 +51,6 @@ module Ruco
 
       def colorize(map, styled_lines)
         return unless styled_lines
-        @@theme ||= Ruco::TMTheme.new('spec/fixtures/test.tmTheme')
 
         styled_lines.each_with_index do |style_positions, line|
           next unless style_positions
@@ -65,11 +65,31 @@ module Ruco
       end
 
       def style_for_element(syntax_element)
-        @@style_for_element ||= {}
-        @@style_for_element[syntax_element] ||= begin
-          _, style = @@theme.styles.detect{|name,style| syntax_element.start_with?(name) }
+        @theme ||= Ruco::TMTheme.new(theme_file)
+        @style_for_element ||= {}
+        @style_for_element[syntax_element] ||= begin
+          _, style = @theme.styles.detect{|name,style| syntax_element.start_with?(name) }
           style
         end
+      end
+
+      def theme_file
+        file = download_into_file(@options[:color_theme]) if @options[:color_theme]
+        file || DEFAULT_THEME
+      end
+
+      def download_into_file(url)
+        theme_store = FileStore.new(File.expand_path('~/.ruco/themes'), :keep => 5, :pure => true)
+        theme_store.cache(url) do
+          require 'open-uri'
+          require 'openssl'
+          OpenURI.without_ssl_verification do
+            open(url).read
+          end
+        end
+        File.expand_path(theme_store.file(url))
+      rescue => e
+        STDERR.puts "Could not download #{url} -- #{e}"
       end
     end
   end

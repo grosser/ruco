@@ -50,3 +50,29 @@ class Object
     Marshal.load(Marshal.dump(self))
   end unless defined? deep_copy
 end
+
+class Object
+  # copy from active_support
+  def silence_warnings
+    with_warnings(nil) { yield }
+  end unless defined? silence_warnings
+
+  # copy from active_support
+  def with_warnings(flag)
+    old_verbose, $VERBOSE = $VERBOSE, flag
+    yield
+  ensure
+    $VERBOSE = old_verbose
+  end unless defined? with_warnings
+end
+
+# http://grosser.it/2010/07/23/open-uri-without-ssl-https-verification/
+module OpenURI
+  def self.without_ssl_verification
+    old = ::OpenSSL::SSL::VERIFY_PEER
+    silence_warnings{ ::OpenSSL::SSL.const_set :VERIFY_PEER, OpenSSL::SSL::VERIFY_NONE }
+    yield
+  ensure
+    silence_warnings{ ::OpenSSL::SSL.const_set :VERIFY_PEER, old }
+  end
+end

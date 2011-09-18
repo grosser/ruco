@@ -247,7 +247,7 @@ module Ruco
       @status_lines = 1
 
       editor_options = @options.slice(
-        :columns, :convert_tabs, :convert_newlines, :undo_stack_size
+        :columns, :convert_tabs, :convert_newlines, :undo_stack_size, :color_theme
       ).merge(
         :window => @options.nested(:window),
         :history => @options.nested(:history),

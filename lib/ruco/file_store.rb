@@ -37,6 +37,10 @@ module Ruco
       FileUtils.rm_rf(@folder)
     end
 
+    def file(key)
+      "#{@folder}/#{Digest::MD5.hexdigest(key)}.yml"
+    end
+
     private
 
     def entries
@@ -50,12 +54,8 @@ module Ruco
       delete.each{|f| File.delete(f) }
     end
 
-    def file(key)
-      "#{@folder}/#{Digest::MD5.hexdigest(key)}.yml"
-    end
-
     def serialize(value)
-      Marshal.dump(value)
+      @options[:string] ? value : Marshal.dump(value)
     end
 
     def deserialize(value)

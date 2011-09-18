@@ -40,6 +40,10 @@ Customize
       options.editor_remove_trailing_whitespace_on_save = true  # default false
       options.editor_blank_line_before_eof_on_save = true       # default false
       options.editor_line_numbers = true                        # default false
+
+      # Use any Textmate theme e.g. from http://wiki.macromates.com/Themes/UserSubmittedThemes
+      # use a url that points directly to the theme, e.g. github 'raw' urls
+      options.color_theme = "https://raw.github.com/ChrisKempson/Tomorrow-Theme/master/TextMate/Tomorrow-Night-Bright.tmTheme"
       ...
 
       # bind a key
