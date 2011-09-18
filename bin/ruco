@@ -21,6 +21,7 @@ Options:
 BANNER
     opts.on("-c", "--convert-tabs","Convert tabs to spaces") { options[:convert_tabs] = true }
     opts.on("-u", "--undo-stack-size SIZE","Maximum size of the undo stack.  0 allows for a complete undo stack.") {|size| options[:undo_stack_size] = size.to_i }
+    opts.on("--no-colors","No colors -- helps performance / broken terminals") { options[:no_colors] = true }
     opts.on("--debug-cache","Show caching in action") { options[:debug_cache] = true }
     opts.on("--debug-keys", "Show pressed keys") { options[:debug_keys] = true }
     opts.on("-v", "--version","Show Version"){
@@ -44,15 +45,16 @@ def log(stuff)
   File.open('ruco.log','ab'){|f| f.puts stuff }
 end
 
-@options = parse_options
+options = parse_options
+$ruco_no_colors = options[:no_colors]
 
 require 'ruco'
 
 # draw app and redraw after each keystroke (or paste)
-Ruco::Screen.open(@options) do |screen|
+Ruco::Screen.open(options) do |screen|
   app = Ruco::Application.new(ARGV[0],
-    :convert_tabs => @options[:convert_tabs],
-    :undo_stack_size => @options[:undo_stack_size],
+    :convert_tabs => options[:convert_tabs],
+    :undo_stack_size => options[:undo_stack_size],
     :lines => screen.lines, :columns => screen.columns
   )
 
@@ -63,7 +65,7 @@ Ruco::Screen.open(@options) do |screen|
   end
 
   Keyboard.output do |key|
-    screen.debug_key(key) if @options[:debug_keys]
+    screen.debug_key(key) if options[:debug_keys]
     if key == :resize
       app.resize(lines, columns)
       screen.clear_cache

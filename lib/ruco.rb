@@ -22,28 +22,30 @@ require 'ruco/syntax_parser'
 require 'ruco/editor'
 require 'ruco/editor/line_numbers'
 require 'ruco/editor/history'
-require 'ruco/editor/colors'
 require 'ruco/status_bar'
 require 'ruco/command_bar'
 require 'ruco/application'
 
-begin
-  # this can fail on ruby 1.8 <-> oniguruma is complicated to install
-  require 'oniguruma' if RUBY_VERSION < '1.9.0'
+unless $ruco_no_colors
+  begin
+    # this can fail on ruby 1.8 <-> oniguruma is complicated to install
+    require 'oniguruma' if RUBY_VERSION < '1.9.0'
 
-  # there are some other gems out there like spox-textpow etc, so be picky
-  gem 'plist'
-  require 'plist'
-  gem 'textpow1x'
-  require 'textpow'
-  gem 'ultraviolet1x'
-  require 'uv'
+    # there are some other gems out there like spox-textpow etc, so be picky
+    gem 'plist'
+    require 'plist'
+    gem 'textpow1x'
+    require 'textpow'
+    gem 'ultraviolet1x'
+    require 'uv'
 
-  # we do not need there if any other color li failed
-  require 'ruco/array_processor'
-  require 'ruco/tm_theme'
-rescue LoadError
-  warn "Could not load color libs -- #{$!}"
+    # we do not need there if any other color li failed
+    require 'ruco/array_processor'
+    require 'ruco/tm_theme'
+    require 'ruco/editor/colors'
+  rescue LoadError
+    warn "Could not load color libs -- #{$!}"
+  end
 end
 
 require 'ruco/form'
