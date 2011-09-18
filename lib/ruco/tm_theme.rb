@@ -26,10 +26,16 @@ module Ruco
           rules['settings']['foreground'],
           rules['settings']['background'],
         ]
-        rules['scope'].split(/, ?/).each do |scope|
-          @styles[scope] = style
+        rules['scope'].split(/, ?/).map(&:strip).each do |scope|
+          @styles[scope] = style unless nested_scope?(scope)
         end
       end
+    end
+
+    private
+
+    def nested_scope?(scope)
+      scope.include?(' ')
     end
   end
 end
