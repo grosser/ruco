@@ -21,7 +21,7 @@ module Ruco
       end
 
       content = (File.exist?(@file) ? File.binary_read(@file) : '')
-      @options[:language] = LanguageSniffer.detect(@file, :content => content).language
+      @options[:language] ||= LanguageSniffer.detect(@file, :content => content).language
       content.tabs_to_spaces! if @options[:convert_tabs]
 
       # cleanup newline formats

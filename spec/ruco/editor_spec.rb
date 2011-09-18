@@ -18,7 +18,7 @@ describe Ruco::Editor do
   end
 
   let(:editor){
-    editor = Ruco::Editor.new(@file, :lines => 3, :columns => 5)
+    editor = Ruco::Editor.new(@file, :lines => 3, :columns => 5, :language => LanguageSniffer::Language.new(:name => 'ruby', :lexer => 'ruby'))
     # only scroll when we reach end of lines/columns <-> able to test with smaller area
     editor.send(:text_area).instance_eval{
       @window.instance_eval{
