@@ -87,6 +87,9 @@ TIPS
 
 TODO
 =====
+ - some languages are still not mapped correctly to their syntax file
+   [languages](https://github.com/grosser/language_sniffer/blob/master/lib/language_sniffer/languages.yml) <->
+   [syntaxes](https://github.com/grosser/ultraviolet/tree/master/syntax)
  - do not fall back to 0:0 after undoing the first change
  - check writable status every x seconds (e.g. in background) -> faster while typing
  - search help e.g. 'Nothing found' '#4 of 6 hits' 'no more hits, start from beginning ?'
