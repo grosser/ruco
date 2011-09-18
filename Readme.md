@@ -87,6 +87,7 @@ TIPS
 
 TODO
 =====
+ - javascript syntax parsing is slow and often causes syntax-timeouts
  - some languages are still not mapped correctly to their syntax file
    [languages](https://github.com/grosser/language_sniffer/blob/master/lib/language_sniffer/languages.yml) <->
    [syntaxes](https://github.com/grosser/ultraviolet/tree/master/syntax)
