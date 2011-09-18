@@ -1,4 +1,6 @@
 $LOAD_PATH.unshift 'lib'
+$ruco_colors = true
+
 require 'ruco'
 require 'timeout'
 Ruco::Editor::Colors::RECOLORING_TIMEOUT = 0

@@ -26,7 +26,7 @@ require 'ruco/status_bar'
 require 'ruco/command_bar'
 require 'ruco/application'
 
-unless $ruco_no_colors
+if $ruco_colors
   begin
     # this can fail on ruby 1.8 <-> oniguruma is complicated to install
     require 'oniguruma' if RUBY_VERSION < '1.9.0'

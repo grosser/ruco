@@ -46,7 +46,14 @@ def log(stuff)
 end
 
 options = parse_options
-$ruco_no_colors = options[:no_colors]
+
+# do not use colors if told so or the terminal does not support colors
+$ruco_colors = (
+  not options[:no_colors] and
+  RbConfig::CONFIG['host_os'] !~ /mswin|mingw/ and # windows
+  ENV['TERM'] != 'rxvt' and
+  ENV['TERM'] !~ /-color$/
+)
 
 require 'ruco'
 
