@@ -15,7 +15,7 @@ module Ruco
 
     def initialize(content, options)
       @lines = content.naive_split("\n")
-      @options = options.dup.merge(:language => :ruby)
+      @options = options.dup
       @column = 0
       @line = 0
       @window = Window.new(@options.delete(:lines), @options.delete(:columns), @options[:window]||{})

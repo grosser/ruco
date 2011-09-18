@@ -1,3 +1,5 @@
+require 'language_sniffer'
+
 require 'ruco/version'
 
 require 'ruco/core_ext/object'

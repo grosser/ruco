@@ -40,8 +40,12 @@ module Ruco
       end
 
       def parse_lines(range=nil)
-        parsed_lines = (range ? lines[range] : lines)
-        SyntaxParser.parse_lines(parsed_lines, @options[:language])
+        if language = @options[:language]
+          parsed_lines = (range ? lines[range] : lines)
+          SyntaxParser.parse_lines(parsed_lines, [language.name.downcase, language.lexer])
+        else
+          []
+        end
       end
 
       def colorize(map, styled_lines)

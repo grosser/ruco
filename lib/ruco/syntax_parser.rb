@@ -1,7 +1,10 @@
 module Ruco
   module SyntaxParser
-    def self.parse_lines(lines, language)
-      if syntax = syntax_node(language)
+    def self.parse_lines(lines, languages)
+      syntax = nil
+      languages.detect{|l| syntax = syntax_node(l) }
+
+      if syntax
         processor = syntax.parse(lines.join("\n"),  Ruco::ArrayProcessor.new)
         processor.lines
       else

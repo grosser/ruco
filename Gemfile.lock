@@ -8,6 +8,7 @@ GEM
       bundler (~> 1.0.0)
       git (>= 1.2.5)
       rake
+    language_sniffer (1.0.0)
     oniguruma (1.1.0)
     plist (3.1.0)
     rake (0.9.2)
@@ -31,6 +32,7 @@ DEPENDENCIES
   clipboard (>= 0.9.8)
   ffi
   jeweler
+  language_sniffer
   oniguruma
   rake
   rspec (~> 2)
