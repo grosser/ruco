@@ -1,7 +1,7 @@
 module Ruco
   class Editor
     module Colors
-      RECOLORING_TIMEOUT = 2 # seconds
+      RECOLORING_TIMEOUT = 30 # seconds
       INSTANT_RECOLORING_RANGE = 1 # recolor x lines around the current one
       DEFAULT_THEME = 'spec/fixtures/test.tmTheme'
 
