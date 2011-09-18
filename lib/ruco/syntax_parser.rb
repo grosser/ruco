@@ -16,7 +16,7 @@ module Ruco
       @@syntax_node ||= {}
       @@syntax_node[language] ||= begin
         syntax = File.join(Uv.syntax_path, "#{language}.syntax")
-        Textpow::SyntaxNode.load(syntax)
+        Textpow::SyntaxNode.load(syntax) if File.exist?(syntax)
       end
     end
   end

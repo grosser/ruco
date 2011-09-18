@@ -1,8 +1,8 @@
 require File.expand_path('spec/spec_helper')
 
 describe Ruco::SyntaxParser do
-  def parse(text)
-    Ruco::SyntaxParser.parse_lines(text, ['ruby'])
+  def parse(text, languages=['ruby'])
+    Ruco::SyntaxParser.parse_lines(text, languages)
   end
 
   describe :parse_lines do
@@ -59,6 +59,10 @@ describe Ruco::SyntaxParser do
         [["string.quoted.double.ruby.mod", 0...1]],
         [["punctuation.definition.string.end.ruby", 3...4], ["string.quoted.double.ruby.mod", 0...4]]
       ]
+    end
+
+    it "can handle unfound syntaxes" do
+      parse('aaaa', ['fooo']).should == []
     end
   end
 end
