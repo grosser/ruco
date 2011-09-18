@@ -78,14 +78,6 @@ task :parse_syntax do
   puts result.inspect
 end
 
-task :parse_theme do
-  require 'ultra_pow_list'
-  UltraPowList.make_loadable 'plist'
-  require 'plist'
-  syntax = Plist.parse_xml('spec/fixtures/test.tmTheme')
-  puts syntax.inspect
-end
-
 begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
