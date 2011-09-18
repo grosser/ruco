@@ -1,15 +1,31 @@
+require 'timeout'
+
 module Ruco
   class Editor
     module Colors
       RECOLORING_TIMEOUT = 30 # seconds
       INSTANT_RECOLORING_RANGE = 1 # recolor x lines around the current one
       DEFAULT_THEME = 'spec/fixtures/test.tmTheme'
+      STYLING_TIMEOUT = 4
 
       def style_map
         map = super
+        return map unless $ruco_colors
 
-        # add colors to style map
-        colorize(map, styled_lines[@window.visible_lines])
+        # add colors to style map, disable colors if syntax-parsing takes too long
+        begin
+          styles = Timeout.timeout(STYLING_TIMEOUT) do
+            styled_lines[@window.visible_lines]
+          end
+        rescue Timeout::Error
+          # this takes too long, just go on without styles
+          STDERR.puts "Styling takes too long, go on without me!"
+          $ruco_colors = false
+          return map
+        end
+
+        colorize(map, styles)
+
         if @selection
           # add selection a second time so it stays on top
           @window.add_selection_styles(map, @selection)
