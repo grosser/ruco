@@ -21,7 +21,7 @@ Options:
 BANNER
     opts.on("-c", "--convert-tabs","Convert tabs to spaces") { options[:convert_tabs] = true }
     opts.on("-u", "--undo-stack-size SIZE","Maximum size of the undo stack.  0 allows for a complete undo stack.") {|size| options[:undo_stack_size] = size.to_i }
-    opts.on("--no-colors","No colors -- helps performance / broken terminals") { options[:no_colors] = true }
+    opts.on("-n", "--no-colors","No colors -- helps performance / broken terminals") { options[:no_colors] = true }
     opts.on("--debug-cache","Show caching in action") { options[:debug_cache] = true }
     opts.on("--debug-keys", "Show pressed keys") { options[:debug_keys] = true }
     opts.on("-v", "--version","Show Version"){
