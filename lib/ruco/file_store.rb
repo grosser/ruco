@@ -19,6 +19,20 @@ module Ruco
       deserialize File.binary_read(file) if File.exist?(file)
     end
 
+    def cache(key, &block)
+      value = get(key)
+      if value.nil?
+        value = yield
+        set(key, value)
+      end
+      value
+    end
+
+    def delete(key)
+      FileUtils.rm(file(key))
+    rescue Errno::ENOENT
+    end
+
     private
 
     def entries

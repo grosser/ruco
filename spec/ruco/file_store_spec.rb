@@ -16,6 +16,10 @@ describe Ruco::FileStore do
 
   let(:store){ Ruco::FileStore.new(@folder, :keep => 3) }
 
+  it "can get unstored stuff" do
+    store.get('xxx').should == nil
+  end
+
   it "can store stuff" do
     store.set('xxx', 1)
     store.get('xxx').should == 1
@@ -40,5 +44,35 @@ describe Ruco::FileStore do
     store.set('zzz', 1)
     store.set('zzz', 1)
     store.get('xxx').should == 1
+  end
+
+  it "can cache" do
+    store.cache('x'){ 1 }.should == 1
+    store.cache('x'){ 2 }.should == 1
+  end
+
+  it "can cache false" do
+    store.cache('x'){ false }.should == false
+    store.cache('x'){ 2 }.should == false
+  end
+
+  it "does not cache nil" do
+    store.cache('x'){ nil }.should == nil
+    store.cache('x'){ 2 }.should == 2
+  end
+
+  it "can delete" do
+    store.set('x', 1)
+    store.set('y', 2)
+    store.delete('x')
+    store.get('x').should == nil
+    store.get('y').should == 2
+  end
+
+  it "can delete uncached" do
+    store.set('x', 1)
+    store.delete('z')
+    store.get('x').should == 1
+    store.get('z').should == nil
   end
 end
