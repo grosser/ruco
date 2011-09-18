@@ -33,6 +33,10 @@ module Ruco
     rescue Errno::ENOENT
     end
 
+    def clear
+      FileUtils.rm_rf(@folder)
+    end
+
     private
 
     def entries

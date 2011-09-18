@@ -75,4 +75,15 @@ describe Ruco::FileStore do
     store.get('x').should == 1
     store.get('z').should == nil
   end
+
+  it "can clear" do
+    store.set('x', 1)
+    store.clear
+    store.get('x').should == nil
+  end
+
+  it "can clear unstored" do
+    store.clear
+    store.get('x').should == nil
+  end
 end
