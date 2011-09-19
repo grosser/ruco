@@ -12,10 +12,10 @@ module Ruco
         map = super
         return map if @colors_took_too_long
 
-        # add colors to style map, disable colors if syntax-parsing takes too long
+        # disable colors if syntax-parsing takes too long
         begin
-          styles = Timeout.timeout(STYLING_TIMEOUT) do
-            styled_lines[@window.visible_lines]
+          syntax = Timeout.timeout(STYLING_TIMEOUT) do
+            syntax_info[@window.visible_lines]
           end
         rescue Timeout::Error
           # this takes too long, just go on without styles
@@ -24,7 +24,7 @@ module Ruco
           return map
         end
 
-        colorize(map, styles)
+        add_syntax_highlighting_to_style_map(map, syntax)
 
         if @selection
           # add selection a second time so it stays on top
@@ -35,44 +35,44 @@ module Ruco
 
       private
 
-      def styled_lines
+      def syntax_info
         # initially color everything
-        @@styled_lines ||= parse_lines
+        @@syntax_info ||= syntax_for_lines
         @@last_recoloring ||= Time.now.to_f
 
         current_time = Time.now.to_f
         if @@last_recoloring + RECOLORING_TIMEOUT < current_time
           # re-color everything max every 2 seconds
-          @@styled_lines = parse_lines
+          @@syntax_info = syntax_for_lines
           @@last_recoloring = Time.now.to_f
         else
           # re-color the current + 2 surrounding lines (in case of line changes)
-          recolor = [line - INSTANT_RECOLORING_RANGE, 0].max..(line + INSTANT_RECOLORING_RANGE)
-          parsed = parse_lines(recolor)
-          recolor.to_a.size.times{|i| parsed[i] ||= [] } # for empty lines [] => [[],[],[]]
-          @@styled_lines[recolor] = parsed
+          lines_to_recolor = [line - INSTANT_RECOLORING_RANGE, 0].max..(line + INSTANT_RECOLORING_RANGE)
+          parsed = syntax_for_lines(lines_to_recolor)
+          lines_to_recolor.to_a.size.times{|i| parsed[i] ||= [] } # for empty lines [] => [[],[],[]]
+          @@syntax_info[lines_to_recolor] = parsed
         end
 
-        @@styled_lines
+        @@syntax_info
       end
 
-      def parse_lines(range=nil)
+      def syntax_for_lines(range=nil)
         if language = @options[:language]
-          parsed_lines = (range ? lines[range] : lines)
-          SyntaxParser.parse_lines(parsed_lines, [language.name.downcase, language.lexer])
+          lines_to_parse = (range ? lines[range] : lines)
+          SyntaxParser.syntax_for_lines(lines_to_parse, [language.name.downcase, language.lexer])
         else
           []
         end
       end
 
-      def colorize(map, styled_lines)
-        return unless styled_lines
+      def add_syntax_highlighting_to_style_map(map, syntax_info)
+        return unless syntax_info
 
-        styled_lines.each_with_index do |style_positions, line|
-          next unless style_positions
-          style_positions.each do |syntax_element, columns|
+        syntax_info.each_with_index do |syntax_positions, line|
+          next unless syntax_positions
+          syntax_positions.each do |syntax_element, columns|
             columns = columns.move(-@window.left)
-            style = style_for_element(syntax_element)
+            style = style_for_syntax_element(syntax_element)
             if style and columns.first >= 0
               map.add(style, line, columns)
             end
@@ -80,7 +80,7 @@ module Ruco
         end
       end
 
-      def style_for_element(syntax_element)
+      def style_for_syntax_element(syntax_element)
         @theme ||= Ruco::TMTheme.new(theme_file)
         @style_for_element ||= {}
         @style_for_element[syntax_element] ||= begin

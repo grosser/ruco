@@ -1,6 +1,6 @@
 module Ruco
   module SyntaxParser
-    def self.parse_lines(lines, languages)
+    def self.syntax_for_lines(lines, languages)
       syntax = nil
       languages.detect{|l| syntax = syntax_node(l) }
 

@@ -2,7 +2,7 @@ require File.expand_path('spec/spec_helper')
 
 describe Ruco::SyntaxParser do
   def parse(text, languages=['ruby'])
-    Ruco::SyntaxParser.parse_lines(text, languages)
+    Ruco::SyntaxParser.syntax_for_lines(text, languages)
   end
 
   describe :parse_lines do

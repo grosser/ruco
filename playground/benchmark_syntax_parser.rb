@@ -15,9 +15,9 @@ language = LanguageSniffer.detect(file).language
 require 'ruco/syntax_parser'
 require 'ruco/array_processor'
 t = Time.now.to_f
-Ruco::SyntaxParser.parse_lines(text.split("\n"), [language.name.downcase, language.lexer])
-Ruco::SyntaxParser.parse_lines(text.split("\n"), [language.name.downcase, language.lexer])
-Ruco::SyntaxParser.parse_lines(text.split("\n"), [language.name.downcase, language.lexer])
-Ruco::SyntaxParser.parse_lines(text.split("\n"), [language.name.downcase, language.lexer])
-Ruco::SyntaxParser.parse_lines(text.split("\n"), [language.name.downcase, language.lexer])
+Ruco::SyntaxParser.syntax_for_lines(text.split("\n"), [language.name.downcase, language.lexer])
+Ruco::SyntaxParser.syntax_for_lines(text.split("\n"), [language.name.downcase, language.lexer])
+Ruco::SyntaxParser.syntax_for_lines(text.split("\n"), [language.name.downcase, language.lexer])
+Ruco::SyntaxParser.syntax_for_lines(text.split("\n"), [language.name.downcase, language.lexer])
+Ruco::SyntaxParser.syntax_for_lines(text.split("\n"), [language.name.downcase, language.lexer])
 puts (Time.now.to_f - t)
