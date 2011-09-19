@@ -10,7 +10,7 @@ module Ruco
 
       def style_map
         map = super
-        return map unless $ruco_colors
+        return map if @colors_took_too_long
 
         # add colors to style map, disable colors if syntax-parsing takes too long
         begin
@@ -20,7 +20,7 @@ module Ruco
         rescue Timeout::Error
           # this takes too long, just go on without styles
           STDERR.puts "Styling takes too long, go on without me!"
-          $ruco_colors = false
+          @colors_took_too_long = true
           return map
         end
 
