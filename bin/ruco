@@ -74,7 +74,7 @@ Ruco::Screen.open(options) do |screen|
   Keyboard.output do |key|
     screen.debug_key(key) if options[:debug_keys]
     if key == :resize
-      app.resize(lines, columns)
+      app.resize(screen.lines, screen.columns)
       screen.clear_cache
     else
       result = app.key key

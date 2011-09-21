@@ -2,7 +2,8 @@ module Ruco
   module SyntaxParser
     # uv only offers certain syntax
     UV_CONVERT = {
-      'scss' => 'sass'
+      'scss' => 'sass',
+      'html+erb' => 'html_rails',
     }
 
     def self.syntax_for_lines(lines, languages)

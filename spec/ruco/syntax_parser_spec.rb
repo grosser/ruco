@@ -66,11 +66,9 @@ describe Ruco::SyntaxParser do
     end
   end
 
-  describe 'syntax_node' do
-    {'scss' => 'sass'}.each do |from,to|
-      it "detects #{to} from #{from}" do
-        Ruco::SyntaxParser.syntax_node([from]).should_not == nil
-      end
+  describe :syntax_nodes do
+    it "detects languages not present in ultraviolet" do
+      Ruco::SyntaxParser.syntax_node(['html+erb']).should_not == nil
     end
   end
 end
