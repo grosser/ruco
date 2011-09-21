@@ -26,7 +26,10 @@ module Ruco
           rules['settings']['foreground'],
           rules['settings']['background'],
         ]
-        rules['scope'].split(/, ?/).map(&:strip).each do |scope|
+
+        next unless scope = rules['scope'] # some weird themes have rules without scopes...
+
+        scope.split(/, ?/).map(&:strip).each do |scope|
           @styles[scope] = style unless nested_scope?(scope)
         end
       end

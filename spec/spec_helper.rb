@@ -4,6 +4,9 @@ $ruco_colors = true
 require 'ruco'
 require 'timeout'
 require 'tempfile'
+
+silence_warnings{ Ruco::Editor::Colors::DEFAULT_THEME = 'spec/fixtures/test.tmTheme' }
+
 class Tempfile
   def self.string_as_file(data)
     result = nil

@@ -43,7 +43,7 @@ Customize
 
       # Use any Textmate theme e.g. from http://wiki.macromates.com/Themes/UserSubmittedThemes
       # use a url that points directly to the theme, e.g. github 'raw' urls
-      options.color_theme = "https://raw.github.com/ChrisKempson/Tomorrow-Theme/master/TextMate/Tomorrow-Night-Bright.tmTheme"
+      options.color_theme = "https://raw.github.com/ryanb/textmate-themes/master/railscasts.tmTheme"
       ...
 
       # bind a key
