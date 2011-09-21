@@ -3,8 +3,6 @@ require 'timeout'
 module Ruco
   class Editor
     module Colors
-      RECOLORING_TIMEOUT = 30 # seconds
-      INSTANT_RECOLORING_RANGE = 1 # recolor x lines around the current one
       DEFAULT_THEME = 'spec/fixtures/test.tmTheme'
       STYLING_TIMEOUT = 4
 
@@ -36,30 +34,12 @@ module Ruco
       private
 
       def syntax_info
-        # initially color everything
-        @@syntax_info ||= syntax_for_lines
-        @@last_recoloring ||= Time.now.to_f
-
-        current_time = Time.now.to_f
-        if @@last_recoloring + RECOLORING_TIMEOUT < current_time
-          # re-color everything max every 2 seconds
-          @@syntax_info = syntax_for_lines
-          @@last_recoloring = Time.now.to_f
-        else
-          # re-color the current + 2 surrounding lines (in case of line changes)
-          lines_to_recolor = [line - INSTANT_RECOLORING_RANGE, 0].max..(line + INSTANT_RECOLORING_RANGE)
-          parsed = syntax_for_lines(lines_to_recolor)
-          lines_to_recolor.to_a.size.times{|i| parsed[i] ||= [] } # for empty lines [] => [[],[],[]]
-          @@syntax_info[lines_to_recolor] = parsed
-        end
-
-        @@syntax_info
-      end
-
-      def syntax_for_lines(range=nil)
         if language = @options[:language]
-          lines_to_parse = (range ? lines[range] : lines)
-          SyntaxParser.syntax_for_lines(lines_to_parse, [language.name.downcase, language.lexer])
+          @syntax_info ||= {}
+          language = [language.name.downcase, language.lexer]
+          lines.map do |line|
+            @syntax_info[line] ||= SyntaxParser.syntax_for_lines([line], language).first
+          end
         else
           []
         end

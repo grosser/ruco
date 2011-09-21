@@ -3,8 +3,6 @@ $ruco_colors = true
 
 require 'ruco'
 require 'timeout'
-Ruco::Editor::Colors::RECOLORING_TIMEOUT = 0
-
 require 'tempfile'
 class Tempfile
   def self.string_as_file(data)

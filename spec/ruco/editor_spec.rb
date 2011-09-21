@@ -686,7 +686,7 @@ describe Ruco::Editor do
       ]
     end
 
-    it "shows multiline comments" do
+    xit "shows multiline comments" do
       write("=begin\na\nb\n=end")
       editor.move(:to, 3,0)
       editor.view.should == "b\n=end\n"
@@ -707,6 +707,18 @@ describe Ruco::Editor do
         nil,
         nil
       ]
+    end
+
+    it "times out when styling takes too long" do
+      begin
+        STDERR.should_receive(:puts)
+        old = Ruco::Editor::Colors::STYLING_TIMEOUT
+        silence_warnings{ Ruco::Editor::Colors::STYLING_TIMEOUT = 0.001 }
+        write(File.read('lib/ruco.rb'))
+        editor.style_map.flatten.should == [nil,nil,nil]
+      ensure
+        silence_warnings{ Ruco::Editor::Colors::STYLING_TIMEOUT = old }
+      end
     end
 
     describe 'with theme' do
