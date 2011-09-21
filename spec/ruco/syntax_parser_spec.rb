@@ -65,4 +65,12 @@ describe Ruco::SyntaxParser do
       parse('aaaa', ['fooo']).should == []
     end
   end
+
+  describe 'syntax_node' do
+    {'scss' => 'sass'}.each do |from,to|
+      it "detects #{to} from #{from}" do
+        Ruco::SyntaxParser.syntax_node([from]).should_not == nil
+      end
+    end
+  end
 end

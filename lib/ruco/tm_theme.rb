@@ -27,6 +27,7 @@ module Ruco
           rules['settings']['background'],
         ]
 
+        next if style == [nil, nil] # some weird themes have rules without colors...
         next unless scope = rules['scope'] # some weird themes have rules without scopes...
 
         scope.split(/, ?/).map(&:strip).each do |scope|
