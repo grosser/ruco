@@ -3,7 +3,7 @@ require 'timeout'
 module Ruco
   class Editor
     module Colors
-      DEFAULT_THEME = 'spec/fixtures/solarized.tmTheme'
+      DEFAULT_THEME = 'spec/fixtures/railscasts.tmTheme'
       STYLING_TIMEOUT = 4
 
       def style_map
