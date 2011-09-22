@@ -1,6 +1,6 @@
 module Ruco
   class StyleMap
-    attr_accessor :lines
+    attr_accessor :lines, :foreground, :background
 
     def initialize(lines)
       @lines = Array.new(lines)

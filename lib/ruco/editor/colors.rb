@@ -48,6 +48,9 @@ module Ruco
       def add_syntax_highlighting_to_style_map(map, syntax_info)
         return unless syntax_info
 
+        $ruco_foreground = theme.foreground
+        $ruco_background = theme.background
+
         syntax_info.each_with_index do |syntax_positions, line|
           next unless syntax_positions
           syntax_positions.each do |syntax_element, columns|
@@ -61,17 +64,19 @@ module Ruco
       end
 
       def style_for_syntax_element(syntax_element)
-        @theme ||= Ruco::TMTheme.new(theme_file)
         @style_for_element ||= {}
         @style_for_element[syntax_element] ||= begin
-          _, style = @theme.styles.detect{|name,style| syntax_element.start_with?(name) }
+          _, style = theme.styles.detect{|name,style| syntax_element.start_with?(name) }
           style
         end
       end
 
-      def theme_file
-        file = download_into_file(@options[:color_theme]) if @options[:color_theme]
-        file || DEFAULT_THEME
+      def theme
+        @theme ||= begin
+          file = download_into_file(@options[:color_theme]) if @options[:color_theme]
+          file ||= DEFAULT_THEME
+          Ruco::TMTheme.new(file)
+        end
       end
 
       def download_into_file(url)

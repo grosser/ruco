@@ -97,13 +97,13 @@ module Ruco
     def self.curses_style(style)
       @@styles[style] ||= begin
         if $ruco_colors
-          foreground = '#ffffff'
-          background = '#000000' # background white does not work well since is is more like pink
+          foreground = $ruco_foreground || '#ffffff'
+          background = $ruco_background || '#000000'
 
           foreground, background = if style == :normal
             [foreground, background]
           elsif style == :reverse
-            [background, foreground]
+            ['#000000', '#ffffff']
           else
             # :red or [:red, :blue]
             f,b = style
