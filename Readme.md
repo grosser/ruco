@@ -3,6 +3,7 @@ Simple, extendable, test-driven commandline editor written in ruby, for Linux/Ma
 Features:
 
  - **Intuitive interface**
+ - TextMate Syntax and Theme support
  - selecting via Shift + arrow-keys (only Linux or iTerm) or 'select mode' Ctrl+b + arrow-keys
  - move line up/down (Alt+Ctrl+up/down)
  - Tab -> indent / Shift+Tab -> unindent
@@ -20,6 +21,9 @@ Features:
  - (optional) remove trailing whitespace on save
  - (optional) blank line before eof on save
  - (optional) line numbers
+
+![ruco with railscasts theme](http://dl.dropbox.com/u/2670385/Web/ruco-with-railscasts-theme.png)<br/>
+(to get colors on ruby 1.8, install oniguruma [OsX](http://blog.pastie.org/2010/01/oniguruma-on-snow-leopard.html) / [Ubuntu](http://blog.loftninjas.org/2008/09/25/installing-the-oniguruma-gem-on-debianubuntu/))
 
 Install
 =======
@@ -43,7 +47,7 @@ Customize
 
       # Use any Textmate theme e.g. from http://wiki.macromates.com/Themes/UserSubmittedThemes
       # use a url that points directly to the theme, e.g. github 'raw' urls
-      options.color_theme = "https://raw.github.com/ryanb/textmate-themes/master/railscasts.tmTheme"
+      options.color_theme = "https://raw.github.com/deplorableword/textmate-solarized/master/Solarized%20%28dark%29.tmTheme"
       ...
 
       # bind a key
@@ -87,6 +91,7 @@ TIPS
 
 TODO
 =====
+ - only do syntax parsing for changed lines + selected lines <-> will not be redrawn anyhow
  - try to use complete file coloring as removed in 26d6da4
  - javascript syntax parsing is slow and often causes syntax-timeouts
  - some languages are still not mapped correctly to their syntax file
