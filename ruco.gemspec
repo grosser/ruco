@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Michael Grosser"]
-  s.date = %q{2011-09-02}
+  s.date = %q{2011-09-22}
   s.default_executable = %q{ruco}
   s.email = %q{michael@grosser.it}
   s.executables = ["ruco"]
@@ -22,6 +22,7 @@ Gem::Specification.new do |s|
     "bin/ruco",
     "lib/ruco.rb",
     "lib/ruco/application.rb",
+    "lib/ruco/array_processor.rb",
     "lib/ruco/command_bar.rb",
     "lib/ruco/core_ext/array.rb",
     "lib/ruco/core_ext/file.rb",
@@ -30,6 +31,7 @@ Gem::Specification.new do |s|
     "lib/ruco/core_ext/range.rb",
     "lib/ruco/core_ext/string.rb",
     "lib/ruco/editor.rb",
+    "lib/ruco/editor/colors.rb",
     "lib/ruco/editor/history.rb",
     "lib/ruco/editor/line_numbers.rb",
     "lib/ruco/editor_area.rb",
@@ -42,14 +44,22 @@ Gem::Specification.new do |s|
     "lib/ruco/screen.rb",
     "lib/ruco/status_bar.rb",
     "lib/ruco/style_map.rb",
+    "lib/ruco/syntax_parser.rb",
     "lib/ruco/text_area.rb",
     "lib/ruco/text_field.rb",
+    "lib/ruco/tm_theme.rb",
     "lib/ruco/version.rb",
     "lib/ruco/window.rb",
+    "playground/benchmark_syntax_parser.rb",
     "ruco.gemspec",
+    "spec/fixtures/railscasts.tmTheme",
+    "spec/fixtures/slow.js",
+    "spec/fixtures/test.tmTheme",
     "spec/ruco/application_spec.rb",
+    "spec/ruco/array_processor_spec.rb",
     "spec/ruco/command_bar_spec.rb",
     "spec/ruco/core_ext/array_spec.rb",
+    "spec/ruco/core_ext/range_spec.rb",
     "spec/ruco/core_ext/string_spec.rb",
     "spec/ruco/editor_spec.rb",
     "spec/ruco/file_store_spec.rb",
@@ -60,7 +70,9 @@ Gem::Specification.new do |s|
     "spec/ruco/screen_spec.rb",
     "spec/ruco/status_bar_spec.rb",
     "spec/ruco/style_map_spec.rb",
+    "spec/ruco/syntax_parser_spec.rb",
     "spec/ruco/text_area_spec.rb",
+    "spec/ruco/tm_theme_spec.rb",
     "spec/ruco/window_spec.rb",
     "spec/ruco_spec.rb",
     "spec/spec_helper.rb"
@@ -76,8 +88,10 @@ Gem::Specification.new do |s|
   s.summary = %q{Commandline editor written in ruby}
   s.test_files = [
     "spec/ruco/application_spec.rb",
+    "spec/ruco/array_processor_spec.rb",
     "spec/ruco/command_bar_spec.rb",
     "spec/ruco/core_ext/array_spec.rb",
+    "spec/ruco/core_ext/range_spec.rb",
     "spec/ruco/core_ext/string_spec.rb",
     "spec/ruco/editor_spec.rb",
     "spec/ruco/file_store_spec.rb",
@@ -88,7 +102,9 @@ Gem::Specification.new do |s|
     "spec/ruco/screen_spec.rb",
     "spec/ruco/status_bar_spec.rb",
     "spec/ruco/style_map_spec.rb",
+    "spec/ruco/syntax_parser_spec.rb",
     "spec/ruco/text_area_spec.rb",
+    "spec/ruco/tm_theme_spec.rb",
     "spec/ruco/window_spec.rb",
     "spec/ruco_spec.rb",
     "spec/spec_helper.rb"
@@ -99,11 +115,17 @@ Gem::Specification.new do |s|
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<clipboard>, [">= 0.9.8"])
+      s.add_runtime_dependency(%q<ultraviolet1x>, [">= 0"])
+      s.add_runtime_dependency(%q<language_sniffer>, [">= 0"])
     else
       s.add_dependency(%q<clipboard>, [">= 0.9.8"])
+      s.add_dependency(%q<ultraviolet1x>, [">= 0"])
+      s.add_dependency(%q<language_sniffer>, [">= 0"])
     end
   else
     s.add_dependency(%q<clipboard>, [">= 0.9.8"])
+    s.add_dependency(%q<ultraviolet1x>, [">= 0"])
+    s.add_dependency(%q<language_sniffer>, [">= 0"])
   end
 end
 
