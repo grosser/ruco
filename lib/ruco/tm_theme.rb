@@ -12,6 +12,7 @@ module Ruco
 
     def initialize(file)
       raw = Plist.parse_xml(file)
+      raise "Theme not found in #{file}" unless raw
       rules = raw['settings']
       @styles = {}
 

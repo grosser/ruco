@@ -51,8 +51,8 @@ options = parse_options
 $ruco_colors = (
   not options[:no_colors] and
   RbConfig::CONFIG['host_os'] !~ /mswin|mingw/ and # windows
-  ENV['TERM'] != 'rxvt' and
-  ENV['TERM'] !~ /-color$/
+  ENV['TERM'] != 'rxvt'
+  # and ENV['TERM'] !~ /-color$/ # it seems many lion users set xterm-color to fix bugs ...
 )
 
 require 'ruco'

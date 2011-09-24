@@ -3,7 +3,7 @@ require 'timeout'
 module Ruco
   class Editor
     module Colors
-      DEFAULT_THEME = 'spec/fixtures/railscasts.tmTheme'
+      DEFAULT_THEME = File.expand_path('../../../../spec/fixtures/railscasts.tmTheme',__FILE__)
       STYLING_TIMEOUT = 4
 
       def style_map
