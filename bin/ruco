@@ -50,10 +50,10 @@ options = parse_options
 # do not use colors if told so or the terminal does not support colors
 $ruco_colors = (
   not options[:no_colors] and
-  RbConfig::CONFIG['host_os'] !~ /mswin|mingw/ and # windows
+  RbConfig::CONFIG['host_os'] !~ /mswin|mingw/ and # no windows
   ENV['TERM'] != 'rxvt' and
-  (ENV['TERM'] != 'xterm' or ENV['COLORTERM']) # we can convert xterm to xterm-256colors if COLORTERM is given
-  # and ENV['TERM'] !~ /-color$/ # it seems many lion users set xterm-color to fix bugs ...
+  (ENV['TERM'] != 'xterm' or ENV['COLORTERM']) and # xterm can be converted into xterm-256colors if COLORTERM is given
+  ENV['TERM'] !~ /-color$/ # would only support 16 colors
 )
 
 require 'ruco'
@@ -81,7 +81,7 @@ Ruco::Screen.open(options) do |screen|
       result = app.key key
       break if result == :quit
     end
-    
+
     screen.draw *app.display_info
   end
 end
