@@ -80,7 +80,7 @@ module Ruco
       end
 
       def download_into_file(url)
-        theme_store = FileStore.new(File.expand_path('~/.ruco/themes'), :keep => 5, :pure => true)
+        theme_store = FileStore.new(File.expand_path('~/.ruco/themes'), :keep => 5, :string => true)
         theme_store.cache(url) do
           require 'open-uri'
           require 'openssl'
