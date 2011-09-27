@@ -86,4 +86,10 @@ describe Ruco::FileStore do
     store.clear
     store.get('x').should == nil
   end
+
+  it "can store pure strings" do
+    store = Ruco::FileStore.new(@folder, :keep => 3, :string => true)
+    store.set('xxx','yyy')
+    File.read(store.file('xxx')).should == 'yyy'
+  end
 end
