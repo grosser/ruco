@@ -23,7 +23,7 @@ Features:
  - (optional) line numbers
 
 ![ruco with railscasts theme](http://dl.dropbox.com/u/2670385/Web/ruco-with-railscasts-theme.png)<br/>
-(to get colors on ruby 1.8, install oniguruma [OsX](http://blog.pastie.org/2010/01/oniguruma-on-snow-leopard.html) / [Ubuntu](http://blog.loftninjas.org/2008/09/25/installing-the-oniguruma-gem-on-debianubuntu/))
+[Colors in Ruby 1.8](#colors)
 
 Install
 =======
@@ -88,6 +88,19 @@ TIPS
  - [Ruby1.9] Unicode support -> install libncursesw5-dev before installing ruby (does not work for 1.8)
  - [ssh vs clipboard] access your desktops clipboard by installing `xauth` on the server and then using `ssh -X`
  - [Alt key] if Alt does not work try your Meta/Win/Cmd key
+
+<a name="colors"/>
+### Colors in Ruby 1.8
+
+    # OSX via brew OR port
+    brew install oniguruma
+    port install oniguruma5
+
+    # Ubuntu
+    sudo apt-get -y install libonig-dev
+
+    gem install oniguruma
+
 
 TODO
 =====
