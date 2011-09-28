@@ -5,7 +5,7 @@ require "ruco/core_ext/file"
 module Ruco
   class FileStore
     def initialize(folder, options={})
-      @folder = folder
+      @folder = File.expand_path(folder)
       @options = options
     end
 
