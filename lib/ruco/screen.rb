@@ -12,9 +12,6 @@ module Ruco
     end
 
     def open(&block)
-      if $ruco_colors and ENV['TERM'] == 'xterm'
-        ENV['TERM'] += '-256color' # activate 256 colors
-      end
       Curses.noecho # do not show typed chars
       Curses.nonl # turn off newline translation
       Curses.stdscr.keypad(true) # enable arrow keys

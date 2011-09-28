@@ -1,9 +1,10 @@
 require "digest/md5"
 require "fileutils"
+require "ruco/core_ext/file"
 
 module Ruco
   class FileStore
-    def initialize(folder, options)
+    def initialize(folder, options={})
       @folder = folder
       @options = options
     end
@@ -11,7 +12,7 @@ module Ruco
     def set(key, value)
       FileUtils.mkdir_p @folder unless File.exist? @folder
       File.write(file(key), serialize(value))
-      cleanup
+      cleanup if @options[:keep]
     end
 
     def get(key)

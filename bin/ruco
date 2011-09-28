@@ -45,17 +45,23 @@ def log(stuff)
   File.open('ruco.log','ab'){|f| f.puts stuff }
 end
 
+# do not use colors if told so or the terminal does not support colors
+# so far the only terminal that supports it is xterm-256color
+# but just setting ENV['TERM'] to it will crash un-rescue-able
+def activate_256_colors
+  (
+    RbConfig::CONFIG['host_os'] !~ /mswin|mingw/ and # and not windows
+    # and its possible to open xterm-256color
+    Ruco::FileStore.new('~/.ruco/cache').cache('color_possible'){
+      system(%{TERM=xterm-256color ruby -r curses -e 'Curses.noecho' > /dev/null 2>&1})
+    }
+  ) and ENV['TERM'] = 'xterm-256color' # finally switch terminal
+end
+
 options = parse_options
 
-# do not use colors if told so or the terminal does not support colors
-$ruco_colors = (
-  not options[:no_colors] and
-  RbConfig::CONFIG['host_os'] !~ /mswin|mingw/ and # no windows
-  ENV['TERM'] != 'rxvt' and
-  (ENV['TERM'] != 'xterm' or ENV['COLORTERM']) and # xterm can be converted into xterm-256colors if COLORTERM is given
-  ENV['TERM'] !~ /-color$/ # would only support 16 colors
-)
-
+require 'ruco/file_store'
+$ruco_colors = activate_256_colors unless options[:no_colors]
 require 'ruco'
 
 # draw app and redraw after each keystroke (or paste)
