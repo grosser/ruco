@@ -91,6 +91,7 @@ describe Ruco::FileStore do
     store = Ruco::FileStore.new(@folder, :keep => 3, :string => true)
     store.set('xxx','yyy')
     File.read(store.file('xxx')).should == 'yyy'
+    store.get('xxx').should == 'yyy'
   end
 
   it "works without colors" do

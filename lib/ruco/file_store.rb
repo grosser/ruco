@@ -60,7 +60,7 @@ module Ruco
     end
 
     def deserialize(value)
-      Marshal.load(value)
+      @options[:string] ? value : Marshal.load(value)
     end
   end
 end
