@@ -48,8 +48,8 @@ end
 
 # do not use colors if the terminal does not support colors
 # so far the only terminal that supports it:
-# - xterm-256color on osx (not ssh)
-# - xterm on ubuntu (not ssh)
+# - xterm-256color on osx
+# - xterm and xterm-256color on ubuntu 10.04+
 # (setting ENV['TERM'] will sometimes crash un-rescue-able -> test if it works)
 def activate_256_colors
   require 'ruco/file_store'
