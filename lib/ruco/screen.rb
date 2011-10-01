@@ -104,8 +104,7 @@ module Ruco
           else
             # :red or [:red, :blue]
             f,b = style
-            b ||= background
-            [f,b]
+            [f || foreground, b || background]
           end
 
           foreground = html_to_terminal_color(foreground)
