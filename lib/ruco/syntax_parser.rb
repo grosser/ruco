@@ -1,7 +1,7 @@
 module Ruco
   module SyntaxParser
-    # uv only offers certain syntax
-    UV_CONVERT = {
+    # textpow only offers certain syntax
+    TEXTPOW_CONVERT = {
       'scss' => 'sass',
       'html+erb' => 'html_rails',
     }
@@ -19,10 +19,10 @@ module Ruco
       @@syntax_node ||= {}
       @@syntax_node[languages] ||= begin
         found = nil
-        fallbacks = languages.map{|l| UV_CONVERT[l] }.compact
+        fallbacks = languages.map{|l| TEXTPOW_CONVERT[l] }.compact
 
         (languages + fallbacks).detect do |language|
-          syntax = File.join(Uv.syntax_path, "#{language}.syntax")
+          syntax = File.join(Textpow.syntax_path, "#{language}.syntax")
           found = Textpow::SyntaxNode.load(syntax) if File.exist?(syntax)
         end
 

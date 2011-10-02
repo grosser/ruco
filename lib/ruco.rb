@@ -36,8 +36,6 @@ if $ruco_colors
     require 'plist'
     gem 'textpow1x'
     require 'textpow'
-    gem 'ultraviolet1x'
-    require 'uv'
 
     # we do not need there if any other color li failed
     require 'ruco/array_processor'
