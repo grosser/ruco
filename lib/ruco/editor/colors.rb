@@ -7,8 +7,8 @@ module Ruco
       STYLING_TIMEOUT = 4
 
       def style_map
+        return super if @colors_took_too_long or not @options[:language]
         map = super
-        return map if @colors_took_too_long
 
         # disable colors if syntax-parsing takes too long
         begin
@@ -22,35 +22,32 @@ module Ruco
           return map
         end
 
-        add_syntax_highlighting_to_style_map(map, syntax)
+        $ruco_foreground = theme.foreground
+        $ruco_background = theme.background
 
-        if @selection
+        if syntax
+          add_syntax_highlighting_to_style_map(map, syntax)
+
           # add selection a second time so it stays on top
-          @window.add_selection_styles(map, @selection)
+          @window.add_selection_styles(map, @selection) if @selection
         end
+
         map
       end
 
       private
 
       def syntax_info
-        if language = @options[:language]
-          @syntax_info ||= {}
-          language = [language.name.downcase, language.lexer]
-          lines.map do |line|
-            @syntax_info[line] ||= SyntaxParser.syntax_for_lines([line], language).first
-          end
-        else
-          []
+        language = @options[:language]
+        possible_languages = [language.name.downcase, language.lexer]
+
+        @syntax_info ||= {}
+        lines.map do |line|
+          @syntax_info[line] ||= SyntaxParser.syntax_for_lines([line], possible_languages).first
         end
       end
 
       def add_syntax_highlighting_to_style_map(map, syntax_info)
-        return unless syntax_info
-
-        $ruco_foreground = theme.foreground
-        $ruco_background = theme.background
-
         syntax_info.each_with_index do |syntax_positions, line|
           next unless syntax_positions
           syntax_positions.each do |syntax_element, columns|
