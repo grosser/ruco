@@ -1,7 +1,7 @@
 source :rubygems
 
 gem 'clipboard', '>=0.9.8'
-gem 'ultraviolet1x'
+gem 'ultraviolet1x', '>=0.12.2'
 gem 'language_sniffer'
 
 group :dev do # not development <-> would add unneeded development dependencies in gemspec
