@@ -631,14 +631,14 @@ describe Ruco::Editor do
     end
 
     it "shows multi-line selection in scrolled space" do
-      write("\n\n\n\n\n0123456789\n0123456789\n0123456789\n\n")
+      write("\n\n\n\n\nacdefghijk\nacdefghijk\nacdefghijk\n\n")
       ta = editor.send(:text_area)
       ta.send(:position=, [5,8])
       ta.send(:screen_position=, [5,7])
       editor.selecting do
         move(:relative, 2, 1)
       end
-      editor.view.should == "789\n789\n789"
+      editor.view.should == "ijk\nijk\nijk"
       editor.cursor.should == [2,2]
       editor.style_map.flatten.should == [
         [nil, :reverse, nil, nil, nil, :normal], # start to end of screen
