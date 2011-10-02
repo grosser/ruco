@@ -50,15 +50,25 @@ module Ruco
       def add_syntax_highlighting_to_style_map(map, syntax_info)
         syntax_info.each_with_index do |syntax_positions, line|
           next unless syntax_positions
+
           syntax_positions.each do |syntax_element, columns|
-            columns = columns.move(-@window.left)
-            columns = 0...columns.last if columns.first < 0 and columns.last > 0
-            style = style_for_syntax_element(syntax_element)
-            if style and columns.first >= 0
-              map.add(style, line, columns)
-            end
+            next unless style = style_for_syntax_element(syntax_element)
+            next unless columns = adjust_columns_to_window_position(columns, @window.left)
+            map.add(style, line, columns)
           end
         end
+      end
+
+      def adjust_columns_to_window_position(columns, left)
+        return columns if left == 0
+
+        # style is out of scope -> add nothing
+        return nil if columns.last_element <= left
+
+        # shift style to the left
+        first = [0, columns.first - left].max
+        last = columns.last_element - left
+        first..last
       end
 
       def style_for_syntax_element(syntax_element)
