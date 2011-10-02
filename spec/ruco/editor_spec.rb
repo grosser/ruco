@@ -668,6 +668,18 @@ describe Ruco::Editor do
       ]
     end
 
+    it "shows mid-keywords for moved window" do
+      write("\n\n\n\n\nclass ")
+      editor.move(:to, 5, 6)
+      editor.cursor.should == [1,3]
+      editor.view.should == "\nss \n"
+      editor.style_map.flatten.should == [
+        nil,
+        [color(:keyword), nil, :normal],
+        nil
+      ]
+    end
+
     it "shows multiple syntax elements" do
       write("if @x")
       editor.style_map.flatten.should == [

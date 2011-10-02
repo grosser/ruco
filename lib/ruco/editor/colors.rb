@@ -55,6 +55,7 @@ module Ruco
           next unless syntax_positions
           syntax_positions.each do |syntax_element, columns|
             columns = columns.move(-@window.left)
+            columns = 0...columns.last if columns.first < 0 and columns.last > 0
             style = style_for_syntax_element(syntax_element)
             if style and columns.first >= 0
               map.add(style, line, columns)

@@ -22,7 +22,7 @@ GEM
     rspec-mocks (2.6.0)
     textpow1x (0.11.0)
       plist (>= 3.0.1)
-    ultraviolet1x (0.12.1)
+    ultraviolet1x (0.12.2)
       textpow1x (>= 0.11.0)
 
 PLATFORMS
@@ -36,4 +36,4 @@ DEPENDENCIES
   oniguruma
   rake
   rspec (~> 2)
-  ultraviolet1x
+  ultraviolet1x (>= 0.12.2)
