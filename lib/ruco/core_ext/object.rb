@@ -76,3 +76,23 @@ module OpenURI
     silence_warnings{ ::OpenSSL::SSL.const_set :VERIFY_PEER, old }
   end
 end
+
+class Object
+  def memoize(*names)
+    names.each do |name|
+      unmemoized = "__unmemoized_#{name}"
+      class_eval %{
+        alias   :#{unmemoized} :#{name}
+        private :#{unmemoized}
+        def #{name}(*args)
+          cache = (@#{unmemoized} ||= {})
+          if cache.has_key?(args)
+            cache[args]
+          else
+            cache[args] = send(:#{unmemoized}, *args).freeze
+          end
+        end
+      }
+    end
+  end
+end

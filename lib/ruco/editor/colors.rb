@@ -72,20 +72,17 @@ module Ruco
       end
 
       def style_for_syntax_element(syntax_element)
-        @style_for_element ||= {}
-        @style_for_element[syntax_element] ||= begin
-          _, style = theme.styles.detect{|name,style| syntax_element.start_with?(name) }
-          style
-        end
+        _, style = theme.styles.detect{|name,style| syntax_element.start_with?(name) }
+        style
       end
+      memoize :style_for_syntax_element
 
       def theme
-        @theme ||= begin
-          file = download_into_file(@options[:color_theme]) if @options[:color_theme]
-          file ||= DEFAULT_THEME
-          Ruco::TMTheme.new(file)
-        end
+        file = download_into_file(@options[:color_theme]) if @options[:color_theme]
+        file ||= DEFAULT_THEME
+        Ruco::TMTheme.new(file)
       end
+      memoize :theme
 
       def download_into_file(url)
         theme_store = FileStore.new('~/.ruco/cache', :string => true)
