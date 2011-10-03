@@ -55,12 +55,12 @@ module Ruco
       Curses.addstr(text);
     end
 
-    def draw_view(view, style_mask)
+    def draw_view(view, style_map)
       lines = view.naive_split("\n")
-      style_mask = style_mask.flatten
+      style_map = style_map.flatten
 
       lines.each_with_index do |line, line_number|
-        styles = style_mask[line_number]
+        styles = style_map[line_number]
 
         # expand line with whitespace to overwrite previous content
         missing = columns - line.size
