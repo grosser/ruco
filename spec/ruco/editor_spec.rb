@@ -725,7 +725,7 @@ describe Ruco::Editor do
       begin
         STDERR.should_receive(:puts)
         old = Ruco::Editor::Colors::STYLING_TIMEOUT
-        silence_warnings{ Ruco::Editor::Colors::STYLING_TIMEOUT = 0.001 }
+        silence_warnings{ Ruco::Editor::Colors::STYLING_TIMEOUT = 0.0000001 }
         write(File.read('lib/ruco.rb'))
         editor.style_map.flatten.should == [nil,nil,nil]
       ensure
