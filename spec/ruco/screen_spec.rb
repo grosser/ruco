@@ -3,44 +3,35 @@ require File.expand_path('spec/spec_helper')
 describe Ruco::Screen do
   describe :curses_style do
     it "is 'normal' for nothing" do
-      Ruco::Screen.curses_style(:normal).should == 256
+      Ruco::Screen.curses_style(:normal, true).should == 256
     end
 
     it "is red for red" do
       pending
-      Ruco::Screen.curses_style(:red).should == Curses::color_pair( Curses::COLOR_RED )
+      Ruco::Screen.curses_style(:red, true).should == Curses::color_pair( Curses::COLOR_RED )
     end
 
     it "is reverse for reverse" do
-      Ruco::Screen.curses_style(:reverse).should == 512
+      Ruco::Screen.curses_style(:reverse, true).should == 512
     end
 
     it "raises on unknown style" do
       lambda{
-        Ruco::Screen.curses_style(:foo)
+        Ruco::Screen.curses_style(:foo, true)
       }.should raise_error
     end
 
     describe 'without colors' do
-      before do
-        Ruco::Screen.class_eval '@@styles = {}' # clear cache
-        $ruco_colors = false
-      end
-
-      after do
-        $ruco_colors = true
-      end
-
       it "is 'normal' for normal" do
-        Ruco::Screen.curses_style(:normal).should == Curses::A_NORMAL
+        Ruco::Screen.curses_style(:normal, false).should == Curses::A_NORMAL
       end
 
       it "is reverse for reverse" do
-        Ruco::Screen.curses_style(:reverse).should == Curses::A_REVERSE
+        Ruco::Screen.curses_style(:reverse, false).should == Curses::A_REVERSE
       end
 
       it "is normal for unknown style" do
-        Ruco::Screen.curses_style(:foo).should == Curses::A_NORMAL
+        Ruco::Screen.curses_style(:foo, false).should == Curses::A_NORMAL
       end
     end
   end

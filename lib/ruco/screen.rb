@@ -74,7 +74,7 @@ module Ruco
           # position at start of line and draw
           Curses.setpos(line_number,0)
           Ruco::StyleMap.styled(line, styles).each do |style, part|
-            Curses.attrset self.class.curses_style(style)
+            Curses.attrset self.class.curses_style(style, $ruco_colors)
             Curses.addstr part
           end
 
@@ -91,8 +91,8 @@ module Ruco
       yield # render the line
     end
 
-    def self.curses_style(style)
-      if $ruco_colors
+    def self.curses_style(style, colors)
+      if colors
         foreground = $ruco_foreground || '#ffffff'
         background = $ruco_background || '#000000'
 
