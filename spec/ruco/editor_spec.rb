@@ -722,15 +722,10 @@ describe Ruco::Editor do
     end
 
     it "times out when styling takes too long" do
-      begin
-        STDERR.should_receive(:puts)
-        old = Ruco::Editor::Colors::STYLING_TIMEOUT
-        silence_warnings{ Ruco::Editor::Colors::STYLING_TIMEOUT = 0.0000001 }
-        write(File.read('lib/ruco.rb'))
-        editor.style_map.flatten.should == [nil,nil,nil]
-      ensure
-        silence_warnings{ Ruco::Editor::Colors::STYLING_TIMEOUT = old }
-      end
+      STDERR.should_receive(:puts)
+      Timeout.should_receive(:timeout).and_raise Timeout::Error
+      write(File.read('lib/ruco.rb'))
+      editor.style_map.flatten.should == [nil,nil,nil]
     end
 
     describe 'with theme' do
