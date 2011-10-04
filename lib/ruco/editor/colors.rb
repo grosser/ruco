@@ -41,9 +41,8 @@ module Ruco
         language = @options[:language]
         possible_languages = [language.name.downcase, language.lexer]
 
-        @syntax_info ||= {}
         lines.map do |line|
-          @syntax_info[line] ||= SyntaxParser.syntax_for_lines([line], possible_languages).first
+          SyntaxParser.syntax_for_line(line, possible_languages)
         end
       end
 

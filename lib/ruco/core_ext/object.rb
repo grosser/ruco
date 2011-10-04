@@ -95,4 +95,11 @@ class Object
       }
     end
   end
+
+  # Memoize class methods
+  def cmemoize(*method_names)
+    (class << self; self; end).class_eval do
+      memoize(*method_names)
+    end
+  end
 end

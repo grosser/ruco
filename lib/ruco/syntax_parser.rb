@@ -6,6 +6,11 @@ module Ruco
       'html+erb' => 'html_rails',
     }
 
+    def self.syntax_for_line(line, languages)
+      syntax_for_lines([line], languages).first
+    end
+    cmemoize :syntax_for_line
+
     def self.syntax_for_lines(lines, languages)
       if syntax = syntax_node(languages)
         processor = syntax.parse(lines.join("\n"),  Ruco::ArrayProcessor.new)
@@ -16,18 +21,16 @@ module Ruco
     end
 
     def self.syntax_node(languages)
-      @@syntax_node ||= {}
-      @@syntax_node[languages] ||= begin
-        found = nil
-        fallbacks = languages.map{|l| TEXTPOW_CONVERT[l] }.compact
+      found = nil
+      fallbacks = languages.map{|l| TEXTPOW_CONVERT[l] }.compact
 
-        (languages + fallbacks).detect do |language|
-          syntax = File.join(Textpow.syntax_path, "#{language}.syntax")
-          found = Textpow::SyntaxNode.load(syntax) if File.exist?(syntax)
-        end
-
-        found
+      (languages + fallbacks).detect do |language|
+        syntax = File.join(Textpow.syntax_path, "#{language}.syntax")
+        found = Textpow::SyntaxNode.load(syntax) if File.exist?(syntax)
       end
+
+      found
     end
+    cmemoize :syntax_node
   end
 end

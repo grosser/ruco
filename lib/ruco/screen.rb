@@ -92,48 +92,45 @@ module Ruco
     end
 
     def self.curses_style(style)
-      @@styles[style] ||= begin
-        if $ruco_colors
-          foreground = $ruco_foreground || '#ffffff'
-          background = $ruco_background || '#000000'
+      if $ruco_colors
+        foreground = $ruco_foreground || '#ffffff'
+        background = $ruco_background || '#000000'
 
-          foreground, background = if style == :normal
-            [foreground, background]
-          elsif style == :reverse
-            ['#000000', '#ffffff']
-          else
-            # :red or [:red, :blue]
-            f,b = style
-            [f || foreground, b || background]
-          end
+        foreground, background = if style == :normal
+          [foreground, background]
+        elsif style == :reverse
+          ['#000000', '#ffffff']
+        else
+          # :red or [:red, :blue]
+          f,b = style
+          [f || foreground, b || background]
+        end
 
-          foreground = html_to_terminal_color(foreground)
-          background = html_to_terminal_color(background)
-          color_id(foreground, background)
-        else # no colors
-          if style == :reverse
-            Curses::A_REVERSE
-          else
-            Curses::A_NORMAL
-          end
+        foreground = html_to_terminal_color(foreground)
+        background = html_to_terminal_color(background)
+        color_id(foreground, background)
+      else # no colors
+        if style == :reverse
+          Curses::A_REVERSE
+        else
+          Curses::A_NORMAL
         end
       end
     end
+    cmemoize :curses_style
 
     # create a new color from foreground+background or reuse old
     # and return color-id
     def self.color_id(foreground, background)
-      @@color_ids ||= {}
-      @@color_ids[[foreground, background]] ||= begin
-        # make a new pair with a unique id
-        @@max_color_id ||= 0
-        id = (@@max_color_id += 1)
-        unless defined? RSpec # stops normal text-output, do not use in tests
-          Curses::init_pair(id, foreground, background)
-        end
-        Curses.color_pair(id)
+      # make a new pair with a unique id
+      @@max_color_id ||= 0
+      id = (@@max_color_id += 1)
+      unless defined? RSpec # stops normal text-output, do not use in tests
+        Curses::init_pair(id, foreground, background)
       end
+      Curses.color_pair(id)
     end
+    cmemoize :color_id
 
     COLOR_SOURCE_VALUES = 256
     COLOR_TARGET_VALUES = 5
