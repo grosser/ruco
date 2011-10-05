@@ -7,8 +7,11 @@ module Ruco
       STYLING_TIMEOUT = 4
 
       def style_map
-        return super if @colors_took_too_long or not @options[:language]
+        $ruco_foreground = theme.foreground
+        $ruco_background = theme.background
         map = super
+
+        return map if @colors_took_too_long or not @options[:language]
 
         # disable colors if syntax-parsing takes too long
         begin
@@ -21,9 +24,6 @@ module Ruco
           @colors_took_too_long = true
           return map
         end
-
-        $ruco_foreground = theme.foreground
-        $ruco_background = theme.background
 
         if syntax
           add_syntax_highlighting_to_style_map(map, syntax)
