@@ -3,7 +3,8 @@ module Ruco
     # textpow only offers certain syntax
     TEXTPOW_CONVERT = {
       'scss' => 'sass',
-      'html+erb' => 'html_rails',
+      'html+erb' => 'html',
+      'rhtml' => 'html',
     }
 
     def self.syntax_for_line(line, languages)
