@@ -87,6 +87,29 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.6.2}
   s.summary = %q{Commandline editor written in ruby}
+  s.test_files = [
+    "spec/ruco/application_spec.rb",
+    "spec/ruco/array_processor_spec.rb",
+    "spec/ruco/command_bar_spec.rb",
+    "spec/ruco/core_ext/array_spec.rb",
+    "spec/ruco/core_ext/range_spec.rb",
+    "spec/ruco/core_ext/string_spec.rb",
+    "spec/ruco/editor_spec.rb",
+    "spec/ruco/file_store_spec.rb",
+    "spec/ruco/form_spec.rb",
+    "spec/ruco/history_spec.rb",
+    "spec/ruco/keyboard_spec.rb",
+    "spec/ruco/option_accessor_spec.rb",
+    "spec/ruco/screen_spec.rb",
+    "spec/ruco/status_bar_spec.rb",
+    "spec/ruco/style_map_spec.rb",
+    "spec/ruco/syntax_parser_spec.rb",
+    "spec/ruco/text_area_spec.rb",
+    "spec/ruco/tm_theme_spec.rb",
+    "spec/ruco/window_spec.rb",
+    "spec/ruco_spec.rb",
+    "spec/spec_helper.rb"
+  ]
 
   if s.respond_to? :specification_version then
     s.specification_version = 3
