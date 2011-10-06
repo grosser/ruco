@@ -3,6 +3,7 @@ Simple, extendable, test-driven commandline editor written in ruby, for Linux/Ma
 ### Features
 
  - **Desktop-like / intuitive interface**
+ - TextMate Syntax and Theme support
  - selecting via Shift + arrow-keys (only Linux or iTerm) or 'select mode' Ctrl+b + arrow-keys
  - move line up/down (Alt+Ctrl+up/down)
  - Tab -> indent / Shift+Tab -> unindent
@@ -21,29 +22,19 @@ Simple, extendable, test-driven commandline editor written in ruby, for Linux/Ma
  - (optional) blank line before eof on save
  - (optional) line numbers
 
-### Architecture
-Ruco is basically a lot of String manipulation separated in HTML style elements.
-The only component dealing with the commandline interface are Screen and Keyboard. Therefore
-everything is very simple to build and test since it returns a string or a e.g. cursor position.
+![ruco with railscasts theme](http://dl.dropbox.com/u/2670385/Web/ruco-with-railscasts-theme.png)<br/>
+[Colors in Ruby 1.8](#colors)
 
-Writing/reading is done in a TextArea or a TextField (a TextArea with 1 line)
-which are placed in Form`s.
-
-The Application consists of a StatusBar, Editor, CommandBar and delegates actions to the currently active element.
-
-To build the commandline output Editor/CommandBar return:
-
- - view -- text that should be displayed on the screen (complete content cropped via Window)
- - style_map -- a big Array with style infos, e.g. 'on line 1 chars 5 to 7 are red'
- - cursor -- where to draw the cursor
 
 Install
 =======
     sudo gem install ruco
 
+
 Usage
 =====
     ruco file.rb
+
 
 Customize
 =========
@@ -56,6 +47,10 @@ Customize
       options.editor_remove_trailing_whitespace_on_save = true  # default false
       options.editor_blank_line_before_eof_on_save = true       # default false
       options.editor_line_numbers = true                        # default false
+
+      # Use any Textmate theme e.g. from http://wiki.macromates.com/Themes/UserSubmittedThemes
+      # use a url that points directly to the theme, e.g. github 'raw' urls
+      options.color_theme = "https://raw.github.com/deplorableword/textmate-solarized/master/Solarized%20%28dark%29.tmTheme"
       ...
 
       # bind a key
@@ -88,6 +83,7 @@ Customize
       bind :"Ctrl+u", :first_line
     end
 
+
 TIPS
 ====
  - [Mac] arow-keys + Shift/Alt does not work in default terminal (use iTerm)
@@ -97,10 +93,45 @@ TIPS
  - [ssh vs clipboard] access your desktops clipboard by installing `xauth` on the server and then using `ssh -X`
  - [Alt key] if Alt does not work try your Meta/Win/Cmd key
 
+<a name="colors"/>
+### Colors in Ruby 1.8
+
+    # OSX via brew OR port
+    brew install oniguruma
+    port install oniguruma5
+
+    # Ubuntu
+    sudo apt-get -y install libonig-dev
+
+    gem install oniguruma
+
+
+Architecture
+============
+Ruco is basically a lot of String manipulation separated in HTML style elements.
+The only component dealing with the commandline interface are Screen and Keyboard. Therefore
+everything is very simple to build and test since it returns a string or a e.g. cursor position.
+
+Writing/reading is done in a TextArea or a TextField (a TextArea with 1 line)
+which are placed in Form`s.
+
+The Application consists of a StatusBar, Editor, CommandBar and delegates actions to the currently active element.
+
+To build the commandline output Editor/CommandBar return:
+
+ - view -- text that should be displayed on the screen (complete content cropped via Window)
+ - style_map -- a big Array with style infos, e.g. 'on line 1 chars 5 to 7 are red'
+ - cursor -- where to draw the cursor
 
 
 TODO
 =====
+ - only do syntax parsing for changed lines + selected lines <-> will not be redrawn anyhow
+ - try to use complete file coloring as removed in 26d6da4
+ - javascript syntax parsing is slow and often causes syntax-timeouts
+ - some languages are still not mapped correctly to their syntax file
+   [languages](https://github.com/grosser/language_sniffer/blob/master/lib/language_sniffer/languages.yml) <->
+   [syntaxes](https://github.com/grosser/ultraviolet/tree/master/syntax)
  - do not fall back to 0:0 after undoing the first change
  - check writable status every x seconds (e.g. in background) -> faster while typing
  - search help e.g. 'Nothing found' '#4 of 6 hits' 'no more hits, start from beginning ?'
@@ -115,6 +146,7 @@ TODO
  - search options regex + case-sensitive
  - 1.8: unicode support <-> already finished but unusable due to Curses (see encoding branch)
  - add double quotes/braces when typing one + skip over quote/brace when its already typed at current position
+
 
 Authors
 =======

@@ -9,8 +9,17 @@ describe Ruco::Editor do
     File.binary_read(@file)
   end
 
+  def color(c)
+    {
+      :string => ["#718C00", nil],
+      :keyword => ["#8959A8", nil],
+      :instance_variable => ["#C82829", nil],
+    }[c]
+  end
+
+  let(:language){ LanguageSniffer::Language.new(:name => 'ruby', :lexer => 'ruby') }
   let(:editor){
-    editor = Ruco::Editor.new(@file, :lines => 3, :columns => 5)
+    editor = Ruco::Editor.new(@file, :lines => 3, :columns => 5, :language => language)
     # only scroll when we reach end of lines/columns <-> able to test with smaller area
     editor.send(:text_area).instance_eval{
       @window.instance_eval{
@@ -26,6 +35,7 @@ describe Ruco::Editor do
   before do
     `rm -rf ~/.ruco/sessions`
     @file = 'spec/temp.txt'
+    write('')
   end
 
   describe "strange newline formats" do
@@ -570,7 +580,7 @@ describe Ruco::Editor do
     end
 
     it "shows one-line selection" do
-      write('12345678')
+      write('abcdefghi')
       editor.selecting do
         move(:to, 0, 4)
       end
@@ -582,7 +592,7 @@ describe Ruco::Editor do
     end
 
     it "shows multi-line selection" do
-      write("012\n345\n678")
+      write("abc\nabc\nabc")
       editor.move(:to, 0,1)
       editor.selecting do
         move(:to, 1, 1)
@@ -595,7 +605,7 @@ describe Ruco::Editor do
     end
 
     it "shows the selection from offset" do
-      write('12345678')
+      write('abcdefghi')
       editor.move(:to, 0, 2)
       editor.selecting do
         move(:to, 0, 4)
@@ -608,7 +618,7 @@ describe Ruco::Editor do
     end
 
     it "shows the selection in nth line" do
-      write("\n12345678")
+      write("\nabcdefghi")
       editor.move(:to, 1, 2)
       editor.selecting do
         move(:to, 1, 4)
@@ -621,20 +631,133 @@ describe Ruco::Editor do
     end
 
     it "shows multi-line selection in scrolled space" do
-      write("\n\n\n\n\n0123456789\n0123456789\n0123456789\n\n")
+      write("\n\n\n\n\nacdefghijk\nacdefghijk\nacdefghijk\n\n")
       ta = editor.send(:text_area)
       ta.send(:position=, [5,8])
       ta.send(:screen_position=, [5,7])
       editor.selecting do
         move(:relative, 2, 1)
       end
-      editor.view.should == "789\n789\n789"
+      editor.view.should == "ijk\nijk\nijk"
       editor.cursor.should == [2,2]
       editor.style_map.flatten.should == [
         [nil, :reverse, nil, nil, nil, :normal], # start to end of screen
         [:reverse, nil, nil, nil, nil, :normal], # 0 to end of screen
         [:reverse, nil, :normal] # 0 to end of selection
       ]
+    end
+
+    it "shows keywords" do
+      write("class")
+      editor.style_map.flatten.should == [
+        [color(:keyword), nil, nil, nil, nil, :normal],
+        nil,
+        nil
+      ]
+    end
+
+    it "shows keywords for moved window" do
+      write("\n\n\n\n\n     if  ")
+      editor.move(:to, 5, 6)
+      editor.cursor.should == [1,3]
+      editor.view.should == "\n  if \n"
+      editor.style_map.flatten.should == [
+        nil,
+        [nil, nil, color(:keyword), nil, :normal],
+        nil
+      ]
+    end
+
+    it "shows mid-keywords for moved window" do
+      write("\n\n\n\n\nclass ")
+      editor.move(:to, 5, 6)
+      editor.cursor.should == [1,3]
+      editor.view.should == "\nss \n"
+      editor.style_map.flatten.should == [
+        nil,
+        [color(:keyword), nil, :normal],
+        nil
+      ]
+    end
+
+    it "shows multiple syntax elements" do
+      write("if @x")
+      editor.style_map.flatten.should == [
+        [color(:keyword), nil, :normal, color(:instance_variable), nil, :normal],
+        nil,
+        nil
+      ]
+    end
+
+    it "does not show keywords inside strings" do
+      write("'Foo'")
+      editor.style_map.flatten.should == [
+        [color(:string), nil, nil, nil, nil, :normal],
+        nil,
+        nil
+      ]
+    end
+
+    xit "shows multiline comments" do
+      write("=begin\na\nb\n=end")
+      editor.move(:to, 3,0)
+      editor.view.should == "b\n=end\n"
+      editor.style_map.flatten.should == [
+        [["#8E908C", nil], nil, :normal],
+        [["#8E908C", nil], nil, nil, nil, :normal],
+        nil
+      ]
+    end
+
+    it "shows selection on top" do
+      write("class")
+      editor.selecting do
+        move(:relative, 0, 3)
+      end
+      editor.style_map.flatten.should == [
+        [:reverse, nil, nil, ["#8959A8", nil], nil, :normal],
+        nil,
+        nil
+      ]
+    end
+
+    it "times out when styling takes too long" do
+      STDERR.should_receive(:puts)
+      Timeout.should_receive(:timeout).and_raise Timeout::Error
+      write(File.read('lib/ruco.rb'))
+      editor.style_map.flatten.should == [nil,nil,nil]
+    end
+
+    describe 'with theme' do
+      before do
+        write("class")
+        `rm -rf ~/.ruco/themes`
+      end
+
+      it "can download a theme" do
+        editor = Ruco::Editor.new(@file,
+          :lines => 3, :columns => 5, :language => language,
+          :color_theme => 'https://raw.github.com/ChrisKempson/Tomorrow-Theme/master/TextMate/Tomorrow-Night-Bright.tmTheme'
+        )
+        editor.style_map.flatten.should == [
+          [["#C397D8", nil], nil, nil, nil, nil, :normal],
+          nil,
+          nil
+        ]
+      end
+
+      it "does not fail with invalid theme url" do
+        STDERR.should_receive(:puts)
+        editor = Ruco::Editor.new(@file,
+          :lines => 3, :columns => 5, :language => language,
+          :color_theme => 'foooooo'
+        )
+        editor.style_map.flatten.should == [
+          [["#8959A8", nil], nil, nil, nil, nil, :normal],
+          nil,
+          nil
+        ]
+      end
     end
   end
 
@@ -845,17 +968,17 @@ describe Ruco::Editor do
       stack.length.should == 2
       stack[0][:state][:content].should == "a"
       stack[1][:state][:content].should == "ba"
-      
+
       editor.undo
       editor.history.position.should == 0
-      
+
       editor.insert("c")
       editor.view # trigger save point
       stack.length.should == 2
       stack[0][:state][:content].should == "a"
       stack[1][:state][:content].should == "ca"
     end
-    
+
     it "can undo an action" do
       write("a")
       editor.insert("b")
@@ -992,6 +1115,7 @@ describe Ruco::Editor do
     end
 
     it "is changed after delete" do
+      write("abc")
       editor.delete(1)
       editor.modified?.should == true
     end
@@ -1008,6 +1132,7 @@ describe Ruco::Editor do
     end
 
     it "is changed after delete_line" do
+      write("\n\n\n")
       editor.delete_line
       editor.modified?.should == true
     end
@@ -1109,16 +1234,16 @@ describe Ruco::Editor do
     let(:editor){ Ruco::Editor.new(@file, :lines => 5, :columns => 10, :line_numbers => true) }
 
     before do
-      write("0\n1\n2\n3\n4\n5\n6\n7\n")
+      write("a\nb\nc\nd\ne\nf\ng\nh\n")
     end
 
     it "adds numbers to view" do
-      editor.view.should == "   1 0\n   2 1\n   3 2\n   4 3\n   5 4"
+      editor.view.should == "   1 a\n   2 b\n   3 c\n   4 d\n   5 e"
     end
 
     it "does not show numbers for empty lines" do
       editor.move(:to, 10,0)
-      editor.view.should == "   6 5\n   7 6\n   8 7\n   9 \n     "
+      editor.view.should == "   6 f\n   7 g\n   8 h\n   9 \n     "
     end
 
     it "adjusts the cursor" do

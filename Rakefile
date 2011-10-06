@@ -21,19 +21,23 @@ end
 
 task :try_color do
   require 'curses'
-  if Curses::has_colors?
-    Curses::start_color
-    # initialize every color we want to use
-    # id, foreground, background
-    Curses::init_pair( Curses::COLOR_BLACK, Curses::COLOR_BLACK, Curses::COLOR_BLACK )
-    Curses::init_pair( Curses::COLOR_RED, Curses::COLOR_RED, Curses::COLOR_BLACK )
-    Curses::init_pair( Curses::COLOR_GREEN, Curses::COLOR_GREEN, Curses::COLOR_BLACK )
-  end
+  # fix colors for xterm...
+  #if Curses::has_colors?
+  ENV['TERM'] += '-256color' if ENV['TERM'] == 'xterm'
+  Curses::start_color
+  # initialize every color we want to use
+  # id, foreground, background
+  #Curses.use_default_colors if defined? Curses.use_default_colors # 1.9 only, maybe helps to get real white...
+  Curses::init_pair( 32, 253, 39 )
+  #Curses::init_pair( 32, -1, -1 )
+  #Curses::init_pair( Curses::COLOR_RED, Curses::COLOR_RED, Curses::COLOR_BLACK )
+  #Curses::init_pair( Curses::COLOR_GREEN, Curses::COLOR_GREEN, Curses::COLOR_BLACK )
+  #end
 
   Curses.setpos(0,0)
-  Curses.attrset(Curses.color_pair(Curses::COLOR_RED)) # fetch color pair with the id xxx
+  Curses.attrset(Curses::color_pair( 32 )) # fetch color pair with the id xxx
   Curses.addstr("xxxxxxxx\nyyyyyyy");
-  Curses.attrset(Curses.color_pair(Curses::COLOR_GREEN))
+  Curses.attrset(Curses::color_pair( 32 ))
   Curses.addstr("xxxxxxxx\nyyyyyyy");
   Curses.getch
 end
@@ -59,6 +63,19 @@ task :key do
     Curses.setpos(count,0)
     Curses.addstr("#{key.inspect}     ");
   end
+end
+
+task :parse_syntax do
+  require 'ruco/array_processor'
+  require 'ultra_pow_list'
+  UltraPowList.make_loadable
+  require 'textpow'
+  require 'uv'
+  puts ruby = File.join(Uv.path.first,'uv', 'syntax','ruby.syntax')
+  syntax = Textpow::SyntaxNode.load(ruby)
+  processor = Ruco::ArrayProcessor.new
+  result = syntax.parse( "class Foo\n  def xxx;end\nend",  processor )
+  puts result.inspect
 end
 
 begin

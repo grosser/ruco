@@ -9,4 +9,13 @@ class Range
   def last_element
     exclude_end? ? last.pred : last
   end unless defined? last_element
+
+  # (1..2).move(2) == (3..4)
+  def move(n)
+    if exclude_end?
+      (first + n)...(last + n)
+    else
+      (first + n)..(last + n)
+    end
+  end
 end

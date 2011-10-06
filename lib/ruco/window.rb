@@ -50,9 +50,15 @@ module Ruco
     end
 
     def style_map(selection)
-      mask = StyleMap.new(lines)
-      return mask unless selection
+      map = StyleMap.new(lines)
+      if selection
+        add_selection_styles(map, selection)
+      else
+        map
+      end
+    end
 
+    def add_selection_styles(map, selection)
       lines.times do |line|
         visible = visible_area(line)
         next unless selection.overlap?(visible)
@@ -62,10 +68,9 @@ module Ruco
         last = [selection.last, visible.last].min
         last = last[1] - left
 
-        mask.add(:reverse, line, first...last)
+        map.add(:reverse, line, first...last)
       end
-
-      mask
+      map
     end
 
     def left=(x)
@@ -75,6 +80,14 @@ module Ruco
     def set_top(line, total_lines)
       max_top = total_lines - lines + 1 + @options[:line_scroll_offset]
       @top = [[line, max_top].min, 0].max
+    end
+
+    def visible_lines
+      @top..(@top+@lines-1)
+    end
+
+    def visible_columns
+      @left..(@left+@columns-1)
     end
 
     private
@@ -94,14 +107,6 @@ module Ruco
       last_visible_column = @left + @columns
       end_of_line = [line, last_visible_column]
       start_of_line..end_of_line
-    end
-
-    def visible_lines
-      @top..(@top+@lines-1)
-    end
-
-    def visible_columns
-      @left..(@left+@columns-1)
     end
   end
 end

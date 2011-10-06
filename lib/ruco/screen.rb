@@ -1,5 +1,7 @@
 module Ruco
   class Screen
+    @@styles = {}
+
     def initialize(options)
       @options = options
       @cache = []
@@ -16,6 +18,7 @@ module Ruco
       Curses.raw # give us all other keys
       Curses.stdscr.nodelay = 1 # do not block -> we can use timeouts
       Curses.init_screen
+      Curses.start_color if $ruco_colors and Curses.has_colors?
       yield self
     ensure
       Curses.clear # needed to clear the menu/status bar on windows
@@ -52,12 +55,12 @@ module Ruco
       Curses.addstr(text);
     end
 
-    def draw_view(view, style_mask)
+    def draw_view(view, style_map)
       lines = view.naive_split("\n")
-      style_mask = style_mask.flatten
+      style_map = style_map.flatten
 
       lines.each_with_index do |line, line_number|
-        styles = style_mask[line_number]
+        styles = style_map[line_number]
 
         # expand line with whitespace to overwrite previous content
         missing = columns - line.size
@@ -71,7 +74,7 @@ module Ruco
           # position at start of line and draw
           Curses.setpos(line_number,0)
           Ruco::StyleMap.styled(line, styles).each do |style, part|
-            Curses.attrset self.class.curses_style(style)
+            Curses.attrset self.class.curses_style(style, $ruco_colors)
             Curses.addstr part
           end
 
@@ -88,14 +91,58 @@ module Ruco
       yield # render the line
     end
 
-    STYLES = {
-      :normal => 0,
-      :reverse => Curses::A_REVERSE
-    }
+    def self.curses_style(style, colors)
+      if colors
+        foreground = $ruco_foreground || '#ffffff'
+        background = $ruco_background || '#000000'
 
-    def self.curses_style(style)
-      return 0 unless style
-      STYLES[style] or raise("Unknown style #{style.inspect}")
+        foreground, background = if style == :normal
+          [foreground, background]
+        elsif style == :reverse
+          ['#000000', '#ffffff']
+        else
+          # :red or [:red, :blue]
+          f,b = style
+          [f || foreground, b || background]
+        end
+
+        foreground = html_to_terminal_color(foreground)
+        background = html_to_terminal_color(background)
+        color_id(foreground, background)
+      else # no colors
+        if style == :reverse
+          Curses::A_REVERSE
+        else
+          Curses::A_NORMAL
+        end
+      end
+    end
+    cmemoize :curses_style
+
+    # create a new color from foreground+background or reuse old
+    # and return color-id
+    def self.color_id(foreground, background)
+      # make a new pair with a unique id
+      @@max_color_id ||= 0
+      id = (@@max_color_id += 1)
+      unless defined? RSpec # stops normal text-output, do not use in tests
+        Curses::init_pair(id, foreground, background)
+      end
+      Curses.color_pair(id)
+    end
+    cmemoize :color_id
+
+    COLOR_SOURCE_VALUES = 256
+    COLOR_TARGET_VALUES = 5
+    COLOR_DIVIDE = COLOR_SOURCE_VALUES / COLOR_TARGET_VALUES
+    TERM_COLOR_BASE = 16
+
+    def self.html_to_terminal_color(html_color)
+      return unless html_color
+      r = (html_color[1..2].to_i(16) / COLOR_DIVIDE) * 36
+      g = (html_color[3..4].to_i(16) / COLOR_DIVIDE) * 6
+      b = (html_color[5..6].to_i(16) / COLOR_DIVIDE) * 1
+      TERM_COLOR_BASE + r + g + b
     end
   end
 end

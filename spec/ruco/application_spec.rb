@@ -31,7 +31,7 @@ describe Ruco::Application do
   end
 
   def status(line=1)
-    "Ruco #{Ruco::VERSION} -- spec/temp.txt                   #{line}:1\n"
+    "Ruco #{Ruco::VERSION} -- spec/temp.txt                    #{line}:1\n"
   end
 
   let(:rucorc){ 'spec/.ruco.rb' }

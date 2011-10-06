@@ -2,6 +2,7 @@ module Ruco
   # everything that does not belong to a text-area
   # but is needed for Ruco::Editor
   class EditorArea < TextArea
+    include Ruco::Editor::Colors if defined? Ruco::Editor::Colors # only colorize if all color libs are loaded
     include Ruco::Editor::LineNumbers
     include Ruco::Editor::History
 
