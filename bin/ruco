@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 # encoding: UTF-8
 require 'rubygems'
+require 'clipboard'
 require 'curses'
 require 'optparse'
 $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
