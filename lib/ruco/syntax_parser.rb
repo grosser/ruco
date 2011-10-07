@@ -2,9 +2,9 @@ module Ruco
   module SyntaxParser
     # textpow only offers certain syntax
     TEXTPOW_CONVERT = {
-      'scss' => 'sass',
-      'html+erb' => 'html',
-      'rhtml' => 'html',
+      'scss' => 'source.sass',
+      'html+erb' => 'text.html.ruby',
+      'rhtml' => 'text.html.ruby',
     }
 
     def self.syntax_for_line(line, languages)
@@ -26,8 +26,7 @@ module Ruco
       fallbacks = languages.map{|l| TEXTPOW_CONVERT[l] }.compact
 
       (languages + fallbacks).detect do |language|
-        syntax = File.join(Textpow.syntax_path, "#{language}.syntax")
-        found = Textpow::SyntaxNode.load(syntax) if File.exist?(syntax)
+        found = Textpow.syntax(language)
       end
 
       found
