@@ -2,7 +2,6 @@ module Ruco
   module SyntaxParser
     # textpow only offers certain syntax
     TEXTPOW_CONVERT = {
-      'scss' => 'source.sass',
       'html+erb' => 'text.html.ruby',
       'rhtml' => 'text.html.ruby',
     }
