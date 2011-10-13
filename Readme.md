@@ -126,6 +126,7 @@ To build the commandline output Editor/CommandBar return:
 
 TODO
 =====
+ - ctrl+right should jump to line end and then to the next line even if the line ends in a "
  - only do syntax parsing for changed lines + selected lines <-> will not be redrawn anyhow
  - try to use complete file coloring as removed in 26d6da4
  - javascript syntax parsing is slow and often causes syntax-timeouts
