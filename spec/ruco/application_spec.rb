@@ -356,6 +356,14 @@ describe Ruco::Application do
     end
   end
 
+  describe 'find' do
+    it "finds" do
+      write('text foo')
+      type :'Ctrl+f', 'foo', :enter
+      app.cursor.should == [1, 5]
+    end
+  end
+
   describe :save do
     it "just saves" do
       write('')
