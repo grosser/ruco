@@ -362,6 +362,24 @@ describe Ruco::Application do
       type :'Ctrl+f', 'foo', :enter
       app.cursor.should == [1, 5]
     end
+
+    it "shows a menu when nothing was found" do
+      write('text foo')
+      type :'Ctrl+f', 'bar', :enter
+      app.view.split("\n").last.should include("No matches found")
+    end
+
+    it "returns to top after no matches found" do
+      write('text foo foo')
+      type :'Ctrl+f', 'foo', :enter
+      app.cursor.should == [1, 5]
+      type :'Ctrl+f', 'foo', :enter
+      app.cursor.should == [1, 9]
+      type :'Ctrl+f', 'foo', :enter, :enter
+      app.cursor.should == [1, 5]
+    end
+
+
   end
 
   describe :save do
