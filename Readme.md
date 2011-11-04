@@ -154,6 +154,7 @@ Authors
 
 ### [Contributors](http://github.com/grosser/ruco/contributors)
  - [AJ Palkovic](https://github.com/ajpalkovic)
+ - [David Sachitano](https://github.com/dsachitano)
 
 
 [Michael Grosser](http://grosser.it)<br/>
