@@ -357,10 +357,20 @@ describe Ruco::Application do
   end
 
   describe 'find' do
+    def command_bar
+      app.view.split("\n").last
+    end
+
     it "finds" do
       write('text foo')
       type :'Ctrl+f', 'foo', :enter
       app.cursor.should == [1, 5]
+    end
+
+    it "marks the found word" do
+      write('text foo')
+      type :'Ctrl+f', 'foo', :enter, 'a'
+      editor_part(app.view).should == "text a\n\n"
     end
 
     it "shows a menu when nothing was found and there were previous matches" do
@@ -368,10 +378,10 @@ describe Ruco::Application do
       type :'Ctrl+f', 'bar', :enter
       type :'Ctrl+f', 'bar', :enter
       type :'Ctrl+f', 'bar', :enter
-      app.view.split("\n").last.should include("No matches found")
+      command_bar.should include("No matches found")
     end
 
-    it "returns to top after no matches found" do
+    it "returns to first match if user confirms after no more match is found" do
       write('text foo foo')
       type :'Ctrl+f', 'foo', :enter
       app.cursor.should == [1, 5]
@@ -381,13 +391,11 @@ describe Ruco::Application do
       app.cursor.should == [1, 5]
     end
 
-    it "notifies user when no matches are found in the entire document" do
+    it "notifies the user when no matches are found in the entire file" do
       write('text foo')
       type :'Ctrl+f', 'bar', :enter
-      app.view.split("\n").last.should include("No matches found in entire document")
+      command_bar.should include("No matches found in entire file")
     end
-
-
   end
 
   describe :save do

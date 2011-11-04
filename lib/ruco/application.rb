@@ -190,7 +190,7 @@ module Ruco
               end
             end
           else
-            ask("No matches found in entire document") {}
+            ask("No matches found in entire file")
           end
         end
       end

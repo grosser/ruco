@@ -37,10 +37,14 @@ module Ruco
 
     def find(text)
       move(:relative, 0,0) # reset selection
-      return unless start = text_area.content.index(text, text_area.index_for_position+1)
+      start = text_area.content.index(text, text_area.index_for_position+1)
+      return unless start
+
+      # select the found word
       finish = start + text.size
       move(:to_index, finish)
       selecting{ move(:to_index, start) }
+
       true
     end
 
