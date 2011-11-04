@@ -395,6 +395,16 @@ describe Ruco::Application do
       write('text foo')
       type :'Ctrl+f', 'bar', :enter
       command_bar.should include("No matches found in entire file")
+      type :enter
+      command_bar.should_not include("No matches found in entire file")
+    end
+
+    it "dismisses the nothing found warning on a single key-press" do
+      write('text foo')
+      type :'Ctrl+f', 'bar', :enter
+      command_bar.should include("No matches found in entire file")
+      type 'a'
+      command_bar.should_not include("No matches found in entire file")
     end
   end
 

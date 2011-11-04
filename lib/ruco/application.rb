@@ -185,7 +185,7 @@ module Ruco
               editor.find(result)
             end
           else
-            ask("No matches found in entire file")
+            ask("No matches found in entire file", :auto_enter => true){}
           end
         end
       end
