@@ -177,12 +177,7 @@ module Ruco
 
       action :find do
         ask("Find: ", :cache => true) do |result|
-          original_pos = editor.position
-          editor.move(:to, 0,0)
-          global_search_success = editor.find(result)
-          editor.move(:to, *original_pos)
-
-          if global_search_success
+          if editor.content.include?(result)
             if not editor.find(result)
               ask("No matches found -- Enter=First match ESC=Stop") do
                 editor.move(:to, 0,0)

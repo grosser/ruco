@@ -70,6 +70,10 @@ module Ruco
       session_store.set(@file, text_area.state.slice(:position, :screen_position))
     end
 
+    def content
+      text_area.content.freeze # no modifications allowed
+    end
+
     private
 
     def restore_session
