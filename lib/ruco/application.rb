@@ -245,6 +245,7 @@ module Ruco
       bind :"Alt+Ctrl+down", :move_line_down
       bind :"Alt+Ctrl+up", :move_line_up
       bind :end, :move_to_eol
+      bind :"Ctrl+e", :move_to_eol # for OsX
       bind :home, :move_to_bol
     end
 

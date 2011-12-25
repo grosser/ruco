@@ -75,7 +75,6 @@ Customize
       bind :"Ctrl+x", :quit
       bind :"Ctrl+o", :save
       bind :"Ctrl+k", :delete_line
-      bind :"Ctrl+e", :move_to_eol
       bind :"Ctrl+a", :move_to_bol
 
       # create reusable actions
