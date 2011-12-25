@@ -4,14 +4,13 @@
 # -*- encoding: utf-8 -*-
 
 Gem::Specification.new do |s|
-  s.name = %q{ruco}
-  s.version = "0.2.8"
+  s.name = "ruco"
+  s.version = "0.2.9"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Michael Grosser"]
-  s.date = %q{2011-11-03}
-  s.default_executable = %q{ruco}
-  s.email = %q{michael@grosser.it}
+  s.date = "2011-12-25"
+  s.email = "michael@grosser.it"
   s.executables = ["ruco"]
   s.files = [
     ".travis.yml",
@@ -78,38 +77,11 @@ Gem::Specification.new do |s|
     "spec/ruco_spec.rb",
     "spec/spec_helper.rb"
   ]
-  s.homepage = %q{http://github.com/grosser/ruco}
-  s.post_install_message = %q{
-      Mac: shift/ctrl + arrow-keys only work in iterm (not Terminal.app)
-      Ubuntu: sudo apt-get install xclip # to use the clipboard
-
-}
+  s.homepage = "http://github.com/grosser/ruco"
+  s.post_install_message = "\n      Mac: shift/ctrl + arrow-keys only work in iterm (not Terminal.app)\n      Ubuntu: sudo apt-get install xclip # to use the clipboard\n\n"
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.6.2}
-  s.summary = %q{Commandline editor written in ruby}
-  s.test_files = [
-    "spec/ruco/application_spec.rb",
-    "spec/ruco/array_processor_spec.rb",
-    "spec/ruco/command_bar_spec.rb",
-    "spec/ruco/core_ext/array_spec.rb",
-    "spec/ruco/core_ext/range_spec.rb",
-    "spec/ruco/core_ext/string_spec.rb",
-    "spec/ruco/editor_spec.rb",
-    "spec/ruco/file_store_spec.rb",
-    "spec/ruco/form_spec.rb",
-    "spec/ruco/history_spec.rb",
-    "spec/ruco/keyboard_spec.rb",
-    "spec/ruco/option_accessor_spec.rb",
-    "spec/ruco/screen_spec.rb",
-    "spec/ruco/status_bar_spec.rb",
-    "spec/ruco/style_map_spec.rb",
-    "spec/ruco/syntax_parser_spec.rb",
-    "spec/ruco/text_area_spec.rb",
-    "spec/ruco/tm_theme_spec.rb",
-    "spec/ruco/window_spec.rb",
-    "spec/ruco_spec.rb",
-    "spec/spec_helper.rb"
-  ]
+  s.rubygems_version = "1.8.10"
+  s.summary = "Commandline editor written in ruby"
 
   if s.respond_to? :specification_version then
     s.specification_version = 3
