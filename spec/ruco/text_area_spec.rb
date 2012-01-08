@@ -1,3 +1,4 @@
+# encoding: utf-8
 require File.expand_path('spec/spec_helper')
 
 describe Ruco::TextArea do
@@ -156,6 +157,26 @@ describe Ruco::TextArea do
         text.insert("'")
         text.view.should == "'ab\n'cd\nef"
         text.selection.should == ([0,0]..[1,1])
+      end
+    end
+  end
+
+  if ''.respond_to?(:encoding)
+    describe "encoding" do
+      def build(encoding)
+        Ruco::TextArea.new("asd".force_encoding(encoding), :lines => 3, :columns => 10)
+      end
+
+      it "upgrades ascii-8 to utf8" do
+        build('ASCII-8BIT').lines.first.encoding.to_s.should == 'UTF-8'
+      end
+
+      it "upgrades ascii-7 to utf8" do
+        build('US-ASCII').lines.first.encoding.to_s.should == 'UTF-8'
+      end
+
+      it "does not convert weird encodings to utf-8" do
+        build('eucJP').lines.first.encoding.to_s.should == 'EUC-JP'
       end
     end
   end

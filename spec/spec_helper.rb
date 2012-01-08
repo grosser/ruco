@@ -30,3 +30,7 @@ class Time
     Time.now.to_f - t
   end
 end
+
+def log(text)
+  puts "LOG: #{text}"
+end

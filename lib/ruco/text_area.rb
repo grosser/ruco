@@ -14,6 +14,10 @@ module Ruco
     attr_reader :lines, :selection, :column, :line
 
     def initialize(content, options)
+      if content.respond_to?(:encoding) and content.encoding.to_s.include?('ASCII')
+        content = content.force_encoding('UTF-8')
+      end
+
       @lines = content.naive_split("\n")
       @options = options.dup
       @column = 0
@@ -89,6 +93,7 @@ module Ruco
     end
 
     def insert(text)
+      text = text.force_encoding('UTF-8')
       if @selection
         if SURROUNDING_CHARS[text]
           return surround_selection_with(text)
