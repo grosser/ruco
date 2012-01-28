@@ -737,7 +737,7 @@ describe Ruco::Editor do
       it "can download a theme" do
         editor = Ruco::Editor.new(@file,
           :lines => 3, :columns => 5, :language => language,
-          :color_theme => 'https://raw.github.com/ChrisKempson/Tomorrow-Theme/master/TextMate/Tomorrow-Night-Bright.tmTheme'
+          :color_theme => 'https://raw.github.com/ChrisKempson/TextMate-Tomorrow-Theme/master/Tomorrow-Night-Bright.tmTheme'
         )
         editor.style_map.flatten.should == [
           [["#C397D8", nil], nil, nil, nil, nil, :normal],
