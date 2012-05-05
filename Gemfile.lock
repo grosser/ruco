@@ -20,7 +20,7 @@ GEM
     rspec-expectations (2.6.0)
       diff-lcs (~> 1.1.2)
     rspec-mocks (2.6.0)
-    textpow1x (1.2.4)
+    textpow1x (1.2.5)
       plist (>= 3.0.1)
 
 PLATFORMS
@@ -34,4 +34,4 @@ DEPENDENCIES
   oniguruma
   rake
   rspec (~> 2)
-  textpow1x (>= 1.2.4)
+  textpow1x (>= 1.2.5)
