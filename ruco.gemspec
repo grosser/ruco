@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "ruco"
-  s.version = "0.2.10"
+  s.version = "0.2.11"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Michael Grosser"]
-  s.date = "2012-01-08"
+  s.date = "2012-05-05"
   s.email = "michael@grosser.it"
   s.executables = ["ruco"]
   s.files = [
@@ -80,7 +80,7 @@ Gem::Specification.new do |s|
   s.homepage = "http://github.com/grosser/ruco"
   s.post_install_message = "\n      Mac: shift/ctrl + arrow-keys only work in iterm (not Terminal.app)\n      Ubuntu: sudo apt-get install xclip # to use the clipboard\n\n"
   s.require_paths = ["lib"]
-  s.rubygems_version = "1.8.10"
+  s.rubygems_version = "1.8.24"
   s.summary = "Commandline editor written in ruby"
 
   if s.respond_to? :specification_version then
@@ -88,16 +88,16 @@ Gem::Specification.new do |s|
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<clipboard>, [">= 0.9.8"])
-      s.add_runtime_dependency(%q<textpow1x>, [">= 1.2.4"])
+      s.add_runtime_dependency(%q<textpow1x>, [">= 1.2.5"])
       s.add_runtime_dependency(%q<language_sniffer>, [">= 0"])
     else
       s.add_dependency(%q<clipboard>, [">= 0.9.8"])
-      s.add_dependency(%q<textpow1x>, [">= 1.2.4"])
+      s.add_dependency(%q<textpow1x>, [">= 1.2.5"])
       s.add_dependency(%q<language_sniffer>, [">= 0"])
     end
   else
     s.add_dependency(%q<clipboard>, [">= 0.9.8"])
-    s.add_dependency(%q<textpow1x>, [">= 1.2.4"])
+    s.add_dependency(%q<textpow1x>, [">= 1.2.5"])
     s.add_dependency(%q<language_sniffer>, [">= 0"])
   end
 end
