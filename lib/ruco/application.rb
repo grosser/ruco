@@ -49,8 +49,8 @@ module Ruco
       when :left then move_with_select_mode :relative, 0,-1
       when :page_up then move_with_select_mode :page_up
       when :page_down then move_with_select_mode :page_down
-      when :"Ctrl+right" then move_with_select_mode :jump, :right
-      when :"Ctrl+left" then move_with_select_mode :jump, :left
+      when :"Ctrl+right", :"Alt+f" then move_with_select_mode :jump, :right
+      when :"Ctrl+left", :"Alt+b" then move_with_select_mode :jump, :left
 
       # select
       when :"Shift+down" then @focused.selecting { move(:relative, 1, 0) }
