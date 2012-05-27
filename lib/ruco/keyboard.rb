@@ -107,7 +107,7 @@ class Keyboard
 
   def self.fetch_user_input
     key = @input.call or return
-    key = key.ord if key.is_a?(String) # ruby 1.9 fix
+    key = key.ord unless IS_18
     if key >= NOTHING
       # nothing happening -> sleep a bit to save cpu
       sleep SEQUENCE_TIMEOUT
@@ -179,7 +179,7 @@ class Keyboard
   end
 
   def self.escape_sequence?(sequence)
-    sequence[0] == ESCAPE and sequence.size.between?(2,7) # Esc
+    sequence[0] == ESCAPE and sequence.size.between?(2,7)
   end
 
   def self.is_alt_key_code?(sequence)

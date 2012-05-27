@@ -101,9 +101,11 @@ describe Keyboard do
     output.should == [:"Shift+up"]
   end
 
-  it "can handle strings from 1.9" do
-    type ['a']
-    output.should == ["a"]
+  if RUBY_VERSION > '1.9.0'
+    it "can handle strings from 1.9" do
+      type ['a']
+      output.should == ["a"]
+    end
   end
 
   it "can handle Alt+x codes" do
