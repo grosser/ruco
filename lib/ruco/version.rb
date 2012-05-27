@@ -1,3 +1,3 @@
 module Ruco
-  VERSION = File.read( File.join(File.dirname(__FILE__),'..','..','VERSION') ).strip
+  VERSION = Version = "0.2.11"
 end

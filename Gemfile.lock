@@ -1,14 +1,17 @@
+PATH
+  remote: .
+  specs:
+    ruco (0.2.11)
+      clipboard (>= 0.9.8)
+      language_sniffer
+      textpow1x (>= 1.2.5)
+
 GEM
   remote: http://rubygems.org/
   specs:
-    clipboard (0.9.8)
+    clipboard (1.0.1)
     diff-lcs (1.1.2)
-    git (1.2.5)
-    jeweler (1.6.4)
-      bundler (~> 1.0)
-      git (>= 1.2.5)
-      rake
-    language_sniffer (1.0.0)
+    language_sniffer (1.0.1)
     oniguruma (1.1.0)
     plist (3.1.0)
     rake (0.9.2.2)
@@ -27,11 +30,8 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  clipboard (>= 0.9.8)
   ffi
-  jeweler
-  language_sniffer
   oniguruma
   rake
   rspec (~> 2)
-  textpow1x (>= 1.2.5)
+  ruco!

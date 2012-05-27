@@ -1,45 +1,11 @@
 # encoding: UTF-8
+require 'bundler/gem_tasks'
 
 task :default do
-  sh "rspec spec"
+  sh "rspec spec/"
 end
 
-task :run do
-  file = 'spec/temp.txt'
-  File.open(file, 'wb'){|f|f.write("12345\n1234\n#{'abcdefg'*20}\n123")}
-  exec "./bin/ruco #{file}"
-end
-
-task :try do
-  require 'curses'
-  Curses.setpos(0,0)
-  Curses.addstr("xxxxxxxx\nyyyyyyy");
-  Curses.getch
-end
-
-task :try_color do
-  require 'curses'
-  # fix colors for xterm...
-  #if Curses::has_colors?
-  ENV['TERM'] += '-256color' if ENV['TERM'] == 'xterm'
-  Curses::start_color
-  # initialize every color we want to use
-  # id, foreground, background
-  #Curses.use_default_colors if defined? Curses.use_default_colors # 1.9 only, maybe helps to get real white...
-  Curses::init_pair( 32, 253, 39 )
-  #Curses::init_pair( 32, -1, -1 )
-  #Curses::init_pair( Curses::COLOR_RED, Curses::COLOR_RED, Curses::COLOR_BLACK )
-  #Curses::init_pair( Curses::COLOR_GREEN, Curses::COLOR_GREEN, Curses::COLOR_BLACK )
-  #end
-
-  Curses.setpos(0,0)
-  Curses.attrset(Curses::color_pair( 32 )) # fetch color pair with the id xxx
-  Curses.addstr("xxxxxxxx\nyyyyyyy");
-  Curses.attrset(Curses::color_pair( 32 ))
-  Curses.addstr("xxxxxxxx\nyyyyyyy");
-  Curses.getch
-end
-
+desc "Show key-codes you are typing"
 task :key do
   require 'curses'
 
@@ -63,36 +29,19 @@ task :key do
   end
 end
 
-task :parse_syntax do
-  require 'ruco/array_processor'
-  require 'ultra_pow_list'
-  UltraPowList.make_loadable
-  require 'textpow'
-  require 'uv'
-  puts ruby = File.join(Uv.path.first,'uv', 'syntax','ruby.syntax')
-  syntax = Textpow::SyntaxNode.load(ruby)
-  processor = Ruco::ArrayProcessor.new
-  result = syntax.parse( "class Foo\n  def xxx;end\nend",  processor )
-  puts result.inspect
-end
+# extracted from https://github.com/grosser/project_template
+rule /^version:bump:.*/ do |t|
+  sh "git status | grep 'nothing to commit'" # ensure we are not dirty
+  index = ['major', 'minor','patch'].index(t.name.split(':').last)
+  file = 'lib/ruco/version.rb'
 
-begin
-  require 'jeweler'
-  Jeweler::Tasks.new do |gem|
-    gem.name = 'ruco'
-    gem.summary = "Commandline editor written in ruby"
-    gem.email = "michael@grosser.it"
-    gem.homepage = "http://github.com/grosser/#{gem.name}"
-    gem.authors = ["Michael Grosser"]
-    gem.post_install_message = <<-TEXT
+  version_file = File.read(file)
+  old_version, *version_parts = version_file.match(/(\d+)\.(\d+)\.(\d+)/).to_a
+  version_parts[index] = version_parts[index].to_i + 1
+  version_parts[2] = 0 if index < 2 # remove patch for minor
+  version_parts[1] = 0 if index < 1 # remove minor for major
+  new_version = version_parts * '.'
+  File.open(file,'w'){|f| f.write(version_file.sub(old_version, new_version)) }
 
-      Mac: shift/ctrl + arrow-keys only work in iterm (not Terminal.app)
-      Ubuntu: sudo apt-get install xclip # to use the clipboard
-
-    TEXT
-  end
-
-  Jeweler::GemcutterTasks.new
-rescue LoadError
-  puts "Jeweler, or one of its dependencies, is not available. Install it with: gem install jeweler"
+  sh "bundle && git add #{file} Gemfile.lock && git commit -m 'bump version to #{new_version}'"
 end
