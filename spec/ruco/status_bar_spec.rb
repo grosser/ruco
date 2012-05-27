@@ -1,4 +1,4 @@
-require File.expand_path('spec/spec_helper')
+require "spec_helper"
 
 describe Ruco::StatusBar do
   let(:file){ 'spec/temp.txt' }

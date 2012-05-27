@@ -1,4 +1,4 @@
-require File.expand_path('spec/spec_helper')
+require "spec_helper"
 
 describe Ruco::Editor do
   def write(content)

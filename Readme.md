@@ -126,6 +126,7 @@ To build the commandline output Editor/CommandBar return:
 
 TODO
 =====
+ - Shift+up and Alt+up emit the same keycodes in iTerm
  - ctrl+right should jump to line end and then to the next line even if the line ends in a "
  - only do syntax parsing for changed lines + selected lines <-> will not be redrawn anyhow
  - try to use complete file coloring as removed in 26d6da4
@@ -159,6 +160,5 @@ Authors
 
 [Michael Grosser](http://grosser.it)<br/>
 grosser.michael@gmail.com<br/>
-Hereby placed under public domain, do what you want, just do not hold me accountable...<br/>
-[![Flattr](http://api.flattr.com/button/flattr-badge-large.png)](https://flattr.com/submit/auto?user_id=grosser&url=https://github.com/grosser/ruco&title=ruco&language=en_GB&tags=github&category=software)
+License: MIT<br/>
 [![Build Status](https://secure.travis-ci.org/grosser/ruco.png)](http://travis-ci.org/grosser/ruco)

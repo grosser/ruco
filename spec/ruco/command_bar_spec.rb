@@ -1,4 +1,4 @@
-require File.expand_path('spec/spec_helper')
+require "spec_helper"
 
 describe Ruco::CommandBar do
   let(:default_view){ "^W Exit    ^S Save    ^F Find" }

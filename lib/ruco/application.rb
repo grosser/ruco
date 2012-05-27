@@ -57,8 +57,8 @@ module Ruco
       when :"Shift+right" then @focused.selecting { move(:relative, 0, 1) }
       when :"Shift+up" then @focused.selecting { move(:relative, -1, 0) }
       when :"Shift+left" then @focused.selecting { move(:relative, 0, -1) }
-      when :"Ctrl+Shift+left" then @focused.selecting{ move(:jump, :left) }
-      when :"Ctrl+Shift+right" then @focused.selecting{ move(:jump, :right) }
+      when :"Ctrl+Shift+left", :"Alt+Shift+left" then @focused.selecting{ move(:jump, :left) }
+      when :"Ctrl+Shift+right", :"Alt+Shift+right" then @focused.selecting{ move(:jump, :right) }
 
 
       # modify

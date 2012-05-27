@@ -1,4 +1,4 @@
-require File.expand_path('spec/spec_helper')
+require "spec_helper"
 
 describe Ruco::Form do
   let(:form){ Ruco::Form.new('Test', :columns => 30){|value| @result = value } }

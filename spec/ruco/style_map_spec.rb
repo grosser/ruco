@@ -1,4 +1,4 @@
-require File.expand_path('spec/spec_helper')
+require "spec_helper"
 
 describe Ruco::StyleMap do
   let(:map){ Ruco::StyleMap.new(3) }

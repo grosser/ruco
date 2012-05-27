@@ -1,4 +1,4 @@
-require File.expand_path('spec/spec_helper')
+require "spec_helper"
 
 describe Ruco::OptionAccessor do
   let(:options){ Ruco::OptionAccessor.new }

@@ -39,8 +39,9 @@ class Keyboard
     when Curses::Key::RIGHT then :right
     when Curses::Key::LEFT then :left
 
-    when 337, '^[1;2A' then :"Shift+up"
-    when 336, '^[1;2B' then :"Shift+down"
+    # code, unix, iTerm
+    when 337, '^[1;2A', "^[A" then :"Shift+up"
+    when 336, '^[1;2B', "^[B" then :"Shift+down"
     when 402, '^[1;2C' then :"Shift+right"
     when 393, '^[1;2D' then :"Shift+left"
 
@@ -56,8 +57,8 @@ class Keyboard
 
     when 561, '^[1;6A' then :"Ctrl+Shift+up"
     when 520, '^[1;6B' then :"Ctrl+Shift+down"
-    when 555, '^[1;6C' then :"Ctrl+Shift+right"
-    when 540, '^[1;6D' then :"Ctrl+Shift+left"
+    when 555, '^[1;6C', "^[C" then :"Ctrl+Shift+right"
+    when 540, '^[1;6D', "^[D" then :"Ctrl+Shift+left"
 
     when 562, '^[1;7A' then :"Alt+Ctrl+up"
     when 521, '^[1;7B' then :"Alt+Ctrl+down"
@@ -68,6 +69,11 @@ class Keyboard
     when      '^[1;8B' then :"Alt+Ctrl+Shift+down"
     when      '^[1;8C' then :"Alt+Ctrl+Shift+right"
     when      '^[1;8D' then :"Alt+Ctrl+Shift+left"
+
+    when      '^[1;10A' then :"Alt+Shift+up"
+    when      '^[1;10B' then :"Alt+Shift+down"
+    when      '^[1;10C' then :"Alt+Shift+right"
+    when      '^[1;10D' then :"Alt+Shift+left"
 
     when Curses::KEY_END then :end
     when Curses::KEY_HOME then :home
@@ -173,10 +179,10 @@ class Keyboard
   end
 
   def self.escape_sequence?(sequence)
-    sequence[0] == ESCAPE and sequence.size.between?(2,6) # Esc
+    sequence[0] == ESCAPE and sequence.size.between?(2,7) # Esc
   end
 
-  def self.is_alt_key_code?(key)
-    key.slice(0,1) == "^" and key.size == 2
+  def self.is_alt_key_code?(sequence)
+    sequence.slice(0,1) == "^" and sequence.size == 2
   end
 end

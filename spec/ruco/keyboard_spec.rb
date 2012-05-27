@@ -1,5 +1,5 @@
 # encoding: UTF-8
-require File.expand_path('spec/spec_helper')
+require "spec_helper"
 
 describe Keyboard do
   def output
@@ -89,6 +89,11 @@ describe Keyboard do
   it "recognises escape sequence for Shift+down" do
     type [27, 91, 49, 59, 50, 66]
     output.should == [:"Shift+down"]
+  end
+
+  it "ignores to long escape sequences" do
+    type [27, 91, 49, 59, 50, 66, 59, 50, 66, 59, 50, 66]
+    output.should == [:escape, "[", "1", ";", "2", "B", ";", "2", "B", ";", "2", "B"]
   end
 
   it "recognises escape sequence for Shift+up" do
