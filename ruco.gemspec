@@ -8,6 +8,7 @@ Gem::Specification.new name, Ruco::VERSION do |s|
   s.email = "michael@grosser.it"
   s.homepage = "http://github.com/grosser/#{name}"
   s.files = `git ls-files`.split("\n")
+  s.executables = ["ruco"]
   s.license = "MIT"
   s.add_runtime_dependency "clipboard", ">= 0.9.8"
   s.add_runtime_dependency "textpow1x", ">= 1.2.5"
