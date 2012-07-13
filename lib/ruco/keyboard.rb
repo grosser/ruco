@@ -75,6 +75,24 @@ class Keyboard
     when      '^[1;10C' then :"Alt+Shift+right"
     when      '^[1;10D' then :"Alt+Shift+left"
 
+    when      '^[F'     then :"Shift+end"
+    when      '^[H'     then :"Shift+home"
+
+    when      '^[1;9F'  then :"Alt+end"
+    when      '^[1;9H'  then :"Alt+home"
+
+    when      '^[1;10F' then :"Alt+Shift+end"
+    when      '^[1;10H' then :"Alt+Shift+home"
+
+    when      '^[1;13F' then :"Alt+Ctrl+end"
+    when      '^[1;13H' then :"Alt+Ctrl+home"
+
+    when      '^[1;14F' then :"Alt+Ctrl+Shift+end"
+    when      '^[1;14H' then :"Alt+Ctrl+Shift+home"
+
+    when 527            then :"Ctrl+Shift+end"
+    when 532            then :"Ctrl+Shift+home"
+
     when Curses::KEY_END then :end
     when Curses::KEY_HOME then :home
     when Curses::KEY_NPAGE then :page_down
