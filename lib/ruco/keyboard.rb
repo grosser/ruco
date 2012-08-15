@@ -188,7 +188,7 @@ class Keyboard
     else
       # when connected via ssh escape sequences are used
       if escape_sequence?(sequence)
-        stringified = bytes_to_string(sequence).sub("\e",'^').sub('[[','[')
+        stringified = bytes_to_string(sequence).sub(/\e+/,'^').sub('[[','[')
         [translate_key_to_code(stringified)]
       else
         bytes_to_key_codes(sequence)

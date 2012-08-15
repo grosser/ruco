@@ -101,6 +101,16 @@ describe Keyboard do
     output.should == [:"Shift+up"]
   end
 
+  it "recognises escape sequence for mac iterm Ctrl+Shift+right" do
+    type [27, 91, 67]
+    output.should == [:"Ctrl+Shift+right"]
+  end
+
+  it "recognises escape sequence for mac iterm Ctrl+Shift+left" do
+    type [27, 27, 91, 68]
+    output.should == [:"Ctrl+Shift+left"]
+  end
+
   if RUBY_VERSION > '1.9.0'
     it "can handle strings from 1.9" do
       type ['a']

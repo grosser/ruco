@@ -58,6 +58,7 @@ module Ruco
       when :"Shift+up" then @focused.selecting { move(:relative, -1, 0) }
       when :"Shift+left" then @focused.selecting { move(:relative, 0, -1) }
       when :"Ctrl+Shift+left", :"Alt+Shift+left" then @focused.selecting{ move(:jump, :left) }
+      when :"Ctrl+Shift+right", :"Alt+Shift+right" then @focused.selecting{ move(:jump, :right) }
       when :"Shift+end" then @focused.selecting{ move(:to_eol) }
       when :"Shift+home" then @focused.selecting{ move(:to_bol) }
 
