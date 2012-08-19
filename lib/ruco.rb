@@ -34,7 +34,7 @@ if $ruco_colors
     # there are some other gems out there like spox-textpow etc, so be picky
     gem 'plist'
     require 'plist'
-    gem 'textpow1x'
+    gem 'textpow'
     require 'textpow'
 
     # we do not need there if any other color li failed

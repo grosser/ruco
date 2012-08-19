@@ -11,7 +11,7 @@ Gem::Specification.new name, Ruco::VERSION do |s|
   s.executables = ["ruco"]
   s.license = "MIT"
   s.add_runtime_dependency "clipboard", ">= 0.9.8"
-  s.add_runtime_dependency "textpow1x", ">= 1.2.5"
+  s.add_runtime_dependency "textpow", ">= 1.3.0"
   s.add_runtime_dependency "language_sniffer"
   s.post_install_message = <<-TEXT
 

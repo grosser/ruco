@@ -4,7 +4,7 @@ PATH
     ruco (0.2.16)
       clipboard (>= 0.9.8)
       language_sniffer
-      textpow1x (>= 1.2.5)
+      textpow (>= 1.3.0)
 
 GEM
   remote: http://rubygems.org/
@@ -23,7 +23,7 @@ GEM
     rspec-expectations (2.6.0)
       diff-lcs (~> 1.1.2)
     rspec-mocks (2.6.0)
-    textpow1x (1.2.5)
+    textpow (1.3.0)
       plist (>= 3.0.1)
 
 PLATFORMS
