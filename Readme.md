@@ -161,4 +161,4 @@ Authors
 [Michael Grosser](http://grosser.it)<br/>
 grosser.michael@gmail.com<br/>
 License: MIT<br/>
-[![Build Status](https://secure.travis-ci.org/grosser/ruco.png)](http://travis-ci.org/grosser/ruco)
+[![Build Status](https://travis-ci.org/grosser/ruco.png)](https://travis-ci.org/grosser/ruco)
