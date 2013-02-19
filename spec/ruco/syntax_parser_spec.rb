@@ -64,6 +64,10 @@ describe Ruco::SyntaxParser do
     it "can handle unfound syntaxes" do
       parse('aaaa', ['fooo']).should == []
     end
+
+    it "can handle RegexpErrors" do
+      parse(["(?# 2:  NIL     )(NIL)(?=[\\x80-\\xff(){ \\x00-\\x1f\\x7f%*\#{'\"'}\\\\\\[\\]+])|\\"])
+    end
   end
 
   describe :syntax_nodes do
