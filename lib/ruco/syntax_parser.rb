@@ -13,8 +13,13 @@ module Ruco
 
     def self.syntax_for_lines(lines, languages)
       if syntax = syntax_node(languages)
-        processor = syntax.parse(lines.join("\n"),  Ruco::ArrayProcessor.new)
-        processor.lines
+        begin
+          processor = syntax.parse(lines.join("\n"),  Ruco::ArrayProcessor.new)
+          processor.lines
+        rescue RegexpError
+          $stderr.puts $!
+          []
+        end
       else
         []
       end
