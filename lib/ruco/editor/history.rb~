@@ -8,9 +8,9 @@ module Ruco
         @history = Ruco::History.new((options[:history]||{}).reverse_merge(:state => state, :track => [:content], :entries => options[:undo_stack_size], :timeout => 2))
       end
 
-      def set_state s,options
+      def set_state s
         @history = s[:history]
-        pbr_init(s[:buffer],options)
+        pbr_init(s[:buffer],@options)
       end
 
       def undo

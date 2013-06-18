@@ -1,6 +1,6 @@
 module Ruco
   class Editor
-    attr_reader :file
+    attr_reader :file,:states
     attr_reader :text_area
     attr_reader :history
     private :text_area
@@ -13,17 +13,29 @@ module Ruco
 
     def initialize(file, options)
       @options = options
+      @states = {}
+
       pbr_init(file)
     end
 
     def pbr_init file
+      if @file and (file != @file)
+        states[@file] = {:buffer=>"#{content}",:history=>@history,:saved_content=>@saved_content}
+      end
+
       @file = file
       # check for size (10000 lines * 100 chars should be enough for everybody !?)
       if File.exist?(@file) and File.size(@file) > (1024 * 1024)
         raise "#{@file} is larger than 1MB, did you really want to open that with Ruco?"
       end
 
-      content = (File.exist?(@file) ? File.binary_read(@file) : '')
+      if s=states[@file]
+        content = s[:buffer]
+        @saved_content = s[:saved_content]
+      else
+        content = (File.exist?(@file) ? File.binary_read(@file) : '')
+      end
+
       @options[:language] ||= LanguageSniffer.detect(@file, :content => content).language
       content.tabs_to_spaces! if @options[:convert_tabs]
 
@@ -32,11 +44,11 @@ module Ruco
       @newline = (@newline ? @newline[0] : "\n")
       content.gsub!(/\r\n?/,"\n")
 
-      @saved_content = content
-      unless @text_area
+      @saved_content = content unless s
+      unless s
         @text_area = EditorArea.new(content, @options)
-      else;
-        @text_area.pbr_init(content,@options)
+      else
+        @text_area.set_state s,@options
       end
 
       @history = @text_area.history

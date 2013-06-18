@@ -44,6 +44,18 @@ module Ruco
 
     # user typed a key
     def key(key)
+      if @list
+        case key
+        when :"Ctrl+h"
+        when :"Ctrl+t"
+        when :"Ctrl+q"
+        when :enter
+        else
+          if key.to_s !~ /[0-9]/
+            return
+          end
+        end
+      end
       # deactivate select_mode if its not re-enabled in this action
       @select_mode_was_on = @select_mode
       @select_mode = false
@@ -55,8 +67,20 @@ module Ruco
       case key
       # scroll through files
       when :"Ctrl+j"
-        pbr_init(add=files.shift)
-        files << add
+        if @files.length > 1
+          add=files.shift
+
+          if add == @file
+            files << add
+            add = files.shift
+          end
+          pbr_init(add)
+          files << add
+        else
+          pbr_init(files.first) if !files.empty?
+        end
+      when :"Ctrl+t" then list()
+      when :"Ctrl+h" then go_to_file()
       # move
       when :down then move_with_select_mode :relative, 1,0
       when :right then move_with_select_mode :relative, 0,1
@@ -108,6 +132,21 @@ module Ruco
       @actions[name] = block
     end
 
+    def list
+      File.open(".ruco.lst","w") do |f| f.puts files.join("\n") end
+      if !@list
+        @list = true
+        @ofile = @file
+        @files << ".ruco.lst"
+        pbr_init ".ruco.lst"
+      else
+        @files.delete(".ruco.lst")
+        pbr_init @ofile
+        @list = nil
+      end
+      File.delete(".ruco.lst")
+    end
+
     def ask(question, options={}, &block)
       @focused = command
       command.ask(question, options) do |response|
@@ -132,6 +171,26 @@ module Ruco
       @options[:columns] = columns
       create_components
       @editor.resize(editor_lines, columns)
+    end
+
+    def go_to_file
+      ask('Go to Document: ') do |result|
+        d = (result.to_i - 1)
+        if @list then list() end
+        pbr_init(files[d])
+      end
+    end
+
+    def pbr_quit
+      if editor.modified?
+        ask("Lose changes? Enter=Yes Esc=Cancel") do
+          editor.store_session
+          :quit
+        end
+      else
+        editor.store_session
+        :quit
+      end
     end
 
     private
@@ -159,7 +218,7 @@ module Ruco
         end
       end
 
-      action :quit do
+      action :close do
         if editor.modified?
           ask("Lose changes? Enter=Yes Esc=Cancel") do
             editor.store_session
@@ -178,6 +237,19 @@ module Ruco
           else
             :quit
           end
+        end
+      end
+
+      action :quit do
+        bool = true
+
+        if files.length > 1
+          bool = nil
+          ask("Multiple files opened: Are you Sure? Enter=Yes Esc=Cancel") do
+            pbr_quit()
+          end
+        else
+          pbr_quit()
         end
       end
 
@@ -255,7 +327,7 @@ module Ruco
     def setup_keys
       @bindings = {}
       bind :"Ctrl+s", :save
-      bind :"Ctrl+w", :quit
+      bind :"Ctrl+w", :close
       bind :"Ctrl+q", :quit
       bind :"Ctrl+g", :go_to_line
       bind :"Ctrl+f", :find

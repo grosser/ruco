@@ -13,11 +13,14 @@ def parse_options
 [Ru]by [Co]mmandline editor
 
 Shortcuts:
- Ctrl+w/q   Exit
- Ctrl+s     Save
+ Ctrl+w/q      Exit
+ Ctrl+s        Save
+ Ctrl+j        Scroll through open documents
+ Ctrl+t        List open documents
+ Ctrl+h        Goto document (via index)
 
 Usage:
-    ruco FILE
+    ruco FILE [FILE2] [...]
 
 Options:
 BANNER
