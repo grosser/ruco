@@ -12,9 +12,12 @@ module Ruco
       :to => :text_area
 
     def initialize(file, options)
-      @file = file
       @options = options
+      pbr_init(file)
+    end
 
+    def pbr_init file
+      @file = file
       # check for size (10000 lines * 100 chars should be enough for everybody !?)
       if File.exist?(@file) and File.size(@file) > (1024 * 1024)
         raise "#{@file} is larger than 1MB, did you really want to open that with Ruco?"
@@ -30,7 +33,12 @@ module Ruco
       content.gsub!(/\r\n?/,"\n")
 
       @saved_content = content
-      @text_area = EditorArea.new(content, @options)
+      unless @text_area
+        @text_area = EditorArea.new(content, @options)
+      else;
+        @text_area.pbr_init(content,@options)
+      end
+
       @history = @text_area.history
       restore_session
     end

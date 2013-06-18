@@ -12,8 +12,11 @@ module Ruco
     }
 
     attr_reader :lines, :selection, :column, :line
-
     def initialize(content, options)
+      pbr_init(content,options)
+    end
+
+    def pbr_init content,options
       if content.respond_to?(:encoding) and content.encoding.to_s.include?('ASCII')
         content = content.force_encoding('UTF-8')
       end

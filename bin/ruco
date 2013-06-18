@@ -83,7 +83,11 @@ require 'ruco'
 
 # draw app and redraw after each keystroke (or paste)
 Ruco::Screen.open(options) do |screen|
-  app = Ruco::Application.new(ARGV[0],
+  flist = ARGV.map do |q|
+    Dir.glob(q)
+  end.flatten.uniq
+
+  app = Ruco::Application.new(flist,screen,
     :convert_tabs => options[:convert_tabs],
     :undo_stack_size => options[:undo_stack_size],
     :lines => screen.lines, :columns => screen.columns

@@ -1,15 +1,27 @@
 module Ruco
   class Application
-    attr_reader :editor, :status, :command, :options
+    attr_reader :editor, :status, :command, :options,:files,:s
 
-    def initialize(file, options)
-      @file, go_to_line = parse_file_and_line(file)
+    def initialize(files,s, options); @s = s
+      @files = files.is_a?(Array) ? files : [files]
       @options = OptionAccessor.new(options)
 
-      setup_actions
-      setup_keys
-      load_user_config
-      create_components
+      pbr_init files.first
+    end
+
+    def pbr_init file
+      @file, go_to_line = parse_file_and_line(file)
+
+      unless @pbr_init;
+        @pbr_init=true
+        setup_actions
+        setup_keys
+        load_user_config
+        create_components
+      else;
+        s.draw *display_info;
+        @editor.pbr_init @file
+      end
 
       @editor.move(:to, go_to_line.to_i-1,0) if go_to_line
     end
@@ -41,7 +53,10 @@ module Ruco
       end
 
       case key
-
+      # scroll through files
+      when :"Ctrl+j"
+        pbr_init(add=files.shift)
+        files << add
       # move
       when :down then move_with_select_mode :relative, 1,0
       when :right then move_with_select_mode :relative, 0,1
@@ -148,11 +163,21 @@ module Ruco
         if editor.modified?
           ask("Lose changes? Enter=Yes Esc=Cancel") do
             editor.store_session
-            :quit
+            @files.delete(@file)
+            if !@files.empty?
+              key(:"Ctrl+j")
+            else
+              :quit
+            end
           end
         else
           editor.store_session
-          :quit
+          @files.delete(@file)
+          if !@files.empty?
+            key(:"Ctrl+j")
+          else
+            :quit
+          end
         end
       end
 
