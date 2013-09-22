@@ -28,60 +28,64 @@ Simple, extendable, test-driven commandline editor written in ruby, for Linux/Ma
 
 Install
 =======
-    sudo gem install ruco
-
+```Bash
+gem install ruco
+```
 
 Usage
 =====
-    ruco file.rb
-
+```Bash
+ruco file.rb
+rvmsudo ruco /etc/hosts
+```
 
 Customize
 =========
 
-    # ~/.ruco.rb
-    Ruco.configure do
-      # set options
-      options.window_line_scroll_offset = 5 # default 1
-      options.history_entries = 10          # default 100
-      options.editor_remove_trailing_whitespace_on_save = true  # default false
-      options.editor_blank_line_before_eof_on_save = true       # default false
-      options.editor_line_numbers = true                        # default false
+```Ruby
+# ~/.ruco.rb
+Ruco.configure do
+  # set options
+  options.window_line_scroll_offset = 5 # default 1
+  options.history_entries = 10          # default 100
+  options.editor_remove_trailing_whitespace_on_save = true  # default false
+  options.editor_blank_line_before_eof_on_save = true       # default false
+  options.editor_line_numbers = true                        # default false
 
-      # Use any Textmate theme e.g. from http://wiki.macromates.com/Themes/UserSubmittedThemes
-      # use a url that points directly to the theme, e.g. github 'raw' urls
-      options.color_theme = "https://raw.github.com/deplorableword/textmate-solarized/master/Solarized%20%28dark%29.tmTheme"
-      ...
+  # Use any Textmate theme e.g. from http://wiki.macromates.com/Themes/UserSubmittedThemes
+  # use a url that points directly to the theme, e.g. github 'raw' urls
+  options.color_theme = "https://raw.github.com/deplorableword/textmate-solarized/master/Solarized%20%28dark%29.tmTheme"
+  ...
 
-      # bind a key
-      # - you can use Integers and Symbols
-      # - use "ruco --debug-keys foo" to see which keys are possible
-      # - have a look at lib/ruco/keyboard.rb
-      bind(:"Ctrl+e") do
-        ask('foo') do |response|
-          if response == 'bar'
-            editor.insert('baz')
-          else
-            editor.move(:to, 0,0)
-            editor.delete(99999)
-            editor.insert('FAIL!')
-          end
-        end
+  # bind a key
+  # - you can use Integers and Symbols
+  # - use "ruco --debug-keys foo" to see which keys are possible
+  # - have a look at lib/ruco/keyboard.rb
+  bind(:"Ctrl+e") do
+    ask('foo') do |response|
+      if response == 'bar'
+        editor.insert('baz')
+      else
+        editor.move(:to, 0,0)
+        editor.delete(99999)
+        editor.insert('FAIL!')
       end
-
-      # bind an existing action
-      puts @actions.keys
-
-      bind :"Ctrl+x", :quit
-      bind :"Ctrl+o", :save
-      bind :"Ctrl+k", :delete_line
-      bind :"Ctrl+a", :move_to_bol
-
-      # create reusable actions
-      action(:first_line){ editor.move(:to_column, 0) }
-      bind :"Ctrl+u", :first_line
     end
+  end
 
+  # bind an existing action
+  puts @actions.keys
+
+  bind :"Ctrl+x", :quit
+  bind :"Ctrl+o", :save
+  bind :"Ctrl+k", :delete_line
+  bind :"Ctrl+a", :move_to_bol
+
+  # create reusable actions
+  action(:first_line){ editor.move(:to_column, 0) }
+  bind :"Ctrl+u", :first_line
+end
+```
 
 TIPS
 ====
