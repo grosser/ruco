@@ -16,7 +16,7 @@ module Ruco
         begin
           processor = syntax.parse(lines.join("\n"),  Ruco::ArrayProcessor.new)
           processor.lines
-        rescue RegexpError
+        rescue RegexpError, ArgumentError
           $stderr.puts $!
           []
         end
