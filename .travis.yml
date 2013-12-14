@@ -1,7 +1,6 @@
 before_install:
   - sudo apt-get install -y libonig-dev && bundle install
-script: "bundle exec rake"
 rvm:
   - ree
-  - 1.9.2
   - 1.9.3
+  - 2.0.0
