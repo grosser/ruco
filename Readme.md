@@ -60,7 +60,7 @@ Ruco.configure do
   # bind a key
   # - you can use Integers and Symbols
   # - use "ruco --debug-keys foo" to see which keys are possible
-  # - have a look at lib/ruco/keyboard.rb
+  # - have a look at [keyboard.rb](https://github.com/grosser/dispel/blob/master/lib/dispel/keyboard.rb)
   bind(:"Ctrl+e") do
     ask('foo') do |response|
       if response == 'bar'

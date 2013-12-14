@@ -50,7 +50,7 @@ module Ruco
     end
 
     def style_map(selection)
-      map = StyleMap.new(lines)
+      map = Dispel::StyleMap.new(lines)
       if selection
         add_selection_styles(map, selection)
       else

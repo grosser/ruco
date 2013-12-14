@@ -1,3 +1,4 @@
+require 'dispel'
 require 'language_sniffer'
 
 require 'ruco/version'
@@ -9,14 +10,11 @@ require 'ruco/core_ext/hash'
 require 'ruco/core_ext/range'
 require 'ruco/core_ext/file'
 
-require 'ruco/keyboard'
 require 'ruco/position'
 require 'ruco/history'
 require 'ruco/option_accessor'
 require 'ruco/file_store'
 require 'ruco/window'
-require 'ruco/screen'
-require 'ruco/style_map'
 require 'ruco/syntax_parser'
 
 require 'ruco/editor'

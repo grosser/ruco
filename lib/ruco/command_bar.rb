@@ -34,7 +34,7 @@ module Ruco
         map.prepend(:reverse, 0, 0..@options[:columns])
         map
       else
-        StyleMap.single_line_reversed(@options[:columns])
+        Dispel::StyleMap.single_line_reversed(@options[:columns])
       end
     end
 

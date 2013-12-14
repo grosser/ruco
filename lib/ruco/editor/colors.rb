@@ -7,8 +7,8 @@ module Ruco
       STYLING_TIMEOUT = 4
 
       def style_map
-        $ruco_foreground = theme.foreground
-        $ruco_background = theme.background
+        $ruco_screen && $ruco_screen.options[:foreground] = theme.foreground
+        $ruco_screen && $ruco_screen.options[:background] = theme.background
         map = super
 
         return map if @colors_took_too_long or not @options[:language]

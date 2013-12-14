@@ -48,41 +48,40 @@ def log(stuff)
   File.open('ruco.log','ab'){|f| f.puts stuff }
 end
 
-# do not use colors if the terminal does not support colors
-# so far the only terminal that supports it:
-# - xterm-256color on osx
-# - xterm and xterm-256color on ubuntu 10.04+
-# (setting ENV['TERM'] will sometimes crash un-rescue-able -> test if it works)
-def activate_256_colors
-  require 'ruco/file_store'
-  (
-    # not windows
-    RbConfig::CONFIG['host_os'] !~ /mswin|mingw/ and
-
-    # possible to open xterm-256color
-    ['xterm', 'xterm-256color'].include?(ENV['TERM']) and
-    Ruco::FileStore.new('~/.ruco/cache').cache('color_possible'){
-      system(%{TERM=xterm-256color ruby -r curses -e 'Curses.noecho' > /dev/null 2>&1})
-    }
-
-    # finally switch terminal, so curses knows we want colors
-  ) and ENV['TERM'] = 'xterm-256color'
-end
-
 options = parse_options
 
-$ruco_colors = if options[:no_colors]
+options[:colors] = if options[:no_colors]
   false
 elsif options[:colors]
   true
 else
-  activate_256_colors
+  # so far the only terminal that supports it:
+  # - xterm-256color on osx
+  # - xterm on ubuntu 10.04+
+  if RbConfig::CONFIG['host_os'] !~ /mswin|mingw/
+    if ENV["TERM"] == 'xterm-256color'
+      true
+    else
+      require 'ruco/file_store'
+      if ENV['TERM'] == 'xterm'
+        # switch terminal, so curses knows we want colors
+        # setting ENV['TERM'] will sometimes crash un-rescue-able -> test if it works
+        possible = Ruco::FileStore.new('~/.ruco/cache').cache('color_possible') do
+          system(%{TERM=xterm-256color ruby -r curses -e 'Curses.noecho' > /dev/null 2>&1})
+        end
+        ENV['TERM'] = 'xterm-256color' if possible
+      end
+    end
+  end
 end
+$ruco_colors = options[:colors]
 
 require 'ruco'
 
 # draw app and redraw after each keystroke (or paste)
-Ruco::Screen.open(options) do |screen|
+Dispel::Screen.open(options) do |screen|
+  $ruco_screen = screen
+
   app = Ruco::Application.new(ARGV[0],
     :convert_tabs => options[:convert_tabs],
     :undo_stack_size => options[:undo_stack_size],
@@ -91,11 +90,7 @@ Ruco::Screen.open(options) do |screen|
 
   screen.draw *app.display_info
 
-  Keyboard.input do
-    Curses.getch
-  end
-
-  Keyboard.output do |key|
+  Dispel::Keyboard.output do |key|
     screen.debug_key(key) if options[:debug_keys]
     if key == :resize
       app.resize(screen.lines, screen.columns)

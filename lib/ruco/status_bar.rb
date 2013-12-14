@@ -23,7 +23,7 @@ module Ruco
     end
 
     def style_map
-      StyleMap.single_line_reversed(@options[:columns])
+      Dispel::StyleMap.single_line_reversed(@options[:columns])
     end
 
     def change_indicator

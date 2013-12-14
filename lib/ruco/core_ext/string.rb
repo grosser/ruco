@@ -1,13 +1,6 @@
 class String
-  # http://grosser.it/2011/08/28/ruby-string-naive-split-because-split-is-to-clever/
-  # "    ".split(' ') == []
-  # "    ".naive_split(' ') == ['','','','']
-  # "".split(' ') == []
-  # "".naive_split(' ') == ['']
   def naive_split(pattern)
-    pattern = /#{Regexp.escape(pattern)}/ unless pattern.is_a?(Regexp)
-    result = split(pattern, -1)
-    result.empty? ? [''] : result
+    Dispel::Tools.naive_split(self, pattern)
   end
 
   def tabs_to_spaces!

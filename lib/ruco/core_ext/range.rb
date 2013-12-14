@@ -7,7 +7,7 @@ class Range
   # (1..2).last_element == 2
   # (1...3).last_element == 2
   def last_element
-    exclude_end? ? last.pred : last
+    Dispel::Tools.last_element(self)
   end unless defined? last_element
 
   # (1..2).move(2) == (3..4)
