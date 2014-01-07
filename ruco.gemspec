@@ -3,7 +3,7 @@ name = "ruco"
 require "#{name}/version"
 
 Gem::Specification.new name, Ruco::VERSION do |s|
-  s.summary = "Commandline editor written in ruby"
+  s.summary = "Desktop-style, Intuitive, Commandline Editor in Ruby. 'Better than nano, simpler than vim.'"
   s.authors = ["Michael Grosser"]
   s.email = "michael@grosser.it"
   s.homepage = "https://github.com/grosser/#{name}"
