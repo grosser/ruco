@@ -62,11 +62,11 @@ module Ruco
         return columns if left == 0
 
         # style is out of scope -> add nothing
-        return nil if columns.last_element <= left
+        return nil if columns.max <= left
 
         # shift style to the left
         first = [0, columns.first - left].max
-        last = columns.last_element - left
+        last = columns.max - left
         first..last
       end
 

@@ -4,12 +4,6 @@ class Range
     (first <= other.last) and (other.first <= last)
   end
 
-  # (1..2).last_element == 2
-  # (1...3).last_element == 2
-  def last_element
-    Dispel::Tools.last_element(self)
-  end unless defined? last_element
-
   # (1..2).move(2) == (3..4)
   def move(n)
     if exclude_end?
