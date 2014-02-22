@@ -1029,7 +1029,7 @@ describe Ruco::Editor do
     it 'does not crash when it cannot save a file' do
       begin
         `chmod -w #{@file}`
-        editor.save.should == "Permission denied - #{@file}"
+        editor.save.sub(" @ rb_sysopen", "").should == "Permission denied - #{@file}"
       ensure
         `chmod +w #{@file}`
       end
