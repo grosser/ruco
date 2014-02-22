@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    ruco (0.2.21)
+    ruco (0.2.22)
       clipboard (>= 0.9.8)
       dispel (>= 0.0.6)
       language_sniffer
