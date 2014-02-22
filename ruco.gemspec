@@ -13,7 +13,7 @@ Gem::Specification.new name, Ruco::VERSION do |s|
   s.add_runtime_dependency "clipboard", ">= 0.9.8"
   s.add_runtime_dependency "textpow", ">= 1.3.0"
   s.add_runtime_dependency "language_sniffer"
-  s.add_runtime_dependency "dispel", ">= 0.0.5"
+  s.add_runtime_dependency "dispel", ">= 0.0.6"
   s.post_install_message = <<-TEXT
 
     Mac: shift/ctrl + arrow-keys only work in iterm (not Terminal.app)
