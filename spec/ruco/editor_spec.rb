@@ -984,7 +984,7 @@ describe Ruco::Editor do
       editor.insert("b")
       editor.view # trigger save point
       future = Time.now + 10
-      Time.stub!(:now).and_return future
+      Time.stub(:now).and_return future
       editor.insert("c")
       editor.view # trigger save point
       editor.undo
