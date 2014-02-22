@@ -1,3 +1,3 @@
 module Ruco
-  VERSION = Version = "0.2.22"
+  VERSION = Version = "0.2.23"
 end
