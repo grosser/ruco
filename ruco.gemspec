@@ -10,10 +10,11 @@ Gem::Specification.new name, Ruco::VERSION do |s|
   s.files = `git ls-files lib bin MIT-LICENSE.txt spec/fixtures/railscasts.tmTheme`.split("\n")
   s.executables = ["ruco"]
   s.license = "MIT"
+  s.required_ruby_version = '>= 2.0.0' # curses does not build on 1.9
   s.add_runtime_dependency "clipboard", ">= 0.9.8"
   s.add_runtime_dependency "textpow", ">= 1.3.0"
   s.add_runtime_dependency "language_sniffer"
-  s.add_runtime_dependency "dispel", ">= 0.0.6"
+  s.add_runtime_dependency "dispel", ">= 0.0.7"
   s.post_install_message = <<-TEXT
 
     Mac: shift/ctrl + arrow-keys only work in iterm (not Terminal.app)
