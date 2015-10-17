@@ -1,37 +1,36 @@
 #!/usr/bin/env ruby
-# encoding: UTF-8
-require 'rubygems'
-gem 'clipboard'
 require 'curses'
 require 'optparse'
-$LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
+
+lib = File.expand_path("../../lib", __FILE__)
+$LOAD_PATH.unshift lib unless $LOAD_PATH.include?(lib) # enable local development
 
 def parse_options
   options = {}
   parser = OptionParser.new do |opts|
-    opts.banner = <<BANNER
-[Ru]by [Co]mmandline editor
+    opts.banner = <<-BANNER.gsub(/^ {6}/, "")
+      [Ru]by [Co]mmandline editor
 
-Shortcuts:
- Ctrl+w/q   Exit
- Ctrl+s     Save
+      Shortcuts:
+       Ctrl+w/q   Exit
+       Ctrl+s     Save
 
-Usage:
-    ruco FILE
+      Usage:
+          ruco FILE
 
-Options:
-BANNER
+      Options:
+    BANNER
     opts.on("-c", "--convert-tabs","Convert tabs to spaces") { options[:convert_tabs] = true }
-    opts.on("-u", "--undo-stack-size SIZE","Maximum size of the undo stack.  0 allows for a complete undo stack.") {|size| options[:undo_stack_size] = size.to_i }
+    opts.on("-u", "--undo-stack-size SIZE","Maximum size of the undo stack.  0 allows for a complete undo stack.") { |size| options[:undo_stack_size] = size.to_i }
     opts.on("-n", "--no-colors","No colors -- helps performance / broken terminals") { options[:no_colors] = true }
     opts.on("--colors","Force colors -- everything could be black") { options[:colors] = true }
     opts.on("--debug-cache","Show caching in action") { options[:debug_cache] = true }
     opts.on("--debug-keys", "Show pressed keys") { options[:debug_keys] = true }
-    opts.on("-v", "--version","Show Version"){
+    opts.on("-v", "--version","Show Version") do
       require 'ruco/version'
       puts Ruco::VERSION
       exit
-    }
+    end
     opts.on("-h", "--help","Show this.") { puts opts; exit }
   end
   parser.parse!
@@ -45,7 +44,7 @@ BANNER
 end
 
 def log(stuff)
-  File.open('ruco.log','ab'){|f| f.puts stuff }
+  File.open('ruco.log','ab') { |f| f.puts stuff }
 end
 
 options = parse_options
@@ -82,7 +81,8 @@ require 'ruco'
 Dispel::Screen.open(options) do |screen|
   $ruco_screen = screen
 
-  app = Ruco::Application.new(ARGV[0],
+  app = Ruco::Application.new(
+    ARGV[0],
     :convert_tabs => options[:convert_tabs],
     :undo_stack_size => options[:undo_stack_size],
     :lines => screen.lines, :columns => screen.columns

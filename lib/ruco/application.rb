@@ -6,6 +6,7 @@ module Ruco
       @file, go_to_line = parse_file_and_line(file)
       @options = OptionAccessor.new(options)
 
+      change_terminal_title
       setup_actions
       setup_keys
       load_user_config
@@ -120,6 +121,14 @@ module Ruco
     end
 
     private
+
+    # http://stackoverflow.com/questions/3232655
+    # terminal tab in iterm2 holds 23 characters by default
+    def change_terminal_title
+      print "\e[22;0;t"
+      print "\e]0;#{@file.ellipsize(max: 23)}\007;"
+      at_exit { print "\e[23;0;t" }
+    end
 
     def setup_actions
       @actions = {}
