@@ -22,7 +22,7 @@ Simple, extendable, test-driven commandline editor written in ruby, for Linux/Ma
  - (optional) blank line before eof on save
  - (optional) line numbers
 
-![ruco with railscasts theme](http://dl.dropbox.com/u/2670385/Web/ruco-with-railscasts-theme.png)<br/>
+![ruco with railscasts theme](assets/example.png?raw=true)<br/>
 [Colors in Ruby 1.8](#colors)
 
 
