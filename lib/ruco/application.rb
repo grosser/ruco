@@ -11,6 +11,7 @@ module Ruco
       setup_keys
       load_user_config
       create_components
+      check_file_ownership
 
       @editor.move(:to, go_to_line.to_i-1,0) if go_to_line
     end
@@ -111,6 +112,13 @@ module Ruco
 
     def configure(&block)
       instance_exec(&block)
+    end
+
+    def check_file_ownership
+      return unless File.exist? @file
+      unless File.writable? @file
+        ask("WARNING: #{@file} is not writable!"){}
+      end
     end
 
     def resize(lines, columns)
