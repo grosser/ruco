@@ -1,5 +1,4 @@
 $LOAD_PATH << 'lib'
-require 'oniguruma' if RUBY_VERSION < '1.9.0'
 require 'language_sniffer'
 gem 'plist'
 require 'plist'

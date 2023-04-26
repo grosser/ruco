@@ -23,7 +23,6 @@ Simple, extendable, test-driven commandline editor written in ruby, for Linux/Ma
  - (optional) line numbers
 
 ![ruco with railscasts theme](assets/example.png?raw=true)<br/>
-[Colors in Ruby 1.8](#colors)
 
 
 Install
@@ -97,19 +96,6 @@ TIPS
  - [Alt key] if Alt does not work try your Meta/Win/Cmd key
  - [Curses] `LoadError: cannot load such file -- curses` --> `rvm install 1.9.3 ----with-libcurses`
 
-<a name="colors"/>
-### Colors in Ruby 1.8
-
-    # OSX via brew OR port
-    brew install oniguruma
-    port install oniguruma5
-
-    # Ubuntu
-    sudo apt-get -y install libonig-dev
-
-    gem install oniguruma
-
-
 Architecture
 ============
 Ruco is basically a lot of String manipulation separated in HTML style elements.
@@ -161,8 +147,6 @@ Authors
  - [AJ Palkovic](https://github.com/ajpalkovic)
  - [David Sachitano](https://github.com/dsachitano)
 
-
 [Michael Grosser](http://grosser.it)<br/>
 grosser.michael@gmail.com<br/>
-License: MIT<br/>
-[![Build Status](https://travis-ci.org/grosser/ruco.png)](https://travis-ci.org/grosser/ruco)
+License: MIT

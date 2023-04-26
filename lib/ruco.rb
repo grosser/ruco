@@ -26,9 +26,6 @@ require 'ruco/application'
 
 if $ruco_colors
   begin
-    # this can fail on ruby 1.8 <-> oniguruma is complicated to install
-    require 'oniguruma' if RUBY_VERSION < '1.9.0'
-
     # there are some other gems out there like spox-textpow etc, so be picky
     gem 'plist'
     require 'plist'
