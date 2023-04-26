@@ -31,7 +31,7 @@ describe Ruco::StatusBar do
   end
 
   it "indicates writable if file is missing" do
-    editor.stub!(:file).and_return '/gradasadadsds'
+    editor.stub(:file).and_return '/gradasadadsds'
     bar.view.should_not include('!')
   end
 
