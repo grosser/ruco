@@ -17,7 +17,6 @@ GEM
     dispel (0.0.7)
       curses
     language_sniffer (1.0.2)
-    oniguruma (1.1.0)
     plist (3.1.0)
     rake (10.1.1)
     rspec (2.14.1)
@@ -37,10 +36,9 @@ PLATFORMS
 DEPENDENCIES
   bump
   ffi
-  oniguruma
   rake
   rspec (~> 2)
   ruco!
 
 BUNDLED WITH
-   1.10.6
+   2.3.12
