@@ -34,3 +34,10 @@ end
 def log(text)
   puts "LOG: #{text}"
 end
+
+RSpec.configure do |config|
+  config.expect_with(:rspec) { |c| c.syntax = [:expect, :should] }
+  config.mock_with :rspec do |mocks|
+    mocks.syntax = [:should, :receive]
+  end
+end
