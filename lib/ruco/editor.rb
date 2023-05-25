@@ -14,14 +14,15 @@ module Ruco
     def initialize(file, options)
       @file = file
       @options = options
+      handle = (File.exist?(file) ? File.open(file, 'rb') : nil)
 
       # check for size (10000 lines * 100 chars should be enough for everybody !?)
-      if File.exist?(@file) and File.size(@file) > (1024 * 1024)
+      if handle&.size.to_i > 1024 * 1024
         raise "#{@file} is larger than 1MB, did you really want to open that with Ruco?"
       end
 
-      content = (File.exist?(@file) ? File.binary_read(@file) : '')
-      @options[:language] ||= LanguageSniffer.detect(@file, :content => content).language
+      content = handle&.read || ''
+      @options[:language] ||= LanguageSniffer.detect(@file, content: content).language
       content.tabs_to_spaces! if @options[:convert_tabs]
 
       # cleanup newline formats
@@ -33,6 +34,9 @@ module Ruco
       @text_area = EditorArea.new(content, @options)
       @history = @text_area.history
       restore_session
+
+      # git and kubectl wait for the file to be closed, so give them that event
+      at_exit { handle&.close }
     end
 
     def find(text)
