@@ -153,7 +153,7 @@ describe Ruco::Editor do
       write('a'*(1024*1024 + 1))
       lambda{
         Ruco::Editor.new(@file, :lines => 3, :columns => 5)
-      }.should raise_error
+      }.should raise_error(RuntimeError)
     end
 
     it "opens large files and does not take forever" do
