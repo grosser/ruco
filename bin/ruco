@@ -40,6 +40,11 @@ def parse_options
     exit
   end
 
+  if ARGV.size != 1
+    puts parser
+    exit 1
+  end
+
   options
 end
 
@@ -49,30 +54,30 @@ end
 
 options = parse_options
 
-options[:colors] = if options[:no_colors]
-  false
-elsif options[:colors]
-  true
-else
-  # so far the only terminal that supports it:
-  # - xterm-256color on osx
-  # - xterm on ubuntu 10.04+
-  if RbConfig::CONFIG['host_os'] !~ /mswin|mingw/
-    if ENV["TERM"] == 'xterm-256color'
-      true
-    else
-      require 'ruco/file_store'
-      if ENV['TERM'] == 'xterm'
-        # switch terminal, so curses knows we want colors
-        # setting ENV['TERM'] will sometimes crash un-rescue-able -> test if it works
-        possible = Ruco::FileStore.new('~/.ruco/cache').cache('color_possible') do
-          system(%{TERM=xterm-256color ruby -r curses -e 'Curses.noecho' > /dev/null 2>&1})
-        end
-        ENV['TERM'] = 'xterm-256color' if possible
-      end
+options[:colors] =
+  if options[:no_colors]
+    false
+  elsif options[:colors]
+    true
+  # windows does not support colors, so disable it
+  elsif RbConfig::CONFIG['host_os'] =~ /mswin|mingw/
+    false
+  # this mostly is osx and works fine
+  elsif ENV["TERM"] == 'xterm-256color'
+    true
+  # xterm on ubuntu 10.04+ also supports colors, but ot might crash if we force it
+  elsif ENV['TERM'] == 'xterm'
+    require 'ruco/file_store'
+    # switch terminal, so curses knows we want colors
+    # setting ENV['TERM'] will sometimes crash un-rescue-able -> test if it works
+    possible = Ruco::FileStore.new('~/.ruco/cache').cache('color_possible') do
+      system(%{TERM=xterm-256color ruby -r curses -e 'Curses.noecho' > /dev/null 2>&1})
     end
+    ENV['TERM'] = 'xterm-256color' if possible
+    possible
+  else
+    false
   end
-end
 $ruco_colors = options[:colors]
 
 require 'ruco'
@@ -83,9 +88,10 @@ Dispel::Screen.open(options) do |screen|
 
   app = Ruco::Application.new(
     ARGV[0],
-    :convert_tabs => options[:convert_tabs],
-    :undo_stack_size => options[:undo_stack_size],
-    :lines => screen.lines, :columns => screen.columns
+    convert_tabs: options[:convert_tabs],
+    undo_stack_size: options[:undo_stack_size],
+    lines: screen.lines,
+    columns: screen.columns
   )
 
   screen.draw *app.display_info
