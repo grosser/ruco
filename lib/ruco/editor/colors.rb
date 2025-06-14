@@ -84,17 +84,17 @@ module Ruco
       memoize :theme
 
       def download_into_file(url)
-        theme_store = FileStore.new('~/.ruco/cache', :string => true)
+        theme_store = FileStore.new('~/.ruco/cache', string: true)
         theme_store.cache(url) do
           require 'open-uri'
           require 'openssl'
           OpenURI.without_ssl_verification do
-            open(url).read
+            URI.open(url).read
           end
         end
         File.expand_path(theme_store.file(url))
       rescue => e
-        STDERR.puts "Could not download #{url} -- #{e}"
+        STDERR.puts "Could not download #{url} set via :color_theme option -- #{e}"
       end
     end
   end

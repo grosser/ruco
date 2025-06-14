@@ -35,7 +35,6 @@ Usage
 =====
 ```Bash
 ruco file.rb
-rvmsudo ruco /etc/hosts
 ```
 
 Customize
@@ -45,16 +44,19 @@ Customize
 # ~/.ruco.rb
 Ruco.configure do
   # set options
-  options.window_line_scroll_offset = 5 # default 1
+  options.window_line_scroll_offset = 5 # when to scroll if getting close to top/bottom, default 1
   options.history_entries = 10          # default 100
   options.editor_remove_trailing_whitespace_on_save = true  # default false
   options.editor_blank_line_before_eof_on_save = true       # default false
   options.editor_line_numbers = true                        # default false
 
-  # Use any Textmate theme e.g. from http://wiki.macromates.com/Themes/UserSubmittedThemes
+  # Use any Textmate 1 theme e.g. from https://github.com/filmgirl/TextMate-Themes
+  # (official wiki is dead http://wiki.macromates.com/Themes/UserSubmittedThemes)
   # use a url that points directly to the theme, e.g. github 'raw' urls
-  options.color_theme = "https://raw.github.com/deplorableword/textmate-solarized/master/Solarized%20%28dark%29.tmTheme"
-  ...
+  # if you use a dark background:
+  options.color_theme = "https://raw.githubusercontent.com/deplorableword/textmate-solarized/master/Solarized%20%28dark%29.tmTheme"
+  # if you use a light background:
+  # options.color_theme = "https://raw.githubusercontent.com/chriskempson/tomorrow-theme/refs/heads/master/textmate/Tomorrow-Night-Bright.tmTheme"
 
   # bind a key
   # - you can use Integers and Symbols
@@ -73,16 +75,16 @@ Ruco.configure do
   end
 
   # bind an existing action
-  puts @actions.keys
+  # puts @actions.keys
 
-  bind :"Ctrl+x", :quit
-  bind :"Ctrl+o", :save
-  bind :"Ctrl+k", :delete_line
-  bind :"Ctrl+a", :move_to_bol
+  # bind :"Ctrl+x", :quit
+  # bind :"Ctrl+o", :save
+  # bind :"Ctrl+k", :delete_line
+  # bind :"Ctrl+a", :move_to_bol
 
   # create reusable actions
-  action(:first_line){ editor.move(:to_column, 0) }
-  bind :"Ctrl+u", :first_line
+  # action(:first_line){ editor.move(:to_column, 0) }
+  # bind :"Ctrl+u", :first_line
 end
 ```
 
@@ -90,28 +92,26 @@ TIPS
 ====
  - [Mac] arow-keys + Shift/Alt does not work in default terminal (use iTerm)
  - [Tabs] Ruco does not like tabs. Existing tabs are displayed as single space and pressing tab inserts 2*space
- - [RVM] `alias r="rvm 1.9.2 exec ruco"` and you only have to install ruco once
- - [Ruby1.9] Unicode support -> install libncursesw5-dev before installing ruby
+ - [RVM] `alias r="rvm 3.3.0 exec ruco"` and you only have to install ruco once
  - [ssh vs clipboard] access your desktops clipboard by installing `xauth` on the server and then using `ssh -X`
  - [Alt key] if Alt does not work try your Meta/Win/Cmd key
- - [Curses] `LoadError: cannot load such file -- curses` --> `rvm install 1.9.3 ----with-libcurses`
 
 Architecture
 ============
-Ruco is basically a lot of String manipulation separated in HTML style elements.
-The only component dealing with the commandline interface are Screen and Keyboard. Therefore
-everything is very simple to build and test since it returns a string or a e.g. cursor position.
+Ruco is a lot of String manipulation separated in HTML style elements.
+The only component dealing with the commandline interface are `Screen` and `Keyboard`.
+Everything is simple to build and test since it returns a string or e.g. cursor position.
 
-Writing/reading is done in a TextArea or a TextField (a TextArea with 1 line)
-which are placed in Form`s.
+Writing/reading is done in a `TextArea` or a `TextField` (a `TextArea` with 1 line)
+which are placed in a `Form`.
 
-The Application consists of a StatusBar, Editor, CommandBar and delegates actions to the currently active element.
+The Application consists of a `StatusBar`, `Editor`, `CommandBar` and delegates actions to the currently active element.
 
-To build the commandline output Editor/CommandBar return:
+To build the commandline output `Editor`/`CommandBar` return:
 
- - view -- text that should be displayed on the screen (complete content cropped via Window)
- - style_map -- a big Array with style infos, e.g. 'on line 1 chars 5 to 7 are red'
- - cursor -- where to draw the cursor
+ - `view` -- text that should be displayed on the screen (complete content cropped via Window)
+ - `style_map` -- a big Array with style infos, e.g. 'on line 1 chars 5 to 7 are red'
+ - `cursor` -- where to draw the cursor
 
 
 TODO
