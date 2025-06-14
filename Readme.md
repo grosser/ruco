@@ -50,7 +50,8 @@ Ruco.configure do
   options.editor_blank_line_before_eof_on_save = true       # default false
   options.editor_line_numbers = true                        # default false
 
-  # Use any Textmate theme e.g. from http://wiki.macromates.com/Themes/UserSubmittedThemes
+  # Use any Textmate 1 theme e.g. from https://github.com/filmgirl/TextMate-Themes
+  # (official wiki is dead http://wiki.macromates.com/Themes/UserSubmittedThemes)
   # use a url that points directly to the theme, e.g. github 'raw' urls
   # if you use a dark background:
   options.color_theme = "https://raw.githubusercontent.com/deplorableword/textmate-solarized/master/Solarized%20%28dark%29.tmTheme"
