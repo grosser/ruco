@@ -52,7 +52,10 @@ Ruco.configure do
 
   # Use any Textmate theme e.g. from http://wiki.macromates.com/Themes/UserSubmittedThemes
   # use a url that points directly to the theme, e.g. github 'raw' urls
-  options.color_theme = "https://raw.github.com/deplorableword/textmate-solarized/master/Solarized%20%28dark%29.tmTheme"
+  # if you use a dark background:
+  options.color_theme = "https://raw.githubusercontent.com/deplorableword/textmate-solarized/master/Solarized%20%28dark%29.tmTheme"
+  # if you use a light background:
+  # options.color_theme = "https://raw.githubusercontent.com/chriskempson/tomorrow-theme/refs/heads/master/textmate/Tomorrow-Night-Bright.tmTheme"
 
   # bind a key
   # - you can use Integers and Symbols
